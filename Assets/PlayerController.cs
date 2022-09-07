@@ -2,29 +2,29 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// TODO - fix jump animation and create one
-// TODO - fix the "multi-jump" mechanic [primarily used for double-jump but open-ended just in case]
-// TODO - Change attack cancels, move them from cancel callback to its own method and only call when needed.
+// TODO - CanMove() is technically useless right now, unless we were to implement a stun effect. Remove if not needed.
 // TODO - Cancel attack if start to move or jump for slow attack, get rid of "force" stand-in-place while attacking.
-// TODO - Allow moving with light attacks and POSSIBLY medium attack (maybe just slow down velocity with light/medium attacks)
+// TODO - Allow moving with light attacks (maybe just slow down velocity when performing light attacks)
+// TODO - Implement falling behavior/logic (no jump used, but simply falling from a platform)
 
 // TODO -
 // If at any point we add ladders, we should allow the player to use up/down arrows to climb up or down the ladder.
 // Jump is handled from the spacebar (default keybind) so pass 0 to the Vector2 Y plane value in MovementFixedUpdate()
+// for now.
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] 
-    private float walkSpeed = 100;
-    [SerializeField]
-    private float runSpeed = 150;
-    [SerializeField] 
-    private float jumpDistance = 1;
-    [SerializeField] 
-    private float jumpSpeed = 200;
-    [SerializeField] 
-    private int maxJumps = 2;
+    #region Serialized Fields
+    [SerializeField] private float walkSpeed = 100f;
+    [SerializeField] private float runSpeed = 150f;
+    [SerializeField] private float jumpDistance = 1f;
+    [SerializeField] private float jumpSpeed = 2f;
+    [SerializeField] private int maxJumps = 2;
+    [SerializeField] private float groundRaycastDistance = 2f;
+    [SerializeField] private float landingRaycastDistance = 1.0f;
+    #endregion
     
+    #region Private Fields
     private PlayerInputActions _playerInputActions;
     private InputAction _movement;
     private InputAction _jump;
@@ -32,15 +32,20 @@ public class PlayerController : MonoBehaviour
     private InputAction _lightAttackLeft;
     private InputAction _lightAttackRight;
     private InputAction _slowAttack;
-    private InputAction _mediumAttack;
+    private InputAction _throwKnife;
     private Vector2 _movePos;
-    private Vector2 _jumpPos;
     private Rigidbody2D _rigidBody;
     private Animator _animator;
+    private bool _moved;
+    private bool _jumped;
+    private bool _handledJump;
     private bool _isGrounded;
+    private bool _isLanding;
     private bool _inAir;
     private int _jumpCount;
+    #endregion
 
+    #region Unity Events
     private void Awake()
     {
         _playerInputActions = new PlayerInputActions();
@@ -80,10 +85,10 @@ public class PlayerController : MonoBehaviour
         _slowAttack.canceled += OnSlowAttackCancel;
         _slowAttack.Enable();
         
-        _mediumAttack = _playerInputActions.Player.MediumAttack;
-        _mediumAttack.performed += OnMediumAttack;
-        _mediumAttack.canceled += OnMediumAttackCancel;
-        _mediumAttack.Enable();
+        _throwKnife = _playerInputActions.Player.ThrowKnife;
+        _throwKnife.performed += OnThrowKnife;
+        _throwKnife.canceled += OnThrowKnifeCancel;
+        _throwKnife.Enable();
     }
 
     private void OnDisable()
@@ -94,27 +99,46 @@ public class PlayerController : MonoBehaviour
         _lightAttackLeft.Disable();
         _lightAttackRight.Disable();
         _slowAttack.Disable();
-        _mediumAttack.Disable();
+        _throwKnife.Disable();
     }
-    
-    private void OnMediumAttack(InputAction.CallbackContext obj)
+
+    // Update is called once per frame
+    private void Update()
     {
-        Debug.Log("Medium attack performed!");
+        // Update ground check every update.
+        GroundCheckUpdate();
+
+        // Update player movement input.
+        MovementInputUpdate();
+        
+        // Update velocity every update.
+        _animator.SetFloat("Velocity", _rigidBody.velocity.magnitude);
+        
+        // Update sprint every update.
+        _animator.SetBool("IsSprinting", _sprint.inProgress);
+    }
+
+    private void FixedUpdate()
+    {
+        MovementFixedUpdate();
+        JumpFixedUpdate();
+    }
+    #endregion
+    
+    #region Input Callbacks
+    private void OnThrowKnife(InputAction.CallbackContext obj)
+    {
+        Debug.Log("Knife throw performed!");
 
         if (!CanAttack())
-        {
-            OnMediumAttackCancel(obj);
             return;
-        }
-        
-        _animator.SetTrigger("MediumAttack");
+
+        _animator.SetTrigger("ThrowKnife");
     }
 
-    private void OnMediumAttackCancel(InputAction.CallbackContext obj)
+    private void OnThrowKnifeCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("Medium attack ended!");
-        
-        _animator.ResetTrigger("MediumAttack");
+        Debug.Log("Knife throw ended!");
     }
     
     private void OnSlowAttack(InputAction.CallbackContext obj)
@@ -122,10 +146,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Slow attack performed!");
 
         if (!CanAttack())
-        {
-            OnSlowAttackCancel(obj);
             return;
-        }
 
         _animator.SetTrigger("SlowAttack");
     }
@@ -133,8 +154,6 @@ public class PlayerController : MonoBehaviour
     private void OnSlowAttackCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("Slow attack ended!");
-        
-        _animator.ResetTrigger("SlowAttack");
     }
     
     private void OnLightAttackRight(InputAction.CallbackContext obj)
@@ -142,19 +161,14 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Light attack with right hand performed!");
 
         if (!CanAttack())
-        {
-            OnLightAttackRightCancel(obj);
             return;
-        }
-        
+
         _animator.SetTrigger("LightAttackRight");
     }
 
     private void OnLightAttackRightCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("Light right-hand attack ended!");
-        
-        _animator.ResetTrigger("LightAttackRight");
     }
     
     private void OnLightAttackLeft(InputAction.CallbackContext obj)
@@ -162,19 +176,14 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Light attack with left hand performed!");
 
         if (!CanAttack())
-        {
-            OnLightAttackLeftCancel(obj);
             return;
-        }
-        
+
         _animator.SetTrigger("LightAttackLeft");
     }
 
     private void OnLightAttackLeftCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("Light left-hand attack ended!");
-        
-        _animator.ResetTrigger("LightAttackLeft");
     }
     
     private void OnSprint(InputAction.CallbackContext obj)
@@ -190,10 +199,7 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputAction.CallbackContext obj)
     {
         if (!CanMove())
-        {
-            OnMoveCancel(obj);
-            return;   
-        }
+            return;
 
         Debug.Log("Moving!");
     }
@@ -212,118 +218,167 @@ public class PlayerController : MonoBehaviour
     private void OnJump(InputAction.CallbackContext obj)
     {
         if (!CanJump())
-        {
-            OnJumpCancel(obj);
             return;
-        }
-
-        Debug.Log("Jumping!");
         
-        if (_jumpCount < maxJumps)
-            _jumpCount++;
+        _jumpCount++;
+
+        Debug.Log($"Jumping!\n Jumps Performed: {_jumpCount + 1}");
     }
 
     private void OnJumpCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("Jump ended!");
+        _handledJump = false;
     }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    #endregion
 
-    // Update is called once per frame
-    private void Update()
+    #region Update Methods
+    /// <summary>
+    /// Update player ground state to determine if grounded or in-air.
+    /// </summary>
+    private void GroundCheckUpdate()
     {
-        // Update ground check every update.
         _isGrounded = _rigidBody.IsTouchingLayers(LayerMask.GetMask("Ground"));
         _animator.SetBool("IsGrounded", _isGrounded);
-        if (_isGrounded && _inAir)
+
+        if (_isGrounded)
         {
             _inAir = false;
             _jumpCount = 0;
+            _isLanding = false;
         }
 
-        // Movement - only grab a move position if movement is in progress (key pressed / held down)
-        if (_movement.inProgress)
-            _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        // Default 5 for hit results for now (?)
+        RaycastHit2D[] hitResults = new RaycastHit2D[5];
 
-        // Jump - only grab a jump position if jump is in progress (key pressed)
-        if (_jump.inProgress)
-            _jumpPos = new Vector2(Input.GetAxisRaw("Horizontal"), jumpDistance);
+        // Set in air if player is over the "landing" distance to stop any issues when just coming off the ground.
+        if (!_isGrounded)
+        {
+            int results = _rigidBody.Cast(Vector2.down, hitResults, groundRaycastDistance);
+            if (results != 0)
+                if (hitResults.Any(hit =>
+                        hit.transform != null && hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground") &&
+                        hit.distance > landingRaycastDistance))
+                    _inAir = true;
+        }
 
-        // Update velocity every update.
-        _animator.SetFloat("Velocity", _rigidBody.velocity.magnitude);
-        
-        // Update sprint every update.
-        _animator.SetBool("IsSprinting", _sprint.inProgress);
-    }
+        // Trigger landing animation if we've found a ground layer within the set "landing" distance.
+        if (_inAir)
+        {
+            int results = _rigidBody.Cast(Vector2.down, hitResults, 2.0f);
+            if (results != 0)
+                if (hitResults.Any(hit =>
+                        hit.transform != null && hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground") &&
+                        hit.distance <= landingRaycastDistance))
+                    _isLanding = true;
+        }
 
-    private void FixedUpdate()
-    {
-        MovementFixedUpdate();
-        JumpFixedUpdate();
+        _animator.SetBool("IsLanding", _isLanding);
     }
 
     /// <summary>
-    /// Update player movement [FixedUpdate]
+    /// Process player's movement input, movement info will be used to handle actual movement in FixedUpdate.
+    /// </summary>
+    private void MovementInputUpdate()
+    {
+        switch (_movement.inProgress)
+        {
+            // Move and Jump
+            case true when _jump.inProgress && !_handledJump:
+                _moved = true;
+                _jumped = true;
+                _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), jumpDistance);
+                break;
+            // Jump only
+            case false when _jump.inProgress && !_handledJump:
+                _moved = false;
+                _jumped = true;
+                _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), jumpDistance);
+                break;
+            // Move only
+            case true when !_jump.inProgress:
+                _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+                _moved = true;
+                break;
+        }
+    }
+    #endregion
+    
+    #region Fixed Update Methods
+    /// <summary>
+    /// Handle player movement
     /// </summary>
     private void MovementFixedUpdate()
     {
-        if (!_movement.inProgress)
-            return;
+        // Flip sprite to correct facing direction regardless if they can actually move.
+        // For instance, flip sprite while in-air.
+        FlipPlayerSprite();
         
-        // Apply proper sprite facing direction based on move direction
-        bool isFacingLeft = gameObject.transform.localScale.x < 0;
-        if (_movement.ReadValue<Vector2>() == Vector2.left && !isFacingLeft ||
-            _movement.ReadValue<Vector2>() == Vector2.right && isFacingLeft)
-            FlipPlayerSprite();
-        
-        if (!CanMove())
-            return;
-        
-        // Move player (walk or run speed) - check TODO comment at top of document
-        Vector2 moveLeftRightPos = new Vector2(_movePos.x, 0);
-        _rigidBody.velocity =
-            moveLeftRightPos * ((_sprint.IsInProgress() ? runSpeed : walkSpeed) * Time.deltaTime);
-    }
-    
-    private void JumpFixedUpdate()
-    {
-        if (!_jump.inProgress || !CanJump())
+        if (!CanWalk())
+            _moved = false;
+
+        if (!_moved)
             return;
 
-        // if (_jumpCount < maxJumps)
-        //     _jumpCount++;
-        
-        Debug.Log($"Jumps performed: {_jumpCount}");
-        
-        _inAir = true;
-        _rigidBody.velocity = _jumpPos * ( jumpSpeed * Time.deltaTime);
+        _moved = false;
+        _rigidBody.velocity = new Vector2(_movePos.x * (_sprint.IsInProgress() ? runSpeed : walkSpeed), 0f) *
+                              Time.deltaTime;
     }
     
+    /// <summary>
+    /// Handle player jump movement
+    /// </summary>
+    private void JumpFixedUpdate()
+    {
+        if (!CanJump())
+            _jumped = false;
+
+        if (!_jumped)
+            return;
+
+        _jumped = false;
+        _handledJump = true;
+        _rigidBody.velocity = new Vector2(_movePos.x, _movePos.y) * (jumpSpeed * Time.deltaTime);
+        _animator.SetTrigger("Jump");
+    }
+    #endregion
+    
+    #region Helper Methods
     /// <summary>
     /// Universal method to flip the player sprite either left or right by local x coordinate scale value
     /// depending on the sprite's current facing direction.
     /// </summary>
     private void FlipPlayerSprite()
     {
-        Vector3 currentScale = gameObject.transform.localScale;
-        currentScale.x = -currentScale.x;
-        gameObject.transform.localScale = currentScale;
+        bool isFacingLeft = transform.localScale.x < 0;
+        if (_movement.ReadValue<Vector2>() == Vector2.zero ||
+            _movement.ReadValue<Vector2>() == Vector2.left && isFacingLeft ||
+            _movement.ReadValue<Vector2>() == Vector2.right && !isFacingLeft ||
+            IsInAttackAnim() || IsInAttackState())
+            return;
+        
+        Vector3 currentScale = transform.localScale;
+        transform.localScale = new Vector3(-currentScale.x, currentScale.y, currentScale.z);
     }
-
+    
     /// <summary>
-    /// Checks if the player is allowed to move
+    /// Checks if the player is allowed to move at all.
     /// </summary>
     /// <returns>Returns true if player is allowed to move, otherwise false.</returns>
     private bool CanMove()
     {
-        return !IsInAttackState() && !IsInAttackAnim() && _isGrounded;
+        return !IsInAttackState() && !IsInAttackAnim();
     }
 
+    /// <summary>
+    /// Checks if the player is allowed to walk.
+    /// </summary>
+    /// <returns>Returns true if player is allowed to walk, otherwise false.</returns>
+    private bool CanWalk()
+    {
+        return !IsInAttackState() && !IsInAttackAnim() && _isGrounded;
+    }
+    
     /// <summary>
     /// Checks if the player is allowed to jump
     /// </summary>
@@ -349,7 +404,7 @@ public class PlayerController : MonoBehaviour
     private bool IsInAttackState()
     {
         bool inAttackState = _lightAttackLeft.inProgress || _lightAttackRight.inProgress ||
-                             _slowAttack.inProgress || _mediumAttack.inProgress;
+                             _slowAttack.inProgress || _throwKnife.inProgress;
         
         return inAttackState;
     }
@@ -380,9 +435,5 @@ public class PlayerController : MonoBehaviour
     {
         return _rigidBody.velocity.magnitude > 0;
     }
-
-    private void AttackCancel(string animationTriggerName)
-    {
-        _animator.ResetTrigger(animationTriggerName);
-    }
+    #endregion
 }

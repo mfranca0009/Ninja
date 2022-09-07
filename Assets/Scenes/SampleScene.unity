@@ -165,7 +165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010470550876, guid: 7ac6bdc2e4b5e47468b8b460ca863a5f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.68
+      value: -2.534
       objectReference: {fileID: 0}
     - target: {fileID: 4000010470550876, guid: 7ac6bdc2e4b5e47468b8b460ca863a5f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -554,9 +554,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 100
   runSpeed: 150
-  jumpDistance: 1
+  jumpDistance: 2
   jumpSpeed: 200
   maxJumps: 2
+  groundRaycastDistance: 2
+  landingRaycastDistance: 0.006
 --- !u!114 &460135256
 MonoBehaviour:
   m_ObjectHideFlags: 0

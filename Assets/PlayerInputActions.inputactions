@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Medium Attack",
+                    "name": "Throw Knife",
                     "type": "Button",
                     "id": "30e3493c-92aa-41d1-80ca-3f9bdab634d1",
                     "expectedControlType": "Button",
@@ -165,7 +165,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Medium Attack",
+                    "action": "Throw Knife",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
