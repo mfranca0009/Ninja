@@ -3,9 +3,16 @@ using UnityEngine;
 public class ItemDropEffectRocket : MonoBehaviour
 {
     #region Serialized Fields
+    [Tooltip("Enable rotate effect")]
     [SerializeField] private bool rotate = true;
+    
+    [Tooltip("The distance to move the target upward")]
     [SerializeField] private float rocketDistance = 2;
+    
+    [Tooltip("The speed the target will move upward at")]
     [SerializeField] private float rocketSpeed = 4;
+    
+    [Tooltip("The speed the target will rotate at")]
     [SerializeField] private float rotationSpeed = 2;
     #endregion
 
@@ -50,6 +57,9 @@ public class ItemDropEffectRocket : MonoBehaviour
     #endregion
 
     #region Fixed Update Methods
+    /// <summary>
+    /// Apply upward force, like a rocket, onto the gameobject
+    /// </summary>
     private void RocketEffectFixedUpdate()
     {
         if (!_applyImpulse || _impulseApplied)
@@ -60,6 +70,9 @@ public class ItemDropEffectRocket : MonoBehaviour
         _rigidbody.AddForce(new Vector2(0, rocketDistance * rocketSpeed), ForceMode2D.Impulse);
     }
 
+    /// <summary>
+    /// Apply torque to make the gameobject spin
+    /// </summary>
     private void RotationEffectFixedUpdate()
     {
         if (!_applyTorque || _torqueApplied)

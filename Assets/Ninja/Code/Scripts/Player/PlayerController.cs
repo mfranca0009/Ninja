@@ -15,12 +15,25 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     #region Serialized Fields
+    [Tooltip("Player walk speed")]
     [SerializeField] private float walkSpeed = 100f;
+    
+    [Tooltip("Player run speed")]
     [SerializeField] private float runSpeed = 150f;
+    
+    [Tooltip("The distance to move the player upward")]
     [SerializeField] private float jumpDistance = 1f;
+    
+    [Tooltip("The speed the player will move upward at")]
     [SerializeField] private float jumpSpeed = 2f;
+    
+    [Tooltip("The amount of allowable jumps the player can use while in-air")]
     [SerializeField] private int maxJumps = 2;
+    
+    [Tooltip("The distance to be checked to determine if the player is in-air")]
     [SerializeField] private float groundRaycastDistance = 2f;
+    
+    [Tooltip("The distance to be checked to determine if the player is about to land")]
     [SerializeField] private float landingRaycastDistance = 1.0f;
     #endregion
     
