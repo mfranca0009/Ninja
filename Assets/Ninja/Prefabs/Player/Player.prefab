@@ -1176,7 +1176,7 @@ Transform:
   m_Children:
   - {fileID: 1863393140278986437}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1766446573384302901
 Animator:
@@ -1280,6 +1280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
   applySmoothing: 1
+  applyXAxisLock: 1
   verticalOffset: 1.5
   horizontalOffset: 2
   smoothTime: 0.4

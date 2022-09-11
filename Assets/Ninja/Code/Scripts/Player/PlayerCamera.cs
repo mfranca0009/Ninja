@@ -9,6 +9,9 @@ public class PlayerCamera : MonoBehaviour
     [Tooltip("Enable camera smoothing")]
     [SerializeField] private bool applySmoothing = true;
     
+    [Tooltip("Enable X-axis lock\nCamera will only follow the X-axis.")]
+    [SerializeField] private bool applyXAxisLock;
+    
     [Tooltip("Vertical offset from the target")]
     [SerializeField] private float verticalOffset = 1.5f;
     
@@ -81,20 +84,38 @@ public class PlayerCamera : MonoBehaviour
         if (!_positionChanged)
             return;
         
+        // Default target position to be used before assessing features enabled.
         Vector3 targetPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset,
             _currentPlayerPosition.y + verticalOffset,
             _currentCameraPosition.z);
 
-        if (applySmoothing)
+        switch (applySmoothing)
         {
-            Vector3 newCameraPosition =
-                Vector3.SmoothDamp(_currentCameraPosition, targetPosition, ref _smoothVelocity, smoothTime,
-                    maxSmoothSpeed);
-
-            camera.transform.position = _currentCameraPosition = newCameraPosition;
+            case true when applyXAxisLock:
+            case true when !applyXAxisLock:
+            {
+                Vector3 xAxisLockPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset,
+                    _currentCameraPosition.y, _currentCameraPosition.z);
+                
+                camera.transform.position = _currentCameraPosition = Vector3.SmoothDamp(_currentCameraPosition,
+                    applyXAxisLock ? xAxisLockPosition : targetPosition,
+                    ref _smoothVelocity, smoothTime, maxSmoothSpeed);
+                break;   
+            }
+            case false when applyXAxisLock:
+            {
+                targetPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset, _currentCameraPosition.y,
+                    _currentCameraPosition.z);
+                
+                camera.transform.position = _currentCameraPosition = targetPosition;
+                break;   
+            }
+            default:
+            {
+                camera.transform.position = _currentCameraPosition = targetPosition;
+                break;   
+            }
         }
-        else
-            camera.transform.position = _currentCameraPosition = targetPosition;
 
         _positionChanged = false;
     }
