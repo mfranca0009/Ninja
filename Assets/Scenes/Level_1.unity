@@ -284,6 +284,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 4-wide-platform-block
       objectReference: {fileID: 0}
+    - target: {fileID: 4336257942567812422, guid: ed7c8354c89d7b84580dbf82ae56e7c0, type: 3}
+      propertyPath: m_UsedByEffector
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7297458479890054317, guid: ed7c8354c89d7b84580dbf82ae56e7c0, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -336,30 +340,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7297458479890054317, guid: ed7c8354c89d7b84580dbf82ae56e7c0, type: 3}
   m_PrefabInstance: {fileID: 832789257}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1016744998 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5734839134372352785, guid: 9fed25258db47654f947b5937e899eee, type: 3}
-  m_PrefabInstance: {fileID: 5734839133071831244}
-  m_PrefabAsset: {fileID: 0}
---- !u!251 &1016745003
-PlatformEffector2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1016744998}
-  m_Enabled: 1
-  m_UseColliderMask: 1
-  m_ColliderMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RotationalOffset: 0
-  m_UseOneWay: 1
-  m_UseOneWayGrouping: 1
-  m_SurfaceArc: 180
-  m_UseSideFriction: 0
-  m_UseSideBounce: 0
-  m_SideArc: 1
 --- !u!4 &1344545715 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5734839133879489407, guid: 9fed25258db47654f947b5937e899eee, type: 3}
@@ -399,6 +379,30 @@ Transform:
   m_Father: {fileID: 71703647}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1743665473 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3408669336635530780, guid: ed7c8354c89d7b84580dbf82ae56e7c0, type: 3}
+  m_PrefabInstance: {fileID: 832789257}
+  m_PrefabAsset: {fileID: 0}
+--- !u!251 &1743665478
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743665473}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &2075302197
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,22 +666,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5734839134372352786, guid: 9fed25258db47654f947b5937e899eee, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5734839134372352787, guid: 9fed25258db47654f947b5937e899eee, type: 3}
-      propertyPath: m_Size.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5734839134372352787, guid: 9fed25258db47654f947b5937e899eee, type: 3}
-      propertyPath: m_EdgeRadius
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5734839134372352787, guid: 9fed25258db47654f947b5937e899eee, type: 3}
-      propertyPath: m_UsedByEffector
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 9fed25258db47654f947b5937e899eee, type: 3}
@@ -689,6 +677,14 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: runSpeed
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: walkSpeed
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 1860446570756328647, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_Name
       value: Player
