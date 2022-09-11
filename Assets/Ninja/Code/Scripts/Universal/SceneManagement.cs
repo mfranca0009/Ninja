@@ -23,4 +23,9 @@ public class SceneManagement : MonoBehaviour
         Debug.Log(currentScene.name);
         Debug.Log(currentScene.buildIndex);
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
