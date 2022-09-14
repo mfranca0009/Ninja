@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6580919943572904695}
   m_Layer: 0
-  m_Name: Pit
+  m_Name: pit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,11 +196,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7745520357183932352}
   - {fileID: 3618321073892443488}
+  - {fileID: 7745520357183932352}
   - {fileID: 5170379785981507303}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7799965155109060791
 PrefabInstance:

@@ -4442,7 +4442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5321437992695918745}
   m_Layer: 0
-  m_Name: Background-Wall
+  m_Name: background-wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
