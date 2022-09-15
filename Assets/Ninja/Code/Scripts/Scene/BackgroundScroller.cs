@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FollowCamera : MonoBehaviour
+public class BackgroundScroller : MonoBehaviour
 {
     [Tooltip("How closely the object will move with the camera (100 will have the object unmoving, always in frame)")]
     public float followCameraAccuracy = 100;
