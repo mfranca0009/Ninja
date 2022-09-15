@@ -29,11 +29,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4592413736032662119}
-  - {fileID: 4592413737568094019}
-  - {fileID: 4592413736537923874}
   - {fileID: 4790067134801894296}
   - {fileID: 7550556727320049644}
   - {fileID: 7550556728082917002}
+  - {fileID: 4592413737568094019}
+  - {fileID: 4592413736537923874}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -45,18 +45,6 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 6708821698260826926}
     m_Modifications:
-    - target: {fileID: 1940538504608791266, guid: 3b24fd225e519f542abd6d24b3e75f92, type: 3}
-      propertyPath: m_Name
-      value: Pit-Right
-      objectReference: {fileID: 0}
-    - target: {fileID: 3167863589607403231, guid: 3b24fd225e519f542abd6d24b3e75f92, type: 3}
-      propertyPath: m_Name
-      value: Pit-Left
-      objectReference: {fileID: 0}
-    - target: {fileID: 5170379785981507298, guid: 3b24fd225e519f542abd6d24b3e75f92, type: 3}
-      propertyPath: m_Name
-      value: Kill-Plane
-      objectReference: {fileID: 0}
     - target: {fileID: 6580919943572904695, guid: 3b24fd225e519f542abd6d24b3e75f92, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -100,10 +88,6 @@ PrefabInstance:
     - target: {fileID: 6580919943572904695, guid: 3b24fd225e519f542abd6d24b3e75f92, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7745520357183932352, guid: 3b24fd225e519f542abd6d24b3e75f92, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 19.085003
       objectReference: {fileID: 0}
     - target: {fileID: 7896933612160334862, guid: 3b24fd225e519f542abd6d24b3e75f92, type: 3}
       propertyPath: m_Name
