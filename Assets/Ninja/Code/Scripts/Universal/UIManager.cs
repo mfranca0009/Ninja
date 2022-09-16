@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
 		//Checks to make sure MainLevel is the loaded level
 		Scene currentScene = SceneManager.GetActiveScene();
 		if (currentScene.name == "_Main") { 
+			// TODO turn on once we determine the bool for when the player is dead/alive
 			//playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 		}
 	}
