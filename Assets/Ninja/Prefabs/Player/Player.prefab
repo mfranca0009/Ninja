@@ -1273,9 +1273,11 @@ MonoBehaviour:
   walkSpeed: 70
   runSpeed: 120
   jumpSpeed: 150
+  gravityForce: 1
   jumpDistance: 2
   maxJumps: 2
   landingTolerance: 0.003
+  artificialGravityTimer: 0.45
 --- !u!114 &8862957453690271467
 MonoBehaviour:
   m_ObjectHideFlags: 0

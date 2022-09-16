@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     
     [Tooltip("The velocity the player will move upward at")]
     [SerializeField] private float jumpSpeed = 150f;
-    
+
     [Header("Movement Distances")]
     [Tooltip("The distance to move the player upward")]
     [SerializeField] private float jumpDistance = 2f;

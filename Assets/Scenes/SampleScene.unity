@@ -1235,6 +1235,14 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: jumpSpeed
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: jumpDistance
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1860446570756328647, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1282,6 +1290,18 @@ PrefabInstance:
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7549300170648140738, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: m_Mass
+      value: 1.643236
+      objectReference: {fileID: 0}
+    - target: {fileID: 7549300170648140738, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7549300170648140738, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: m_GravityScale
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8862957453690271467, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: camera
