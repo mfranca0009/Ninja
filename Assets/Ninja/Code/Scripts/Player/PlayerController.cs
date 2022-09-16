@@ -73,8 +73,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnEnable()
-    {
-        _movement = _playerInputActions.Player.Movement;
+    { _movement = _playerInputActions.Player.Movement;
         _movement.performed += OnMove;
         _movement.canceled += OnMoveCancel;
         _movement.Enable();
