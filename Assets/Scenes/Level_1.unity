@@ -1636,14 +1636,6 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: runSpeed
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: walkSpeed
-      value: 70
-      objectReference: {fileID: 0}
     - target: {fileID: 1860446570756328647, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1651,14 +1643,6 @@ PrefabInstance:
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1699,10 +1683,6 @@ PrefabInstance:
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2345012281786925401, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: m_Camera
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8862957453690271467, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: camera
