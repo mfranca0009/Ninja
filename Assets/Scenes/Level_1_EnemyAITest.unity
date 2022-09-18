@@ -1352,6 +1352,14 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: runSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: walkSpeed
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 1000013304306144, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: m_Name
       value: Rogue_05
@@ -1399,6 +1407,26 @@ PrefabInstance:
     - target: {fileID: 4000011914616612, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2082631852691545196, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: m_Mass
+      value: 1.6032361
+      objectReference: {fileID: 0}
+    - target: {fileID: 2082631852691545196, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199308842321572621, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: combatReach
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199308842321572621, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: heavyAttackDmg
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8199308842321572621, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: lightAttackDmg
+      value: 12.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

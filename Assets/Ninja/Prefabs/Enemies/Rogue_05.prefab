@@ -1694,7 +1694,7 @@ Transform:
   - {fileID: 4000010503939236}
   - {fileID: 1328465940432135496}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &95000010398391834
 Animator:
@@ -1727,8 +1727,8 @@ Rigidbody2D:
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
+  m_UseAutoMass: 1
+  m_Mass: 1.6032361
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -1775,8 +1775,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f42f0ceb9c3ba49bddc2af163c0a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 100
-  runSpeed: 130
+  walkSpeed: 70
+  runSpeed: 100
   applyWaypointMovement: 0
   applyRandomMovement: 1
   loopWaypointPath: 1
@@ -1802,8 +1802,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f1fa9c171e027845bdd293e608b05da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightAttackDmg: 0
-  heavyAttackDmg: 0
+  lightAttackDmg: 12.5
+  heavyAttackDmg: 25
+  combatReach: 1.5
+  combatReachTolerance: 0.03
+  timeBetweenAttacks: 1.5
 --- !u!114 &7674412284704653532
 MonoBehaviour:
   m_ObjectHideFlags: 0

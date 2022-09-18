@@ -37,10 +37,10 @@ public class EnemyMovement : MonoBehaviour
     [Header("Movement Speeds")]
     
     [Tooltip("How fast the enemy AI will walk")]
-    [SerializeField] private float walkSpeed = 100f;
+    [SerializeField] private float walkSpeed = 70f;
     
     [Tooltip("How fast the enemy AI will run")]
-    [SerializeField] private float runSpeed = 130f;
+    [SerializeField] private float runSpeed = 100f;
 
     [Header("Movement Type")]
     
