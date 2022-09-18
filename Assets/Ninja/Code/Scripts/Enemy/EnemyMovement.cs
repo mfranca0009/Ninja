@@ -30,7 +30,7 @@ public class WaypointInfo
 // TODO: Implement sound detection based on player footsteps?
 // TODO: Implement capability of jumping?
 
-public class GenericEnemyAI : MonoBehaviour
+public class EnemyMovement : MonoBehaviour
 {
     #region Serialized Fields
     
@@ -94,6 +94,10 @@ public class GenericEnemyAI : MonoBehaviour
     private Animator _animator;
     private Vector2 _homePos;
     private bool _isGrounded;
+    
+    // Enemy Scripts
+    private Health _health;
+    private EnemyCombat _enemyCombat;
 
     // Random Movement System
     private Vector2 _destPos;
@@ -116,6 +120,8 @@ public class GenericEnemyAI : MonoBehaviour
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _health = GetComponent<Health>();
+        _enemyCombat = GetComponent<EnemyCombat>();
         
         // Only one movement type can be active at a time, default to random movement.
         if (applyWaypointMovement && applyRandomMovement)
@@ -145,6 +151,7 @@ public class GenericEnemyAI : MonoBehaviour
     {
         RandomMovementFixedUpdate();
         WaypointMovementFixedUpdate();
+        ChaseMovementFixedUpdate();
     }
 
     #endregion
@@ -157,7 +164,8 @@ public class GenericEnemyAI : MonoBehaviour
     /// </summary>
     private void RandomMovementFixedUpdate()
     {
-        if (!applyRandomMovement || !_isGrounded || _randomMoveDelayed)
+        if (!applyRandomMovement || !_isGrounded || _randomMoveDelayed || _enemyCombat.ChaseTarget ||
+            _enemyCombat.InCombat)
             return;
         
         Vector2 currentPos = _rigidBody.position;
@@ -201,7 +209,8 @@ public class GenericEnemyAI : MonoBehaviour
     {
         // Check conditions before proceeding with waypoint movement.
         if (!applyWaypointMovement || waypoints.Length == 0 || !_isGrounded ||
-            _waypointPathDelayed || (_currentWpId == waypoints.Length && !loopWaypointPath))
+            _waypointPathDelayed || (_currentWpId == waypoints.Length && !loopWaypointPath) ||
+            _enemyCombat.ChaseTarget || _enemyCombat.InCombat)
             return;
 
         // Looping waypoint from reverse or beginning, this will initially correct the direction
@@ -259,6 +268,21 @@ public class GenericEnemyAI : MonoBehaviour
             else
                 _currentWpId++;
         }
+    }
+
+    private void ChaseMovementFixedUpdate()
+    {
+        if (!_enemyCombat.ChaseTarget || _enemyCombat.InCombat)
+            return;
+        
+        FlipSprite();
+        
+        Vector2 currentPos = _rigidBody.position;
+        // float currentSpeed = waypoint.shouldRun ? runSpeed : walkSpeed;
+
+        _rigidBody.velocity =
+            new Vector2((_enemyCombat.Target.transform.position.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
+                        * runSpeed, 0f) * Time.deltaTime;
     }
     
     #endregion
@@ -347,11 +371,32 @@ public class GenericEnemyAI : MonoBehaviour
     private void FlipSprite()
     {
         bool isFacingLeft = transform.localScale.x < 0;
-        if (_rigidBody.velocity.x > 0 && !isFacingLeft || _rigidBody.velocity.x < 0 && isFacingLeft)
+        if (_rigidBody.velocity.x > 0 && !isFacingLeft || _rigidBody.velocity.x < 0 && isFacingLeft ||
+            _rigidBody.velocity.x == 0)
             return;
 
         Vector3 currentScale = transform.localScale;
         transform.localScale = new Vector3(-currentScale.x, currentScale.y, currentScale.z);
+    }
+
+    /// <summary>
+    /// Checks whether the AI can proceed with waypoint movement or not
+    /// </summary>
+    /// <returns>Returns true if AI can continue waypoint movement, otherwise false.</returns>
+    private bool AllowWaypointMovement()
+    {
+        // TODO
+        return false;
+    }
+
+    /// <summary>
+    /// Checks whether the AI can proceed with random movement or not
+    /// </summary>
+    /// <returns>Returns true if AI can continue random movement, otherwise false.</returns>
+    private bool AllowRandomMovement()
+    {
+        // TODO
+        return false;
     }
     
     #endregion
