@@ -14,11 +14,8 @@ public class EnemyCombat : MonoBehaviour
     [SerializeField] private float heavyAttackDmg = 25f;
 
     [Tooltip("The distance from the target that is acceptable to trigger combat")] 
-    [SerializeField] private float combatReach = 1.5f;
-
-    [Tooltip("Acceptable tolerance for combat reach")] 
-    [SerializeField] private float combatReachTolerance = 0.03f;
-
+    [SerializeField] private float combatReach = 2.0f;
+    
     [Tooltip("Wait time between attacks")] 
     [SerializeField] private float timeBetweenAttacks = 1.5f;
 
@@ -83,8 +80,7 @@ public class EnemyCombat : MonoBehaviour
             return;
         }
 
-        if (Vector2.Distance(Target.transform.position, transform.position)
-            <= combatReach + combatReachTolerance)
+        if (Vector2.Distance(Target.transform.position, transform.position) <= combatReach)
         {
             InCombat = true;
             ExecuteRandomMeleeAttack();

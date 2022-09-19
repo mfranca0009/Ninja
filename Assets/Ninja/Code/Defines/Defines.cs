@@ -1,5 +1,5 @@
 
-public enum AnimationLayers : int
+public enum AnimationLayers
 {
     BaseAnimLayer = 0
 }

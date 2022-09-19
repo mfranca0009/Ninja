@@ -1352,14 +1352,6 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
-      propertyPath: runSpeed
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
-      propertyPath: walkSpeed
-      value: 70
-      objectReference: {fileID: 0}
     - target: {fileID: 1000013304306144, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: m_Name
       value: Rogue_05
@@ -1408,25 +1400,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2082631852691545196, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
-      propertyPath: m_Mass
-      value: 1.6032361
-      objectReference: {fileID: 0}
-    - target: {fileID: 2082631852691545196, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
-      propertyPath: m_UseAutoMass
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8199308842321572621, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: combatReach
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8199308842321572621, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
-      propertyPath: heavyAttackDmg
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 8199308842321572621, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
-      propertyPath: lightAttackDmg
-      value: 12.5
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1694,18 +1670,6 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: runSpeed
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 1046993377088705601, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: walkSpeed
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 1766446573384302901, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: aa96c0ae21d1c604ca77e77dd241d910, type: 2}
     - target: {fileID: 1860446570756328647, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1713,14 +1677,6 @@ PrefabInstance:
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1761,10 +1717,6 @@ PrefabInstance:
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2345012281786925401, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
-      propertyPath: m_Camera
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8862957453690271467, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: camera

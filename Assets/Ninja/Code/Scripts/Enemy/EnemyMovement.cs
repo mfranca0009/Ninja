@@ -331,34 +331,6 @@ public class EnemyMovement : MonoBehaviour
         // Retrieve initial ground check
         _isGrounded = _rigidBody.IsTouchingLayers(LayerMask.GetMask("Ground"));
         _animator.SetBool("IsGrounded", _isGrounded);
-    
-        // if (!_isGrounded)
-        //     _inAir = true;
-        //
-        // // Update box collider bounds, then proceed to raycast landing check.
-        // _boxBounds = _boxCollider.bounds;
-        // RaycastHit2D hitResult = Physics2D.BoxCast(_boxBounds.center, _boxBounds.size,
-        //     0f, Vector2.down, landingTolerance, LayerMask.NameToLayer("Ground"));
-        //     
-        // if (hitResult.collider != null)
-        //     _isLanding = true;
-        //
-        // // Update animator landing state
-        // _animator.SetBool("IsLanding", _isLanding);
-        //
-        // if (!_isGrounded)
-        //     return;
-        //
-        // // From this point onward, execute clean-up from a complete jump (jump, in-air, land).
-        //
-        // // Clear horizontal velocity when landing from a jump.
-        // if (_inAir && _isLanding)
-        //     _rigidBody.velocity = new Vector2(0, _rigidBody.velocity.y);
-        //
-        // // Reset
-        // _inAir = false;
-        // _jumpCount = 0;
-        // _isLanding = false;
     }
 
     #endregion
