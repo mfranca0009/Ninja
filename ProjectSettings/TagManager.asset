@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Enemy
   - ShowOnPause
   - ShowOnFinish
-  - Cloud
   layers:
   - Default
   - TransparentFX
@@ -14,10 +14,10 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - PlayerMeleeAttack
+  - Enemy
+  - EnemyMeleeAttack
   - 
   - 
   - 
