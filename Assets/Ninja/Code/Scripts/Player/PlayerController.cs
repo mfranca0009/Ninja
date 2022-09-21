@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,26 +14,27 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     #region Serialized Fields
+    [Header("Movement Speeds")]
     [Tooltip("Player walk speed")]
-    [SerializeField] private float walkSpeed = 100f;
+    [SerializeField] private float walkSpeed = 70f;
     
     [Tooltip("Player run speed")]
-    [SerializeField] private float runSpeed = 150f;
+    [SerializeField] private float runSpeed = 120f;
     
+    [Tooltip("The velocity the player will move upward at")]
+    [SerializeField] private float jumpSpeed = 150f;
+
+    [Header("Movement Distances")]
     [Tooltip("The distance to move the player upward")]
-    [SerializeField] private float jumpDistance = 1f;
-    
-    [Tooltip("The speed the player will move upward at")]
-    [SerializeField] private float jumpSpeed = 2f;
-    
+    [SerializeField] private float jumpDistance = 2f;
+
+    [Header("Movement Restrictions")]
     [Tooltip("The amount of allowable jumps the player can use while in-air")]
     [SerializeField] private int maxJumps = 2;
-    
-    [Tooltip("The distance to be checked to determine if the player is in-air")]
-    [SerializeField] private float groundRaycastDistance = 2f;
-    
-    [Tooltip("The distance to be checked to determine if the player is about to land")]
-    [SerializeField] private float landingRaycastDistance = 1.0f;
+
+    [Header("Movement Tolerances")]
+    [Tooltip("Raycast distance for transitioning from in-air to land")]
+    [SerializeField] private float landingTolerance = 0.006f;
     #endregion
     
     #region Private Fields
@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 _movePos;
     private Rigidbody2D _rigidBody;
     private Animator _animator;
+    private BoxCollider2D _boxCollider;
+    private Bounds _boxBounds;
     private bool _moved;
     private bool _jumped;
     private bool _handledJump;
@@ -64,6 +66,8 @@ public class PlayerController : MonoBehaviour
         _playerInputActions = new PlayerInputActions();
         _rigidBody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _boxCollider = GetComponent<BoxCollider2D>();
+        _boxBounds = _boxCollider.bounds;
     }
 
     private void OnEnable()
@@ -120,13 +124,15 @@ public class PlayerController : MonoBehaviour
     {
         // Update ground check every update.
         GroundCheckUpdate();
-
+        
         // Update player movement input.
         MovementInputUpdate();
         
         // Update velocity every update.
-        _animator.SetFloat("Velocity", _rigidBody.velocity.magnitude);
-        
+        _animator.SetFloat("VelocityX", _rigidBody.velocity.x);
+        _animator.SetFloat("VelocityY", _rigidBody.velocity.y);
+        _animator.SetBool("HasVelocityX", _rigidBody.velocity.x != 0);
+
         // Update sprint every update.
         _animator.SetBool("IsSprinting", _sprint.inProgress);
     }
@@ -219,13 +225,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnMoveCancel(InputAction.CallbackContext obj)
     {
-        if (!IsMoving() || !_isGrounded)
-            return;
-        
         Debug.Log("Movement ended!");
-
-        // zero out horizontal velocity
-        _rigidBody.velocity = new Vector2(0, _rigidBody.velocity.y);
+        
+        // Clear horizontal velocity
+        if (IsMoving() && _isGrounded)
+            _rigidBody.velocity = new Vector2(0, _rigidBody.velocity.y);
     }
     
     private void OnJump(InputAction.CallbackContext obj)
@@ -235,7 +239,7 @@ public class PlayerController : MonoBehaviour
         
         _jumpCount++;
 
-        Debug.Log($"Jumping!\n Jumps Performed: {_jumpCount + 1}");
+        Debug.Log($"Jumping!\n Jumps Performed: {_jumpCount}");
     }
 
     private void OnJumpCancel(InputAction.CallbackContext obj)
@@ -247,46 +251,41 @@ public class PlayerController : MonoBehaviour
 
     #region Update Methods
     /// <summary>
-    /// Update player ground state to determine if grounded or in-air.
+    /// Update player ground state to determine if grounded, in-air, or landing.
     /// </summary>
     private void GroundCheckUpdate()
     {
+        // Retrieve initial ground check
         _isGrounded = _rigidBody.IsTouchingLayers(LayerMask.GetMask("Ground"));
         _animator.SetBool("IsGrounded", _isGrounded);
 
-        if (_isGrounded)
-        {
-            _inAir = false;
-            _jumpCount = 0;
-            _isLanding = false;
-        }
-
-        // Default 5 for hit results for now (?)
-        RaycastHit2D[] hitResults = new RaycastHit2D[5];
-
-        // Set in air if player is over the "landing" distance to stop any issues when just coming off the ground.
         if (!_isGrounded)
-        {
-            int results = _rigidBody.Cast(Vector2.down, hitResults, groundRaycastDistance);
-            if (results != 0)
-                if (hitResults.Any(hit =>
-                        hit.transform != null && hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground") &&
-                        hit.distance > landingRaycastDistance))
-                    _inAir = true;
-        }
-
-        // Trigger landing animation if we've found a ground layer within the set "landing" distance.
-        if (_inAir)
-        {
-            int results = _rigidBody.Cast(Vector2.down, hitResults, 2.0f);
-            if (results != 0)
-                if (hitResults.Any(hit =>
-                        hit.transform != null && hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground") &&
-                        hit.distance <= landingRaycastDistance))
-                    _isLanding = true;
-        }
-
+            _inAir = true;
+        
+        // Update box collider bounds, then proceed to raycast landing check.
+        _boxBounds = _boxCollider.bounds;
+        RaycastHit2D hitResult = Physics2D.BoxCast(_boxBounds.center, _boxBounds.size,
+            0f, Vector2.down, landingTolerance, LayerMask.NameToLayer("Ground"));
+            
+        if (hitResult.collider != null)
+            _isLanding = true;
+        
+        // Update animator landing state
         _animator.SetBool("IsLanding", _isLanding);
+        
+        if (!_isGrounded)
+            return;
+
+        // From this point onward, execute clean-up from a complete jump (jump, in-air, land).
+        
+        // Clear horizontal velocity when landing from a jump.
+        if (_inAir && _isLanding)
+            _rigidBody.velocity = new Vector2(0, _rigidBody.velocity.y);
+        
+        // Reset
+        _inAir = false;
+        _jumpCount = 0;
+        _isLanding = false;
     }
 
     /// <summary>
@@ -296,22 +295,25 @@ public class PlayerController : MonoBehaviour
     {
         switch (_movement.inProgress)
         {
-            // Move and Jump
             case true when _jump.inProgress && !_handledJump:
                 _moved = true;
                 _jumped = true;
                 _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), jumpDistance);
                 break;
-            // Jump only
             case false when _jump.inProgress && !_handledJump:
                 _moved = false;
                 _jumped = true;
                 _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), jumpDistance);
                 break;
-            // Move only
             case true when !_jump.inProgress:
-                _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
                 _moved = true;
+                _jumped = false;
+                _movePos = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+                break;
+            default:
+                _moved = false;
+                _jumped = false;
+                _movePos = Vector2.zero;
                 break;
         }
     }
@@ -332,8 +334,7 @@ public class PlayerController : MonoBehaviour
 
         if (!_moved)
             return;
-
-        _moved = false;
+        
         _rigidBody.velocity = new Vector2(_movePos.x * (_sprint.IsInProgress() ? runSpeed : walkSpeed), 0f) *
                               Time.deltaTime;
     }
@@ -349,7 +350,6 @@ public class PlayerController : MonoBehaviour
         if (!_jumped)
             return;
 
-        _jumped = false;
         _handledJump = true;
         _rigidBody.velocity = new Vector2(_movePos.x, _movePos.y) * (jumpSpeed * Time.deltaTime);
         _animator.SetTrigger("Jump");
@@ -441,12 +441,30 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the player is moving, any time the player has velocity would indicate movement.
+    /// Checks if the player is moving.
     /// </summary>
     /// <returns>Returns true if player is moving, otherwise false.</returns>
     private bool IsMoving()
     {
-        return _rigidBody.velocity.magnitude > 0;
+        return _rigidBody.velocity.x != 0;
+    }
+
+    /// <summary>
+    /// Checks if the player is jumping (positive velocity on Y axis)
+    /// </summary>
+    /// <returns>Returns true if player is jumping, otherwise false.</returns>
+    private bool IsJumping()
+    {
+        return _rigidBody.velocity.y > 0;
+    }
+
+    /// <summary>
+    /// Checks if the player is falling (negative velocity on Y axis)
+    /// </summary>
+    /// <returns>Returns true if player is falling, otherwise false.</returns>
+    private bool IsFalling()
+    {
+        return _rigidBody.velocity.y < 0;
     }
     #endregion
 }
