@@ -577,7 +577,7 @@ GameObject:
   - component: {fileID: 354292288}
   - component: {fileID: 354292287}
   - component: {fileID: 354292286}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: LevelWallEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
