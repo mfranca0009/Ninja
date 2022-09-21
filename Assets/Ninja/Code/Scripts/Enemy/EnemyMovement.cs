@@ -19,14 +19,7 @@ public class WaypointInfo
     public bool WaypointReached { get; set; }
 }
 
-
-// NORMAL FUNCTIONALITY
-// TODO: Implement sight detection to track when player is in front
-// TODO: Implement chase behavior when sight detection is complete
-// TODO: Implement "return to pathing" behavior to stop tracking player when they've left sight range
-// TODO: Implement combat capability (health/death, attacking, etc.)
-
-// EXTRA FEATURES
+// POTENTIAL EXTRA FEATURES
 // TODO: Implement sound detection based on player footsteps?
 // TODO: Implement capability of jumping?
 
@@ -50,10 +43,10 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("Enable random movement")]
     [SerializeField] private bool applyRandomMovement = true;
 
-    [Header("Waypoint Movement Settings")] 
-    
+    [Header("Waypoint Movement Settings")]
     [Tooltip("Enable looping of the waypoint path from start-to-finish and finish-to-start")]
-    [SerializeField] private bool loopWaypointPath = true;
+    [SerializeField]
+    private bool loopWaypointPath;
     
     [Tooltip("An array of waypoints that can create a waypoint path")]
     [SerializeField] private WaypointInfo[] waypoints;
@@ -90,6 +83,7 @@ public class EnemyMovement : MonoBehaviour
     #endregion
     
     #region Private Fields
+    
     private Rigidbody2D _rigidBody;
     private Animator _animator;
     private Vector2 _homePos;
@@ -133,6 +127,9 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (_health.Dead)
+            return;
+        
         GroundCheckUpdate();
 
         if (_isGrounded && _homePos == Vector2.zero)
@@ -149,6 +146,9 @@ public class EnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_health.Dead)
+            return;
+        
         RandomMovementFixedUpdate();
         WaypointMovementFixedUpdate();
         ChaseMovementFixedUpdate();
@@ -164,10 +164,9 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void RandomMovementFixedUpdate()
     {
-        if (!applyRandomMovement || !_isGrounded || _randomMoveDelayed || _enemyCombat.ChaseTarget ||
-            _enemyCombat.InCombat)
+        if (!AllowRandomMovement())
             return;
-        
+
         Vector2 currentPos = _rigidBody.position;
         
         if (_destReached || _destPos == Vector2.zero)
@@ -207,29 +206,25 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void WaypointMovementFixedUpdate()
     {
-        // Check conditions before proceeding with waypoint movement.
-        if (!applyWaypointMovement || waypoints.Length == 0 || !_isGrounded ||
-            _waypointPathDelayed || (_currentWpId == waypoints.Length && !loopWaypointPath) ||
-            _enemyCombat.ChaseTarget || _enemyCombat.InCombat)
+        if (!AllowWaypointMovement())
             return;
-
+        
         // Looping waypoint from reverse or beginning, this will initially correct the direction
         // and reset all waypoints that were previously reached.
-        if (_currentWpId == waypoints.Length || _currentWpId == 0)
+        switch (_currentWpId == waypoints.Length)
         {
-            if (_currentWpId == waypoints.Length)
-            {
+            case true:
                 _currentWpId--;
                 _returningToFirstPoint = true;
-            }
-            else
+                ResetWaypoints();
+                break;
+            case false when _currentWpId == 0:
                 _returningToFirstPoint = false;
-
-            foreach (WaypointInfo wp in waypoints)
-                wp.WaypointReached = false;
+                ResetWaypoints();
+                break;
         }
 
-        // Retrieve current AI position and waypoint we are on.
+            // Retrieve current AI position and waypoint we are on.
         Vector2 currentPos = _rigidBody.position;
         WaypointInfo waypoint = waypoints[_currentWpId];
 
@@ -270,6 +265,10 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// AI chase movement update.
+    /// Only used during combat engagement with a target and the target is not within combat reach.
+    /// </summary>
     private void ChaseMovementFixedUpdate()
     {
         if (!_enemyCombat.ChaseTarget || _enemyCombat.InCombat)
@@ -278,7 +277,6 @@ public class EnemyMovement : MonoBehaviour
         FlipSprite();
         
         Vector2 currentPos = _rigidBody.position;
-        // float currentSpeed = waypoint.shouldRun ? runSpeed : walkSpeed;
 
         _rigidBody.velocity =
             new Vector2((_enemyCombat.Target.transform.position.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
@@ -290,7 +288,7 @@ public class EnemyMovement : MonoBehaviour
     #region Update Methods
     
     /// <summary>
-    /// Update the timer for a waypoint delay that was triggered
+    /// Update the timer for a waypoint delay that was triggered.
     /// </summary>
     private void WaypointDelayUpdate()
     {
@@ -307,7 +305,7 @@ public class EnemyMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Update the timer for a random movement position delay that was triggered
+    /// Update the timer for a random movement position delay that was triggered.
     /// </summary>
     private void RandomMoveDelayUpdate()
     {
@@ -324,7 +322,7 @@ public class EnemyMovement : MonoBehaviour
     }
     
     /// <summary>
-    /// Update check to determine if AI is on ground or in-air/falling
+    /// Update check to determine if AI is on ground or in-air/falling.
     /// </summary>
     private void GroundCheckUpdate()
     {
@@ -338,7 +336,7 @@ public class EnemyMovement : MonoBehaviour
     #region Helper Methods
     
     /// <summary>
-    /// Flip sprite based on current facing direction compared to the rigidbody's velocity if needed
+    /// Flip sprite based on current facing direction compared to the rigidbody's velocity if needed.
     /// </summary>
     private void FlipSprite()
     {
@@ -352,23 +350,34 @@ public class EnemyMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks whether the AI can proceed with waypoint movement or not
+    /// Checks whether the AI can proceed with waypoint movement or not.
     /// </summary>
     /// <returns>Returns true if AI can continue waypoint movement, otherwise false.</returns>
     private bool AllowWaypointMovement()
     {
-        // TODO
-        return false;
+        return applyWaypointMovement && waypoints.Length != 0 && _isGrounded &&
+               !_waypointPathDelayed && (_currentWpId != waypoints.Length || loopWaypointPath) &&
+               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat;
     }
 
     /// <summary>
-    /// Checks whether the AI can proceed with random movement or not
+    /// Checks whether the AI can proceed with random movement or not.
     /// </summary>
     /// <returns>Returns true if AI can continue random movement, otherwise false.</returns>
     private bool AllowRandomMovement()
     {
-        // TODO
-        return false;
+        return applyRandomMovement && _isGrounded && !_randomMoveDelayed &&
+               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat;
+    }
+
+
+    /// <summary>
+    /// Reset all waypoints to be marked as not reached, used primarily when looping the waypoint path
+    /// </summary>
+    private void ResetWaypoints()
+    {
+        foreach (WaypointInfo wp in waypoints)
+            wp.WaypointReached = false;
     }
     
     #endregion

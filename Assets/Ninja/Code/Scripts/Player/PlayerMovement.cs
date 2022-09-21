@@ -45,9 +45,9 @@ public class PlayerMovement : MonoBehaviour
     private InputAction _jump;
     private InputAction _sprint;
     private Vector2 _movePos;
-    private Rigidbody2D _rigidBody;
+    private Rigidbody2D _rigidBody2D;
     private Animator _animator;
-    private BoxCollider2D _boxCollider;
+    private BoxCollider2D _boxCollider2D;
     private Bounds _boxBounds;
     private bool _moved;
     private bool _jumped;
@@ -67,10 +67,10 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _playerInputActions = new PlayerInputActions();
-        _rigidBody = GetComponent<Rigidbody2D>();
+        _rigidBody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _boxCollider = GetComponent<BoxCollider2D>();
-        _boxBounds = _boxCollider.bounds;
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+        _boxBounds = _boxCollider2D.bounds;
 
         _health = GetComponent<Health>();
         _playerCombat = GetComponent<PlayerCombat>();
@@ -113,9 +113,9 @@ public class PlayerMovement : MonoBehaviour
         MovementInputUpdate();
         
         // Update velocity every update.
-        _animator.SetFloat("VelocityX", _rigidBody.velocity.x);
-        _animator.SetFloat("VelocityY", _rigidBody.velocity.y);
-        _animator.SetBool("HasVelocityX", _rigidBody.velocity.x != 0);
+        _animator.SetFloat("VelocityX", _rigidBody2D.velocity.x);
+        _animator.SetFloat("VelocityY", _rigidBody2D.velocity.y);
+        _animator.SetBool("HasVelocityX", _rigidBody2D.velocity.x != 0);
 
         // Update sprint every update.
         _animator.SetBool("IsSprinting", _sprint.inProgress);
@@ -158,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
         
         // Clear horizontal velocity
         if (IsMoving() && IsGrounded())
-            _rigidBody.velocity = new Vector2(0, _rigidBody.velocity.y);
+            _rigidBody2D.velocity = new Vector2(0, _rigidBody2D.velocity.y);
     }
     
     private void OnJump(InputAction.CallbackContext obj)
@@ -190,15 +190,23 @@ public class PlayerMovement : MonoBehaviour
         bool isGrounded = IsGrounded();
         _animator.SetBool("IsGrounded", isGrounded);
 
-        if (!isGrounded)
-            _inAir = true;
-        
+        switch (isGrounded)
+        {
+            // Prevent the remaining fall velocity when landed so it does not trigger fall animation. 
+            case true when IsFalling():
+                _rigidBody2D.velocity = new Vector2(_rigidBody2D.velocity.x, 0f);
+                break;
+            case false:
+                _inAir = true;
+                break;
+        }
+
         // Update box collider bounds, then proceed to raycast landing check.
-        _boxBounds = _boxCollider.bounds;
+        _boxBounds = _boxCollider2D.bounds;
         RaycastHit2D hitResult = Physics2D.BoxCast(_boxBounds.center, _boxBounds.size,
             0f, Vector2.down, landingTolerance, LayerMask.NameToLayer("Ground"));
-            
-        if (hitResult.collider != null)
+
+        if (_inAir && !hitResult.collider)
             _isLanding = true;
         
         // Update animator landing state
@@ -211,8 +219,8 @@ public class PlayerMovement : MonoBehaviour
         
         // Clear horizontal velocity when landing from a jump.
         if (_inAir && _isLanding)
-            _rigidBody.velocity = new Vector2(0, _rigidBody.velocity.y);
-        
+            _rigidBody2D.velocity = new Vector2(0, _rigidBody2D.velocity.y);
+
         // Reset
         _inAir = false;
         _jumpCount = 0;
@@ -268,7 +276,7 @@ public class PlayerMovement : MonoBehaviour
         if (!_moved)
             return;
         
-        _rigidBody.velocity = new Vector2(_movePos.x * (_sprint.IsInProgress() ? runSpeed : walkSpeed), 0f) *
+        _rigidBody2D.velocity = new Vector2(_movePos.x * (_sprint.IsInProgress() ? runSpeed : walkSpeed), 0f) *
                               Time.deltaTime;
     }
     
@@ -284,7 +292,7 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         _handledJump = true;
-        _rigidBody.velocity = new Vector2(_movePos.x, _movePos.y) * (jumpSpeed * Time.deltaTime);
+        _rigidBody2D.velocity = new Vector2(_movePos.x, _movePos.y) * (jumpSpeed * Time.deltaTime);
         _animator.SetTrigger("Jump");
     }
     
@@ -298,7 +306,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is grounded, otherwise false.</returns>
     public bool IsGrounded()
     {
-        return _rigidBody.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        return _rigidBody2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
     }
     
     /// <summary>
@@ -307,7 +315,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is moving, otherwise false.</returns>
     public bool IsMoving()
     {
-        return _rigidBody.velocity.x != 0;
+        return _rigidBody2D.velocity.x != 0;
     }
 
     /// <summary>
@@ -316,7 +324,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is jumping, otherwise false.</returns>
     public bool IsJumping()
     {
-        return _rigidBody.velocity.y > 0;
+        return _rigidBody2D.velocity.y > 0;
     }
 
     /// <summary>
@@ -325,7 +333,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is falling, otherwise false.</returns>
     public bool IsFalling()
     {
-        return _rigidBody.velocity.y < 0;
+        return _rigidBody2D.velocity.y < 0;
     }
     
     #endregion

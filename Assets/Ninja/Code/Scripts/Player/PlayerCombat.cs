@@ -1,9 +1,31 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// TODO: Separate the attacks from base animation layer, add them to attack animation layer, allow attack animation layer
+// to only trigger upper body movement by using an Avatar Mask and blending (Allows movement with attacking).
+
 public class PlayerCombat : MonoBehaviour
 {
-    private PlayerInputActions _playerInputActions; 
+    #region Public Properties
+    
+    public bool LightAttackPerformed { get; set; }
+    public bool SlowAttackPerformed { get; set; }
+
+    #endregion
+
+    #region Public Fields
+    
+    [Tooltip("Light attack damage amount")] 
+    public float lightAttackDmg = 12.5f;
+
+    [Tooltip("heavy attack damage amount")] 
+    public float heavyAttackDmg = 25f;
+    
+    #endregion
+    
+    #region Private Fields
+    
+    private PlayerInputActions _playerInputActions;
     private InputAction _lightAttackLeft;
     private InputAction _lightAttackRight;
     private InputAction _slowAttack;
@@ -13,6 +35,10 @@ public class PlayerCombat : MonoBehaviour
     // Player Scripts
     private PlayerMovement _playerMovement;
 
+    #endregion
+    
+    #region Unity Events
+    
     private void Awake()
     {
         _playerInputActions = new PlayerInputActions();
@@ -52,22 +78,9 @@ public class PlayerCombat : MonoBehaviour
         _throwKnife.Disable();
     }
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        
-    }
-
-    private void FixedUpdate()
-    {
+    #endregion
     
-    }
+    #region Input Callbacks
     
     private void OnThrowKnife(InputAction.CallbackContext obj)
     {
@@ -92,6 +105,7 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         _animator.SetTrigger("SlowAttack");
+        SlowAttackPerformed = true;
     }
 
     private void OnSlowAttackCancel(InputAction.CallbackContext obj)
@@ -107,6 +121,7 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         _animator.SetTrigger("LightAttackRight");
+        LightAttackPerformed = true;
     }
 
     private void OnLightAttackRightCancel(InputAction.CallbackContext obj)
@@ -122,12 +137,17 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         _animator.SetTrigger("LightAttackLeft");
+        LightAttackPerformed = true;
     }
 
     private void OnLightAttackLeftCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("Light left-hand attack ended!");
     }
+    
+    #endregion
+    
+    #region Public Methods
     
     /// <summary>
     /// Checks if the player is allowed to attack
@@ -156,15 +176,45 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is playing an attack animation, otherwise false.</returns>
     public bool IsInAttackAnim()
     {
-        bool inAttackAnim = _animator.IsPlayingAnimation("Rogue_attack_01",
+        bool inAttackAnim = _animator.IsPlayingAnimation("Light Attack Left",
+                                (int)AnimationLayers.BaseAnimLayer) ||
+                            _animator.IsPlayingAnimation("Light Attack Right",
+                                (int)AnimationLayers.BaseAnimLayer) ||
+                            _animator.IsPlayingAnimation("Slow Attack",
                                 (int)AnimationLayers.BaseAnimLayer) ||
                             _animator.IsPlayingAnimation("Rogue_attack_02",
-                                (int)AnimationLayers.BaseAnimLayer) ||
-                            _animator.IsPlayingAnimation("Rogue_attack_03",
-                                (int)AnimationLayers.BaseAnimLayer) ||
-                            _animator.IsPlayingAnimation("Rogue_hit_01",
                                 (int)AnimationLayers.BaseAnimLayer);
 
         return inAttackAnim;
     }
+
+    /// <summary>
+    /// Retrieve the current attack state that is being performed.
+    /// </summary>
+    /// <returns>Returns an attack state from the AttackState enum [See Defines.cs]</returns>
+    public AttackState GetAttackState()
+    {
+        AttackState attackState = AttackState.None;
+        
+        switch (_animator.IsPlayingAnimation("Light Attack Left", (int)AnimationLayers.BaseAnimLayer))
+        {
+            case true when _lightAttackLeft.inProgress || !_lightAttackLeft.inProgress:
+            case false when _animator.IsPlayingAnimation("Light Attack Right",
+                (int)AnimationLayers.BaseAnimLayer) && _lightAttackRight.inProgress || !_lightAttackRight.inProgress:
+                attackState = AttackState.LightAttack;
+                break;
+            case false when _animator.IsPlayingAnimation("Slow Attack",
+                (int)AnimationLayers.BaseAnimLayer) && _slowAttack.inProgress || !_slowAttack.inProgress:
+                attackState = AttackState.SlowAttack;
+                break;
+            case false when _animator.IsPlayingAnimation("Rogue_attack_02",
+                (int)AnimationLayers.BaseAnimLayer) && _throwKnife.inProgress || !_throwKnife.inProgress:
+                attackState = AttackState.ThrowKnife;
+                break;
+        }
+
+        return attackState;
+    }
+    
+    #endregion
 }

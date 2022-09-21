@@ -2,17 +2,31 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
+    #region Public Properties
+    
     public bool Dead { get; private set; }
     public float HealthPoints { get; private set; }
+    
+    #endregion
+    
+    #region Serialized Fields
     
     [Tooltip("Maximum health points to start with on spawn")]
     [SerializeField] private float maxHealth = 100f;
 
+    #endregion
+    
+    #region Private Fields
+    
     private Animator _animator;
     private BoxCollider2D _boxCollider2D;
     private Rigidbody2D _rigidbody2D;
     private bool _playedDeathAnimation;
+    
+    #endregion
 
+    #region Unity Events
+    
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -32,10 +46,19 @@ public class Health : MonoBehaviour
         _boxCollider2D.enabled = false;
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
     }
+    
+    #endregion
 
-    public void DealDamage(float damage)
+    #region Public Methods
+    
+    /// <summary>
+    /// Deal damage and reduce the health of the gameobject that has this script attached.
+    /// </summary>
+    /// <param name="damage">The damage amount that will be subtracted from health.</param>
+    /// <param name="invoker">The invoker who caused the damage.</param>
+    public void DealDamage(float damage, GameObject invoker = null)
     {
-        if (HealthPoints == 0)
+        if (HealthPoints == 0 || damage == 0)
             return;
         
         string gameObjectName = gameObject.name;
@@ -48,15 +71,26 @@ public class Health : MonoBehaviour
         }
         else
         {
-            HealthPoints -= damage; 
+            HealthPoints -= damage;
+            
+            EnemyCombat enemyCombat = GetComponent<EnemyCombat>();
+            if (enemyCombat && invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
+                enemyCombat.NotifyEngagement(invoker);
+            
             Debug.Log($"{gameObjectName} damaged for {damage}; {HealthPoints} remaining.");
         }
     }
     
+    /// <summary>
+    /// Instantly kill the gameobject that has this script attached.
+    /// </summary>
+    /// <param name="skipDeathAnimation">Whether the death animation should be skipped or not.</param>
     public void InstaKill(bool skipDeathAnimation)
     {
         HealthPoints = 0f;
         Dead = true;
         _playedDeathAnimation = skipDeathAnimation;
     }
+    
+    #endregion
 }
