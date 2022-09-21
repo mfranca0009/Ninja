@@ -2,24 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestAudioScript : MonoBehaviour
+public class MenuSounds : MonoBehaviour
 {
     [SerializeField]
     private SoundManager _soundManager;
 
-    public AudioClip soundEffect;
+    public AudioClip bg_music;
 
     void Start()
     {
         _soundManager = FindObjectOfType<SoundManager>();
+        _soundManager.PlayMusic(bg_music);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            _soundManager.PlaySoundEffect(soundEffect);
 
-        }
     }
 }
