@@ -1683,6 +1683,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2466898825072249287, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: throwingKnifePrefab
+      value: 
+      objectReference: {fileID: 4566541791185861260, guid: 5c9a2cd76d14e42499b833af047b4938, type: 3}
+    - target: {fileID: 2466898825072249287, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: throwingKnifeSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f57ffb33cc05fcc46b89c050467dcd7f, type: 3}
     - target: {fileID: 8862957453690271467, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: camera
       value: 

@@ -17,7 +17,7 @@ public class ItemDropEffectRocket : MonoBehaviour
     #endregion
 
     #region Private Fields
-    private Rigidbody2D _rigidbody;
+    private Rigidbody2D _rigidbody2D;
     private bool _impulseApplied;
     private bool _applyImpulse;
     private bool _torqueApplied;
@@ -28,7 +28,7 @@ public class ItemDropEffectRocket : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody2D = GetComponent<Rigidbody2D>();
         _impulseApplied = false;
         _torqueApplied = false;
     }
@@ -67,7 +67,7 @@ public class ItemDropEffectRocket : MonoBehaviour
 
         _applyImpulse = false;
         _impulseApplied = true;
-        _rigidbody.AddForce(new Vector2(0, rocketDistance * rocketSpeed), ForceMode2D.Impulse);
+        _rigidbody2D.AddForce(new Vector2(0f, rocketDistance * rocketSpeed), ForceMode2D.Impulse);
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public class ItemDropEffectRocket : MonoBehaviour
 
         _applyTorque = false;
         _torqueApplied = true;
-        _rigidbody.AddTorque(_rigidbody.position.y * rotationSpeed, ForceMode2D.Impulse);
+        _rigidbody2D.AddTorque(_rigidbody2D.position.y * rotationSpeed, ForceMode2D.Impulse);
     }
     #endregion
 }

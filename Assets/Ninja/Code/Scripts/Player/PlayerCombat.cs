@@ -22,6 +22,13 @@ public class PlayerCombat : MonoBehaviour
     public float heavyAttackDmg = 25f;
     
     #endregion
+
+    #region Serialized Fields
+
+    [SerializeField] private GameObject throwingKnifePrefab;
+    [SerializeField] private Sprite throwingKnifeSprite;
+
+    #endregion
     
     #region Private Fields
     
@@ -89,7 +96,23 @@ public class PlayerCombat : MonoBehaviour
         if (!CanAttack())
             return;
 
+        GameObject knifeToCreate = Instantiate(throwingKnifePrefab, transform.Find("Rogue_weapon_L_01").position,
+            new Quaternion());
+
+        ThrowKnife throwKnife = knifeToCreate.GetComponent<ThrowKnife>();
+        SpriteRenderer knifeSpriteRenderer = knifeToCreate.GetComponent<SpriteRenderer>();
+        Rigidbody2D knifeRigidBody2D = knifeToCreate.GetComponent<Rigidbody2D>();
+
+        if (!throwKnife || !knifeSpriteRenderer || !knifeRigidBody2D)
+            return;
+        
+        knifeSpriteRenderer.sprite = throwingKnifeSprite;
+        knifeToCreate.layer = LayerMask.NameToLayer("PlayerRangeAttack");
+
         _animator.SetTrigger("ThrowKnife");
+
+        knifeRigidBody2D.bodyType = RigidbodyType2D.Dynamic;
+        knifeToCreate.SetActive(true);
     }
 
     private void OnThrowKnifeCancel(InputAction.CallbackContext obj)
