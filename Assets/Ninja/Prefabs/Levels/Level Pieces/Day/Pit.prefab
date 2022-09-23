@@ -178,7 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6580919943572904695}
   m_Layer: 0
-  m_Name: pit
+  m_Name: Pit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,11 +216,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3170512139047335504, guid: b2c870d9fd49903428677ec854450b63, type: 3}
       propertyPath: m_LocalScale.x
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3170512139047335504, guid: b2c870d9fd49903428677ec854450b63, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.9700012
+      value: 9.31
       objectReference: {fileID: 0}
     - target: {fileID: 3170512139047335504, guid: b2c870d9fd49903428677ec854450b63, type: 3}
       propertyPath: m_LocalPosition.y
