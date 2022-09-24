@@ -2,13 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-
+using TMPro;
 public class UIManager : MonoBehaviour
 {
 	GameObject[] pauseObjects;
 	GameObject[] finishObjects;
 	//PlayerController playerController;
 	// Use this for initialization
+
+
+	//
+	private Health _playerHealth;
+	PlayerMovement _playerMovement;
+
+
+	TMP_Text level_name;
+
 	void Start()
 	{
 		Time.timeScale = 1;
@@ -23,8 +32,9 @@ public class UIManager : MonoBehaviour
 
 		//Checks to make sure MainLevel is the loaded level
 		Scene currentScene = SceneManager.GetActiveScene();
-		if (currentScene.name == "_Main") { 
+		if (currentScene.name == "_Main") {
 			// TODO turn on once we determine the bool for when the player is dead/alive
+			_playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
 			//playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 		}
 	}
@@ -32,20 +42,20 @@ public class UIManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-
+		Scene currentScene = SceneManager.GetActiveScene();
 		//uses the p button to pause and unpause the game
-		if (Input.GetKeyDown(KeyCode.P))
+		if ( (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && currentScene.buildIndex != 0)
 		{
 			// TODO: replace "playerController.alive == true" with w/e bool is controller the player life/death
-			//if (Time.timeScale == 1 && playerController.alive == true)
-			if (Time.timeScale == 1)
+			//if (Time.timeScale == 1 && playerController.alive == true) //&& !_playerHealth.Dead
+			if (Time.timeScale == 1 && !_playerHealth.Dead)
 			{
 				Time.timeScale = 0;
 				showPaused();
 			}
 			// TODO: replace "playerController.alive == true" with w/e bool is controller the player life/death
-			//else if (Time.timeScale == 0 && playerController.alive == true)
-			else if (Time.timeScale == 0)
+			//else if (Time.timeScale == 0 && playerController.alive == true) //&& !_playerHealth.Dead
+			else if (Time.timeScale == 0 && !_playerHealth.Dead)
 			{
 				Time.timeScale = 1;
 				hidePaused();
@@ -55,7 +65,7 @@ public class UIManager : MonoBehaviour
 		//shows finish gameobjects if player is dead and timescale = 0 (DO NOT REMOVE THIS LINE)
 		// TODO: replace "playerController.alive == false" with w/e bool is controller the player life/death
 		//if (Time.timeScale == 0 && playerController.alive == false)
-		if (Time.timeScale == 0)
+		if (Time.timeScale == 0 && _playerHealth.Dead)
 		{
 			showFinished();
 		}
