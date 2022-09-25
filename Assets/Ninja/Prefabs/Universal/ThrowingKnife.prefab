@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 1967537120059642301}
   - component: {fileID: 3518758557526915760}
   - component: {fileID: 7593919706837115717}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: ThrowingKnife
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,8 +202,8 @@ MonoBehaviour:
   maximumXVelocity: 15
   xDistance: 10
   xSpeed: 20
-  maximumYVelocity: 15
-  yDistance: 2
+  maximumYVelocity: 10
+  yDistance: 3
   ySpeed: 15
   maximumAngularVelocity: 180
   rotationSpeed: 150
