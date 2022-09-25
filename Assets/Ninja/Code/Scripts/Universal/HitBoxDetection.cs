@@ -11,7 +11,8 @@ public class HitBoxDetection : MonoBehaviour
 
         PlayerCombat playerCombat = GetComponentInParent<PlayerCombat>();
         EnemyCombat enemyCombat = GetComponentInParent<EnemyCombat>();
-        
+        ThrowKnife throwKnife = GetComponentInParent<ThrowKnife>();
+
         float damageToApply = 0f;
         
         if (playerCombat)
@@ -43,6 +44,11 @@ public class HitBoxDetection : MonoBehaviour
             enemyCombat.SlowAttackPerformed = false;
             
             victimHealth.DealDamage(damageToApply);
+        }
+        else if (throwKnife)
+        {
+            victimHealth.DealDamage(throwKnife.throwKnifeDmg);
+            Debug.Log("Throw Knife Hit!");
         }
     }
 }
