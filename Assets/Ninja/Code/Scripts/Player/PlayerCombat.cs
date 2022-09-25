@@ -25,8 +25,12 @@ public class PlayerCombat : MonoBehaviour
 
     #region Serialized Fields
 
-    [SerializeField] private GameObject throwingKnifePrefab;
-    [SerializeField] private Sprite throwingKnifeSprite;
+    [Header("Throwing Knife Settings")]
+    
+    [SerializeField] private GameObject throwKnifePrefab;
+    [SerializeField] private Sprite throwKnifeSprite;
+    [SerializeField] private Transform throwKnifeSpawnTransform;
+    [SerializeField] private Vector2 throwKnifeSpawnOffset;
 
     #endregion
     
@@ -96,8 +100,11 @@ public class PlayerCombat : MonoBehaviour
         if (!CanAttack())
             return;
 
-        GameObject knifeToCreate = Instantiate(throwingKnifePrefab, transform.Find("Rogue_weapon_L_01").position,
+        GameObject knifeToCreate = Instantiate(throwKnifePrefab, throwKnifeSpawnTransform.position,
             new Quaternion());
+
+        if (!knifeToCreate)
+            return;
 
         ThrowKnife throwKnife = knifeToCreate.GetComponent<ThrowKnife>();
         SpriteRenderer knifeSpriteRenderer = knifeToCreate.GetComponent<SpriteRenderer>();
@@ -105,10 +112,15 @@ public class PlayerCombat : MonoBehaviour
 
         if (!throwKnife || !knifeSpriteRenderer || !knifeRigidBody2D)
             return;
-        
-        knifeSpriteRenderer.sprite = throwingKnifeSprite;
-        knifeToCreate.layer = LayerMask.NameToLayer("PlayerRangeAttack");
 
+        throwKnife.Owner = gameObject;
+        throwKnife.ThrowLeft = transform.localScale.x < 0;
+        knifeSpriteRenderer.sprite = throwKnifeSprite;
+        knifeToCreate.layer = LayerMask.NameToLayer("IgnoreEnemy");
+        knifeToCreate.transform.Find("Hitbox").gameObject.layer = LayerMask.NameToLayer("PlayerRangeAttack");
+
+        knifeToCreate.transform.position += new Vector3(throwKnifeSpawnOffset.x, throwKnifeSpawnOffset.y, 0f);
+        
         _animator.SetTrigger("ThrowKnife");
 
         knifeRigidBody2D.bodyType = RigidbodyType2D.Dynamic;

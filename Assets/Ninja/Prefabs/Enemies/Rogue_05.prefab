@@ -1675,7 +1675,7 @@ GameObject:
   - component: {fileID: 8199308842321572621}
   - component: {fileID: 7674412284704653532}
   - component: {fileID: 2088129700}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Rogue_05
   m_TagString: Enemy
   m_Icon: {fileID: 0}

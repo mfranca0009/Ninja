@@ -1210,7 +1210,7 @@ Transform:
   m_Children:
   - {fileID: 1863393140278986437}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1766446573384302901
 Animator:
@@ -1311,6 +1311,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lightAttackDmg: 12.5
   heavyAttackDmg: 25
+  throwKnifePrefab: {fileID: 4566541791185861260, guid: 5c9a2cd76d14e42499b833af047b4938, type: 3}
+  throwKnifeSprite: {fileID: 21300000, guid: f57ffb33cc05fcc46b89c050467dcd7f, type: 3}
+  throwKnifeSpawnTransform: {fileID: 1863393143438914901}
+  throwKnifeSpawnOffset: {x: 1, y: 0.5}
 --- !u!114 &8862957453690271467
 MonoBehaviour:
   m_ObjectHideFlags: 0

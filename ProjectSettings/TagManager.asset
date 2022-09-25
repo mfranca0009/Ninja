@@ -16,12 +16,12 @@ TagManager:
   - UI
   - Player
   - PlayerMeleeAttack
+  - PlayerRangeAttack
   - Enemy
   - EnemyMeleeAttack
-  - 
-  - 
-  - 
-  - 
+  - EnemyRangeAttack
+  - IgnorePlayer
+  - IgnoreEnemy
   - 
   - 
   - 
