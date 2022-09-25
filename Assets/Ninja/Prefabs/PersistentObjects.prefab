@@ -454,19 +454,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7129739286121133020, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133020, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133020, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133020, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -152
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065800, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_Name
@@ -474,7 +474,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065800, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065804, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_Pivot.x
@@ -562,19 +562,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746179, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746179, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746179, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746179, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -40
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
