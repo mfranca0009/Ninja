@@ -14,7 +14,7 @@ public class HitBoxDetection : MonoBehaviour
         ThrowKnife throwKnife = GetComponentInParent<ThrowKnife>();
 
         float damageToApply = 0f;
-        
+
         if (playerCombat)
         {
             damageToApply = playerCombat.LightAttackPerformed switch
@@ -23,11 +23,11 @@ public class HitBoxDetection : MonoBehaviour
                 false when playerCombat.SlowAttackPerformed => playerCombat.heavyAttackDmg,
                 _ => damageToApply
             };
-            
+
             // Reset
             playerCombat.LightAttackPerformed = false;
             playerCombat.SlowAttackPerformed = false;
-            
+
             victimHealth.DealDamage(damageToApply, playerCombat.gameObject);
         }
         else if (enemyCombat)
@@ -38,17 +38,18 @@ public class HitBoxDetection : MonoBehaviour
                 false when enemyCombat.SlowAttackPerformed => enemyCombat.heavyAttackDmg,
                 _ => damageToApply
             };
-        
+
             // Reset
             enemyCombat.LightAttackPerformed = false;
             enemyCombat.SlowAttackPerformed = false;
-            
+
             victimHealth.DealDamage(damageToApply);
         }
         else if (throwKnife)
         {
-            victimHealth.DealDamage(throwKnife.throwKnifeDmg);
-            Debug.Log("Throw Knife Hit!");
+            victimHealth.DealDamage(throwKnife.throwKnifeDmg, throwKnife.Owner);
+            throwKnife.UpdateActiveKnives();
+            Destroy(throwKnife.gameObject);
         }
     }
 }

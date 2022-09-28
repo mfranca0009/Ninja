@@ -82,7 +82,7 @@ public class Health : MonoBehaviour
     }
     
     /// <summary>
-    /// Instantly kill the gameobject that has this script attached.
+    /// Instantly kill the gameobject that has this health script attached.
     /// </summary>
     /// <param name="skipDeathAnimation">Whether the death animation should be skipped or not.</param>
     public void InstaKill(bool skipDeathAnimation)
