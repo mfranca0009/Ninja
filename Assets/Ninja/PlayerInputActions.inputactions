@@ -33,15 +33,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Slow Attack",
-                    "type": "Button",
-                    "id": "199e0712-7519-4808-bc5f-2e5fdecd3924",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Throw Knife",
                     "type": "Button",
                     "id": "30e3493c-92aa-41d1-80ca-3f9bdab634d1",
@@ -51,18 +42,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Light Attack Left",
+                    "name": "Light Attack",
                     "type": "Button",
-                    "id": "1a934c8e-ab00-42af-8774-1433eadb4694",
+                    "id": "4dafb3f4-7df2-4cac-80b4-d4e7eeb94693",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Light Attack Right",
+                    "name": "Slow Attack",
                     "type": "Button",
-                    "id": "4dafb3f4-7df2-4cac-80b4-d4e7eeb94693",
+                    "id": "199e0712-7519-4808-bc5f-2e5fdecd3924",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -150,7 +141,7 @@
                 {
                     "name": "",
                     "id": "935d3f73-6ee6-4c9f-b776-7e452cf1b9f4",
-                    "path": "<Keyboard>/z",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
@@ -161,7 +152,7 @@
                 {
                     "name": "",
                     "id": "b51999db-883e-433c-a4d2-e20aa026729e",
-                    "path": "<Keyboard>/x",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
@@ -171,23 +162,12 @@
                 },
                 {
                     "name": "",
-                    "id": "ca500ea1-d50b-4ef5-bc2e-6fafd4413eac",
-                    "path": "<Keyboard>/c",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Light Attack Left",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "027532b0-d1eb-4912-87ee-1a0061571da4",
-                    "path": "<Keyboard>/v",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Light Attack Right",
+                    "action": "Light Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

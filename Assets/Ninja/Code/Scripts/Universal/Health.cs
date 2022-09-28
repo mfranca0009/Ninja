@@ -67,7 +67,7 @@ public class Health : MonoBehaviour
         {
             HealthPoints = 0f;
             Dead = true;
-            Debug.Log($"{gameObjectName} damaged for {damage}. {gameObjectName} has been killed!");
+            Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}. {gameObjectName} has been killed!");
         }
         else
         {
@@ -77,7 +77,7 @@ public class Health : MonoBehaviour
             if (enemyCombat && invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
                 enemyCombat.NotifyEngagement(invoker);
             
-            Debug.Log($"{gameObjectName} damaged for {damage}; {HealthPoints} remaining.");
+            Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}; {HealthPoints} remaining.");
         }
     }
     

@@ -136,12 +136,12 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnSprint(InputAction.CallbackContext obj)
     {
-        Debug.Log("Sprinting!");
+        Debug.Log("[PlayerMovement/OnSprint] Sprinting!");
     }
 
     private void OnSprintCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("Sprint ended!");
+        Debug.Log("[PlayerMovement/OnSprintCancel] Sprint ended!");
     }
     
     private void OnMove(InputAction.CallbackContext obj)
@@ -149,12 +149,12 @@ public class PlayerMovement : MonoBehaviour
         if (!CanMove())
             return;
 
-        Debug.Log("Moving!");
+        Debug.Log("[PlayerMovement/OnMove] Moving!");
     }
 
     private void OnMoveCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("Movement ended!");
+        Debug.Log("[PlayerMovement/OnMoveCancel] Movement ended!");
         
         // Clear horizontal velocity
         if (IsMoving() && IsGrounded())
@@ -168,12 +168,12 @@ public class PlayerMovement : MonoBehaviour
         
         _jumpCount++;
 
-        Debug.Log($"Jumping!\n Jumps Performed: {_jumpCount}");
+        Debug.Log($"[PlayerMovement/OnJump] Jumping!\n Jumps Performed: {_jumpCount}");
     }
 
     private void OnJumpCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("Jump ended!");
+        Debug.Log("[PlayerMovement/OnJumpCancel] Jump ended!");
         _handledJump = false;
     }
     
