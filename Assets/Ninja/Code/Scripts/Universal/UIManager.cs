@@ -7,16 +7,11 @@ public class UIManager : MonoBehaviour
 {
 	GameObject[] pauseObjects;
 	GameObject[] finishObjects;
-	//PlayerController playerController;
-	// Use this for initialization
-
+	public Canvas scrollCanvas;
 
 	//
 	private Health _playerHealth;
-	PlayerMovement _playerMovement;
 
-
-	TMP_Text level_name;
 
 	void Start()
 	{
@@ -25,10 +20,12 @@ public class UIManager : MonoBehaviour
 		// gets all objects with tag ShowOnPause
 		 pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
 		//gets all objects with tag ShowOnFinish
-		finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");          
+		finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
+		//scrollCanvas = GameObject.FindGameObjectWithTag("ScrollCanvas");
 
 		hidePaused();
 		hideFinished();
+		hideScroll();
 
 		//Checks to make sure MainLevel is the loaded level
 		Scene currentScene = SceneManager.GetActiveScene();
@@ -46,14 +43,12 @@ public class UIManager : MonoBehaviour
 		//uses the p button to pause and unpause the game
 		if ( (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && currentScene.buildIndex != 0)
 		{
-			// TODO: replace "playerController.alive == true" with w/e bool is controller the player life/death
 			//if (Time.timeScale == 1 && playerController.alive == true) //&& !_playerHealth.Dead
 			if (Time.timeScale == 1 && !_playerHealth.Dead)
 			{
 				Time.timeScale = 0;
 				showPaused();
 			}
-			// TODO: replace "playerController.alive == true" with w/e bool is controller the player life/death
 			//else if (Time.timeScale == 0 && playerController.alive == true) //&& !_playerHealth.Dead
 			else if (Time.timeScale == 0 && !_playerHealth.Dead)
 			{
@@ -63,7 +58,6 @@ public class UIManager : MonoBehaviour
 		}
 
 		//shows finish gameobjects if player is dead and timescale = 0 (DO NOT REMOVE THIS LINE)
-		// TODO: replace "playerController.alive == false" with w/e bool is controller the player life/death
 		//if (Time.timeScale == 0 && playerController.alive == false)
 		if (Time.timeScale == 0 && _playerHealth.Dead)
 		{
@@ -103,6 +97,24 @@ public class UIManager : MonoBehaviour
 		{
 			g.SetActive(false);
 		}
+	}
+
+	public void showScroll()
+	{
+		//foreach (GameObject g in scrollCanvas)
+		//{
+			//scrollCanvas.SetActive(true);
+			scrollCanvas.gameObject.SetActive(true);
+		//}
+	}
+
+	public void hideScroll()
+	{
+		//foreach (GameObject g in scrollCanvas)
+		//{
+			//scrollCanvas.SetActive(false);
+			scrollCanvas.gameObject.SetActive(false);
+		//}
 	}
 
 	//shows objects with ShowOnFinish tag
