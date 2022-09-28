@@ -24,6 +24,11 @@ public class SceneManagement : MonoBehaviour
         Debug.Log(currentScene.buildIndex);
     }
 
+    public void LoadNextScene() 
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
     public void QuitGame()
     {
         Application.Quit();

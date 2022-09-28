@@ -710,9 +710,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7129739287332422583, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_text
+      value: Next Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739287955746178, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_Name
+      value: btn_NextLevel
+      objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -720,7 +728,7 @@ PrefabInstance:
       objectReference: {fileID: 24574112080618975}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadSceneByString
+      value: LoadNextScene
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
