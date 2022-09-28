@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -62,27 +61,32 @@ public class EnemyCombat : MonoBehaviour
     
     /// <summary>
     /// Light attack perform state, used to differentiate damage amounts when attacking a target within
-    /// `HitBoxDetection.cs`
+    /// `HitBoxDetection.cs`<br></br><br></br>
+    /// Note: Animation Event during light attack animation(s) will trigger this state to true. Must be an int type,
+    /// animation events do not cover boolean.
     /// </summary>
-    public bool LightAttackPerformed { get; set; }
+    public int LightAttackPerformed { get; set; }
     
     /// <summary>
     /// Slow attack perform state, used to differentiate damage amounts when attacking a target within
-    /// `HitBoxDetection.cs`
+    /// `HitBoxDetection.cs`<br></br><br></br>
+    /// Note: Animation Event during slow attack animation(s) will trigger this state to true. Must be an int type,
+    /// animation events do not cover boolean.
     /// </summary>
-    public bool SlowAttackPerformed { get; set; }
+    public int SlowAttackPerformed { get; set; }
     
     #endregion
     
     #region Public Fields
     
-    [Header("Attack Damage Settings")]
-    
-    [Tooltip("Light attack damage amount")] 
-    public float lightAttackDmg = 12.5f;
-
-    [Tooltip("heavy attack damage amount")] 
-    public float heavyAttackDmg = 25f;
+    // Moved to `MeleeWeapon.cs` script attached to melee weapon prefab
+    // [Header("Attack Damage Settings")]
+    //
+    // [Tooltip("Light attack damage amount")] 
+    // public float lightAttackDmg = 12.5f;
+    //
+    // [Tooltip("heavy attack damage amount")] 
+    // public float heavyAttackDmg = 25f;
     
     #endregion
     
@@ -157,6 +161,20 @@ public class EnemyCombat : MonoBehaviour
     
      [Tooltip("A position offset to adjust spawn positioning further in relation to the spawn transform used")]
      [SerializeField] private Vector2 throwKnifeSpawnOffset = new (1f, 0f);
+     
+     [Header("Melee Weapon Settings")] 
+    
+     [Tooltip("The left melee weapon gameobject")] 
+     [SerializeField] private GameObject meleeWeaponLeft;
+    
+     [Tooltip("The right melee weapon gameobject")] 
+     [SerializeField] private GameObject meleeWeaponRight;
+    
+     [Tooltip("The left melee weapon sprite that will be visible when the weapon is active within the scene")]
+     [SerializeField] private Sprite meleeWeaponLeftSprite;
+    
+     [Tooltip("The right melee weapon sprite that will be visible when the weapon is active within the scene")]
+     [SerializeField] private Sprite meleeWeaponRightSprite;
 
     #endregion
     
@@ -199,14 +217,8 @@ public class EnemyCombat : MonoBehaviour
 
         InvestigateDestPos = Vector2.zero;
         
-        // Retrieve and setup sight colliders
-        _sightCollider2D = gameObject.transform.Find("SightDetection").GetComponent<BoxCollider2D>();
-
-        if (!_sightCollider2D)
-            return;
-        
-        _sightCollider2D.size = sightCollider2DSize;
-        _sightCollider2D.offset = sightCollider2DOffset;
+        SetupSightDetection();
+        SetupMeleeWeapons();
     }
 
     // Update is called once per frame
@@ -327,12 +339,10 @@ public class EnemyCombat : MonoBehaviour
                 case <= 25:
                     AttackState = AttackState.LightAttack;
                     _animator.SetTrigger("LightAttack");
-                    LightAttackPerformed = true;
                     break;
                 default:
                     AttackState = AttackState.SlowAttack;
                     _animator.SetTrigger("SlowAttack");
-                    SlowAttackPerformed = true;
                     break;
             }
 
@@ -464,7 +474,7 @@ public class EnemyCombat : MonoBehaviour
     
     #endregion
     
-    #region Helper Methods
+    #region Private Helper Methods
     
     /// <summary>
     /// Set the current target that the AI is engaging.
@@ -509,7 +519,7 @@ public class EnemyCombat : MonoBehaviour
     }
     
     /// <summary>
-    /// Reset all combat states, including animator attack triggers, for the AI.
+    /// Reset all combat states, including animator attack triggers and combat timers, for the AI.
     /// </summary>
     private void ResetCombatStates()
     {
@@ -522,6 +532,9 @@ public class EnemyCombat : MonoBehaviour
         ResetCombatTimers();
     }
 
+    /// <summary>
+    /// Reset all combat timers, includes melee, range, advance target, and stop advance target timer.
+    /// </summary>
     private void ResetCombatTimers()
     {
         Debug.Log("[EnemyCombat/ResetCombatTimers] Resetting combat timers!");
@@ -529,6 +542,55 @@ public class EnemyCombat : MonoBehaviour
         _rangeAttackTimer = initialRangeAttackTime;
         _advanceTargetTimer = advanceTargetTime;
         _stopAdvanceTargetTimer = stopAdvanceTargetTime;
+    }
+
+    /// <summary>
+    /// Setup sight detection box collider, includes size and offset of collider.
+    /// </summary>
+    private void SetupSightDetection()
+    {
+        _sightCollider2D = gameObject.transform.Find("SightDetection").GetComponent<BoxCollider2D>();
+
+        if (!_sightCollider2D)
+            return;
+        
+        _sightCollider2D.size = sightCollider2DSize;
+        _sightCollider2D.offset = sightCollider2DOffset;
+    }
+    
+    /// <summary>
+    /// Setup melee weapons, includes sprites, tag, layer, and owner of left and right weapon.
+    /// </summary>
+    private void SetupMeleeWeapons()
+    {
+        SpriteRenderer meleeWeaponSpriteRenderer;
+        MeleeWeapon meleeWeapon;
+
+        if (meleeWeaponLeft)
+        {
+            meleeWeaponSpriteRenderer = meleeWeaponLeft.GetComponent<SpriteRenderer>();
+            
+            if (!meleeWeaponSpriteRenderer)
+                return;
+            
+            meleeWeaponSpriteRenderer.sprite = meleeWeaponLeftSprite;
+            
+            meleeWeapon = meleeWeaponLeft.GetComponent<MeleeWeapon>();
+            meleeWeapon.Owner = gameObject;
+        }
+
+        if (meleeWeaponRight)
+        {
+            meleeWeaponSpriteRenderer = meleeWeaponRight.GetComponent<SpriteRenderer>();
+            
+            if (!meleeWeaponSpriteRenderer)
+                return;
+            
+            meleeWeaponSpriteRenderer.sprite = meleeWeaponRightSprite;
+            
+            meleeWeapon = meleeWeaponLeft.GetComponent<MeleeWeapon>();
+            meleeWeapon.Owner = gameObject;
+        }
     }
     
     #endregion

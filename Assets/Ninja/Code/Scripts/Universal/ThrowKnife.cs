@@ -49,7 +49,7 @@ public class ThrowKnife : MonoBehaviour
     [Tooltip("The speed the throwing knife will move horizontally")]
     [SerializeField] private float ySpeed = 15f;
     
-    [Header("Rotation Settings")]
+    [Header("Rotation Movement Settings")]
     
     [Tooltip("The maximum angular velocity threshold")]
     [SerializeField] private float maximumAngularVelocity = 180f;
