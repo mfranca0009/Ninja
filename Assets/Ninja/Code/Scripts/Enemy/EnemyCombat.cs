@@ -225,7 +225,7 @@ public class EnemyCombat : MonoBehaviour
         if (col.gameObject.layer != LayerMask.NameToLayer("Player") || Target)
             return;
 
-        Debug.Log("TARGET ACQUIRED!");
+        Debug.Log("[EnemyCombat/OnTriggerEnter2D] TARGET ACQUIRED!");
 
         _targetHealth = col.gameObject.GetComponentInParent<Health>();
         
@@ -292,7 +292,7 @@ public class EnemyCombat : MonoBehaviour
         if (xDist < disengageXDistance && yDist < disengageYDistance)
             return;
 
-        Debug.Log("Target out of range!");
+        Debug.Log("[EnemyCombat/TargetRangeUpdate] Target out of range!");
         
         ResetCombatStates();
         ResetTarget();
@@ -308,7 +308,7 @@ public class EnemyCombat : MonoBehaviour
         if (Mathf.Abs(Vector2.Distance(currentPos, InvestigateDestPos)) > investigateCompletionDistance)
             return;
         
-        Debug.Log("Completed investigation!");
+        Debug.Log("[EnemyCombat/InvestigateRangeUpdate] Completed investigation!");
         InvestigateEngagement = false;
     }
     
@@ -322,16 +322,11 @@ public class EnemyCombat : MonoBehaviour
         {
             AttackType = AttackType.Melee;
             
-            switch (Random.Range(1, 100))
+            switch (Random.Range(1, 50))
             {
                 case <= 25:
                     AttackState = AttackState.LightAttack;
-                    _animator.SetTrigger("LightAttackLeft");
-                    LightAttackPerformed = true;
-                    break;
-                case > 25 and <= 50:
-                    AttackState = AttackState.LightAttack;
-                    _animator.SetTrigger("LightAttackRight");
+                    _animator.SetTrigger("LightAttack");
                     LightAttackPerformed = true;
                     break;
                 default:
@@ -419,7 +414,7 @@ public class EnemyCombat : MonoBehaviour
         
         FaceTarget(invoker);
 
-        Debug.Log("Investigating!");
+        Debug.Log("[EnemyCombat/NotifyEngagement] Investigating!");
         
         bool facingLeft = transform.localScale.x < 0;
         
@@ -477,7 +472,7 @@ public class EnemyCombat : MonoBehaviour
     /// <param name="target">The target the AI is initiating combat with.</param>
     private void SetTarget(GameObject target)
     {
-        Debug.Log("Setting Target!");
+        Debug.Log("[EnemyCombat/SetTarget] Setting Target!");
         Target = target;
     }
 
@@ -486,7 +481,7 @@ public class EnemyCombat : MonoBehaviour
     /// </summary>
     private void ResetTarget()
     {
-        Debug.Log("Resetting Target!");
+        Debug.Log("[EnemyCombat/ResetTarget] Resetting Target!");
         Target = null;
         _targetHealth = null;
     }
@@ -507,9 +502,8 @@ public class EnemyCombat : MonoBehaviour
     /// </summary>
     private void ResetAllAttackTriggers()
     {
-        Debug.Log("Resetting attack triggers!");
-        _animator.ResetTrigger("LightAttackLeft");
-        _animator.ResetTrigger("LightAttackRight");
+        Debug.Log("[EnemyCombat/ResetAllAttackTriggers] Resetting attack triggers!");
+        _animator.ResetTrigger("LightAttack");
         _animator.ResetTrigger("SlowAttack");
         _animator.ResetTrigger("ThrowKnife");
     }
@@ -519,7 +513,7 @@ public class EnemyCombat : MonoBehaviour
     /// </summary>
     private void ResetCombatStates()
     {
-        Debug.Log("Resetting combat states!");
+        Debug.Log("[EnemyCombat/ResetCombatStates] Resetting combat states!");
         InCombat = false;
         ChaseTarget = false;
         AdvanceTarget = false;
@@ -530,7 +524,7 @@ public class EnemyCombat : MonoBehaviour
 
     private void ResetCombatTimers()
     {
-        Debug.Log("Resetting combat timers!");
+        Debug.Log("[EnemyCombat/ResetCombatTimers] Resetting combat timers!");
         _meleeAttackTimer = initialMeleeAttackTime;
         _rangeAttackTimer = initialRangeAttackTime;
         _advanceTargetTimer = advanceTargetTime;

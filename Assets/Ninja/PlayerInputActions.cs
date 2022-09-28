@@ -55,15 +55,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Slow Attack"",
-                    ""type"": ""Button"",
-                    ""id"": ""199e0712-7519-4808-bc5f-2e5fdecd3924"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Throw Knife"",
                     ""type"": ""Button"",
                     ""id"": ""30e3493c-92aa-41d1-80ca-3f9bdab634d1"",
@@ -73,18 +64,18 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Light Attack Left"",
+                    ""name"": ""Light Attack"",
                     ""type"": ""Button"",
-                    ""id"": ""1a934c8e-ab00-42af-8774-1433eadb4694"",
+                    ""id"": ""4dafb3f4-7df2-4cac-80b4-d4e7eeb94693"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Light Attack Right"",
+                    ""name"": ""Slow Attack"",
                     ""type"": ""Button"",
-                    ""id"": ""4dafb3f4-7df2-4cac-80b4-d4e7eeb94693"",
+                    ""id"": ""199e0712-7519-4808-bc5f-2e5fdecd3924"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -172,7 +163,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""935d3f73-6ee6-4c9f-b776-7e452cf1b9f4"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
@@ -183,7 +174,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b51999db-883e-433c-a4d2-e20aa026729e"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/z"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
@@ -193,23 +184,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ca500ea1-d50b-4ef5-bc2e-6fafd4413eac"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Light Attack Left"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""027532b0-d1eb-4912-87ee-1a0061571da4"",
-                    ""path"": ""<Keyboard>/v"",
+                    ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
-                    ""action"": ""Light Attack Right"",
+                    ""action"": ""Light Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -235,10 +215,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
-        m_Player_SlowAttack = m_Player.FindAction("Slow Attack", throwIfNotFound: true);
         m_Player_ThrowKnife = m_Player.FindAction("Throw Knife", throwIfNotFound: true);
-        m_Player_LightAttackLeft = m_Player.FindAction("Light Attack Left", throwIfNotFound: true);
-        m_Player_LightAttackRight = m_Player.FindAction("Light Attack Right", throwIfNotFound: true);
+        m_Player_LightAttack = m_Player.FindAction("Light Attack", throwIfNotFound: true);
+        m_Player_SlowAttack = m_Player.FindAction("Slow Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -301,10 +280,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Sprint;
-    private readonly InputAction m_Player_SlowAttack;
     private readonly InputAction m_Player_ThrowKnife;
-    private readonly InputAction m_Player_LightAttackLeft;
-    private readonly InputAction m_Player_LightAttackRight;
+    private readonly InputAction m_Player_LightAttack;
+    private readonly InputAction m_Player_SlowAttack;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -312,10 +290,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
-        public InputAction @SlowAttack => m_Wrapper.m_Player_SlowAttack;
         public InputAction @ThrowKnife => m_Wrapper.m_Player_ThrowKnife;
-        public InputAction @LightAttackLeft => m_Wrapper.m_Player_LightAttackLeft;
-        public InputAction @LightAttackRight => m_Wrapper.m_Player_LightAttackRight;
+        public InputAction @LightAttack => m_Wrapper.m_Player_LightAttack;
+        public InputAction @SlowAttack => m_Wrapper.m_Player_SlowAttack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -334,18 +311,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Sprint.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                 @Sprint.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
                 @Sprint.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSprint;
-                @SlowAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlowAttack;
-                @SlowAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlowAttack;
-                @SlowAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlowAttack;
                 @ThrowKnife.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrowKnife;
                 @ThrowKnife.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrowKnife;
                 @ThrowKnife.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnThrowKnife;
-                @LightAttackLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttackLeft;
-                @LightAttackLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttackLeft;
-                @LightAttackLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttackLeft;
-                @LightAttackRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttackRight;
-                @LightAttackRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttackRight;
-                @LightAttackRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttackRight;
+                @LightAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttack;
+                @LightAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttack;
+                @LightAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttack;
+                @SlowAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlowAttack;
+                @SlowAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlowAttack;
+                @SlowAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSlowAttack;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -359,18 +333,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
-                @SlowAttack.started += instance.OnSlowAttack;
-                @SlowAttack.performed += instance.OnSlowAttack;
-                @SlowAttack.canceled += instance.OnSlowAttack;
                 @ThrowKnife.started += instance.OnThrowKnife;
                 @ThrowKnife.performed += instance.OnThrowKnife;
                 @ThrowKnife.canceled += instance.OnThrowKnife;
-                @LightAttackLeft.started += instance.OnLightAttackLeft;
-                @LightAttackLeft.performed += instance.OnLightAttackLeft;
-                @LightAttackLeft.canceled += instance.OnLightAttackLeft;
-                @LightAttackRight.started += instance.OnLightAttackRight;
-                @LightAttackRight.performed += instance.OnLightAttackRight;
-                @LightAttackRight.canceled += instance.OnLightAttackRight;
+                @LightAttack.started += instance.OnLightAttack;
+                @LightAttack.performed += instance.OnLightAttack;
+                @LightAttack.canceled += instance.OnLightAttack;
+                @SlowAttack.started += instance.OnSlowAttack;
+                @SlowAttack.performed += instance.OnSlowAttack;
+                @SlowAttack.canceled += instance.OnSlowAttack;
             }
         }
     }
@@ -389,9 +360,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
-        void OnSlowAttack(InputAction.CallbackContext context);
         void OnThrowKnife(InputAction.CallbackContext context);
-        void OnLightAttackLeft(InputAction.CallbackContext context);
-        void OnLightAttackRight(InputAction.CallbackContext context);
+        void OnLightAttack(InputAction.CallbackContext context);
+        void OnSlowAttack(InputAction.CallbackContext context);
     }
 }

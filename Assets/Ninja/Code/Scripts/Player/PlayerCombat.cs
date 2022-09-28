@@ -68,11 +68,10 @@ public class PlayerCombat : MonoBehaviour
     
     // Input
     private PlayerInputActions _playerInputActions;
-    private InputAction _lightAttackLeft;
-    private InputAction _lightAttackRight;
-    private InputAction _slowAttack;
     private InputAction _throwKnife;
-    
+    private InputAction _lightAttack;
+    private InputAction _slowAttack;
+
     // Animator / animations
     private Animator _animator;
 
@@ -93,15 +92,10 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnEnable()
     {
-        _lightAttackLeft = _playerInputActions.Player.LightAttackLeft;
-        _lightAttackLeft.performed += OnLightAttackLeft;
-        _lightAttackLeft.canceled += OnLightAttackLeftCancel;
-        _lightAttackLeft.Enable();
-        
-        _lightAttackRight = _playerInputActions.Player.LightAttackRight;
-        _lightAttackRight.performed += OnLightAttackRight;
-        _lightAttackRight.canceled += OnLightAttackRightCancel;
-        _lightAttackRight.Enable();
+        _lightAttack = _playerInputActions.Player.LightAttack;
+        _lightAttack.performed += OnLightAttack;
+        _lightAttack.canceled += OnLightAttackCancel;
+        _lightAttack.Enable();
         
         _slowAttack = _playerInputActions.Player.SlowAttack;
         _slowAttack.performed += OnSlowAttack;
@@ -116,8 +110,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnDisable()
     {
-        _lightAttackLeft.Disable();
-        _lightAttackRight.Disable();
+        _lightAttack.Disable();
         _slowAttack.Disable();
         _throwKnife.Disable();
     }
@@ -131,7 +124,7 @@ public class PlayerCombat : MonoBehaviour
     // it has been thrown.
     private void OnThrowKnife(InputAction.CallbackContext obj)
     {
-        Debug.Log("Knife throw performed!");
+        Debug.Log("[PlayerCombat/OnThrowKnife] Knife throw performed!");
 
         if (!CanAttack() || !CanThrowKnife())
             return;
@@ -141,12 +134,12 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnThrowKnifeCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("Knife throw ended!");
+        Debug.Log("[PlayerCombat/OnThrowKnifeCancel] Knife throw ended!");
     }
     
     private void OnSlowAttack(InputAction.CallbackContext obj)
     {
-        Debug.Log("Slow attack performed!");
+        Debug.Log("[PlayerCombat/OnSlowAttack] Slow attack performed!");
 
         if (!CanAttack())
             return;
@@ -157,41 +150,25 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnSlowAttackCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("Slow attack ended!");
+        Debug.Log("[PlayerCombat/OnSlowAttackCancel] Slow attack ended!");
     }
     
-    private void OnLightAttackRight(InputAction.CallbackContext obj)
+    private void OnLightAttack(InputAction.CallbackContext obj)
     {
-        Debug.Log("Light attack with right hand performed!");
+        Debug.Log("[PlayerCombat/OnLightAttack] Light attack performed!");
 
         if (!CanAttack())
             return;
 
-        _animator.SetTrigger("LightAttackRight");
+        _animator.SetTrigger("LightAttack");
         LightAttackPerformed = true;
     }
 
-    private void OnLightAttackRightCancel(InputAction.CallbackContext obj)
+    private void OnLightAttackCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("Light right-hand attack ended!");
-    }
-    
-    private void OnLightAttackLeft(InputAction.CallbackContext obj)
-    {
-        Debug.Log("Light attack with left hand performed!");
-
-        if (!CanAttack())
-            return;
-
-        _animator.SetTrigger("LightAttackLeft");
-        LightAttackPerformed = true;
+        Debug.Log("[PlayerCombat/OnLightAttackCancel] Light attack ended!");
     }
 
-    private void OnLightAttackLeftCancel(InputAction.CallbackContext obj)
-    {
-        Debug.Log("Light left-hand attack ended!");
-    }
-    
     #endregion
     
     #region Public Helper Methods
@@ -202,8 +179,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is pressing an attack key, otherwise false.</returns>
     public bool IsInAttackState()
     {
-        bool inAttackState = _lightAttackLeft.inProgress || _lightAttackRight.inProgress ||
-                             _slowAttack.inProgress || _throwKnife.inProgress;
+        bool inAttackState = _lightAttack.inProgress || _slowAttack.inProgress || _throwKnife.inProgress;
         
         return inAttackState;
     }
@@ -214,9 +190,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is playing an attack animation, otherwise false.</returns>
     public bool IsInAttackAnim()
     {
-        bool inAttackAnim = _animator.IsPlayingAnimation("Light Attack Left",
-                                (int)AnimationLayers.BaseAnimLayer) ||
-                            _animator.IsPlayingAnimation("Light Attack Right",
+        bool inAttackAnim = _animator.IsPlayingAnimation("Light Attack",
                                 (int)AnimationLayers.BaseAnimLayer) ||
                             _animator.IsPlayingAnimation("Slow Attack",
                                 (int)AnimationLayers.BaseAnimLayer) ||
@@ -234,11 +208,9 @@ public class PlayerCombat : MonoBehaviour
     {
         AttackState attackState = AttackState.None;
         
-        switch (_animator.IsPlayingAnimation("Light Attack Left", (int)AnimationLayers.BaseAnimLayer))
+        switch (_animator.IsPlayingAnimation("Light Attack", (int)AnimationLayers.BaseAnimLayer))
         {
-            case true when _lightAttackLeft.inProgress || !_lightAttackLeft.inProgress:
-            case false when _animator.IsPlayingAnimation("Light Attack Right",
-                (int)AnimationLayers.BaseAnimLayer) && _lightAttackRight.inProgress || !_lightAttackRight.inProgress:
+            case true when _lightAttack.inProgress || !_lightAttack.inProgress:
                 attackState = AttackState.LightAttack;
                 break;
             case false when _animator.IsPlayingAnimation("Slow Attack",
