@@ -36,7 +36,7 @@ public class PlayerCombat : MonoBehaviour
 
     #region Public Fields
     
-    [Header("Damage Settings")]
+    [Header("Attack Damage Settings")]
     
     [Tooltip("Light attack damage amount")] 
     public float lightAttackDmg = 12.5f;
@@ -278,7 +278,8 @@ public class PlayerCombat : MonoBehaviour
     
     /// <summary>
     /// Method to instantiate a throwing knife into the scene. It will create the object, adjust parameters, and then
-    /// activate the gameobject. Activating the gameobject will trigger the movement of the throwing knife.
+    /// activate the gameobject. Activating the gameobject will trigger the movement of the throwing knife.<br></br><br></br>
+    /// Note: This is currently executed on its own by an Animation Event through the `Rogue_throw_knife` animation.
     /// </summary>
     public void InstantiateThrowingKnife()
     {

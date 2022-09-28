@@ -84,16 +84,17 @@ public class EnemyMovement : MonoBehaviour
     
     #region Private Fields
     
+    // Rigidbody / Physics
     private Rigidbody2D _rigidBody;
+    
+    // Animator / Animation
     private Animator _animator;
-    private Vector2 _homePos;
+    
+    // Ground check
     private bool _isGrounded;
     
-    // Enemy Scripts
-    private Health _health;
-    private EnemyCombat _enemyCombat;
-
     // Random Movement System
+    private Vector2 _homePos;
     private Vector2 _destPos;
     private bool _isHome;
     private bool _destReached;
@@ -105,6 +106,10 @@ public class EnemyMovement : MonoBehaviour
     private bool _returningToFirstPoint;
     private bool _waypointPathDelayed;
     private float _waypointDelayTimer;
+    
+    // Enemy Scripts
+    private Health _health;
+    private EnemyCombat _enemyCombat;
 
     #endregion
     
@@ -152,6 +157,8 @@ public class EnemyMovement : MonoBehaviour
         RandomMovementFixedUpdate();
         WaypointMovementFixedUpdate();
         ChaseMovementFixedUpdate();
+        AdvanceOnTargetMovementFixedUpdate();
+        InvestigateMovementFixedUpdate();
     }
 
     #endregion
@@ -267,7 +274,7 @@ public class EnemyMovement : MonoBehaviour
 
     /// <summary>
     /// AI chase movement update.
-    /// Only used during combat engagement with a target and the target is not within combat reach.
+    /// Only used during combat engagement and the target is within sight detection but not within combat reach.
     /// </summary>
     private void ChaseMovementFixedUpdate()
     {
@@ -281,6 +288,47 @@ public class EnemyMovement : MonoBehaviour
         _rigidBody.velocity =
             new Vector2((_enemyCombat.Target.transform.position.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                         * runSpeed, 0f) * Time.deltaTime;
+    }
+
+
+    /// <summary>
+    /// AI advance on target movement update.
+    /// Only used during combat engagement and at ranged attack distance, the AI will slowly advance the target between
+    /// each ranged attack while the ranged attack timer ticks.
+    /// </summary>
+    private void AdvanceOnTargetMovementFixedUpdate()
+    {
+        if (!_enemyCombat.AdvanceTarget)
+            return;
+        
+        FlipSprite();
+        
+        Vector2 currentPos = _rigidBody.position;
+        Vector2 destPos = GetMidPoint(_enemyCombat.Target);
+
+        _rigidBody.velocity =
+            new Vector2((destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
+                        * walkSpeed, 0f) * Time.deltaTime;
+    }
+    
+    /// <summary>
+    /// AI investigate movement update.
+    /// Only used when combat has been initiated by an invoker from behind and not within sight detection
+    /// when AI turns around.
+    /// </summary>
+    private void InvestigateMovementFixedUpdate()
+    {
+        if (!_enemyCombat.InvestigateEngagement || _enemyCombat.Target)
+            return;
+        
+        FlipSprite();
+        
+        Vector2 currentPos = _rigidBody.position;
+        Vector2 destPos = _enemyCombat.InvestigateDestPos;
+
+        _rigidBody.velocity =
+            new Vector2((destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
+                        * walkSpeed, 0f) * Time.deltaTime;
     }
     
     #endregion
@@ -357,7 +405,7 @@ public class EnemyMovement : MonoBehaviour
     {
         return applyWaypointMovement && waypoints.Length != 0 && _isGrounded &&
                !_waypointPathDelayed && (_currentWpId != waypoints.Length || loopWaypointPath) &&
-               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat;
+               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat && !_enemyCombat.InvestigateEngagement;
     }
 
     /// <summary>
@@ -367,7 +415,7 @@ public class EnemyMovement : MonoBehaviour
     private bool AllowRandomMovement()
     {
         return applyRandomMovement && _isGrounded && !_randomMoveDelayed &&
-               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat;
+               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat && !_enemyCombat.InvestigateEngagement;
     }
 
 
@@ -378,6 +426,19 @@ public class EnemyMovement : MonoBehaviour
     {
         foreach (WaypointInfo wp in waypoints)
             wp.WaypointReached = false;
+    }
+    
+    /// <summary>
+    /// Retrieve a midpoint between this AI gameobject and the target gameobject passed as parameter.
+    /// </summary>
+    /// <param name="target">The target gameobject that will be used for its current position.</param>
+    /// <returns>Returns the midpoint between this AI gameobject and the target gameobject.</returns>
+    private Vector2 GetMidPoint(GameObject target)
+    {
+        Vector2 myPos = transform.position;
+        Vector2 targetPos = target.transform.position;
+
+        return new Vector2((myPos.x + targetPos.x) / 2, (myPos.y + targetPos.y) / 2);
     }
     
     #endregion

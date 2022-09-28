@@ -1807,10 +1807,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lightAttackDmg: 12.5
   heavyAttackDmg: 25
-  timeBetweenAttacks: 1.5
-  combatReach: 1.5
-  disengageXDistance: 5
+  initialMeleeAttackTime: 0.5
+  repeatMeleeAttackTime: 1.5
+  initialRangeAttackTime: 0.5
+  repeatRangeAttackTime: 1.5
+  advanceTargetTime: 2.25
+  stopAdvanceTargetTime: 1.25
+  shouldAdvanceToTarget: 1
+  meleeCombatReach: 2
+  rangeCombatReach: 4
+  investigateMoveDistance: 3
+  disengageXDistance: 7
   disengageYDistance: 2
+  sightCollider2DSize: {x: 5, y: 0.5}
+  sightCollider2DOffset: {x: 0, y: 0}
+  throwKnifePrefab: {fileID: 4566541791185861260, guid: 5c9a2cd76d14e42499b833af047b4938, type: 3}
+  throwKnifeSprite: {fileID: 21300000, guid: da3944b1a7fbca740b934312a9827421, type: 3}
+  throwKnifeSpawnTransform: {fileID: 4000013623690178}
+  throwKnifeSpawnOffset: {x: 1, y: 0}
 --- !u!114 &7674412284704653532
 MonoBehaviour:
   m_ObjectHideFlags: 0

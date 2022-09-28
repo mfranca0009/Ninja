@@ -2,14 +2,74 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+// TODO: Prevent movement when AI is performing slow attack
+// TODO: Either use a second animation layer and blending, or prevent movement all together with attacks.
+
 public class EnemyCombat : MonoBehaviour
 {
     #region Public Properties
     
+    /// <summary>
+    /// The current target the AI has acquired.
+    /// </summary>
     public GameObject Target { get; private set; }
+    
+    /// <summary>
+    /// Chase state to enable chase movement<br></br><br></br>
+    /// Occurs during initial combat engagement if the AI is not within range for melee or ranged combat.
+    /// </summary>
     public bool ChaseTarget { get; private set; }
+    
+    /// <summary>
+    /// Advance state to enable advance to target movement<br></br><br></br>
+    /// Occurs during ranged combat to advance the AI toward the target without requiring the target to move closer
+    /// to initiate melee combat.
+    /// </summary>
+    public bool AdvanceTarget { get; private set; }
+    
+    /// <summary>
+    /// Investigate state to enable investigate movement<br></br><br></br>
+    /// Occurs when a target initiates combat from the back of the AI, which will result in the AI investigating the
+    /// engagement.
+    /// </summary>
+    public bool InvestigateEngagement { get; private set; }
+    
+    /// <summary>
+    /// The stored destination position used where the AI will move to when investigating. Once reaching this point,
+    /// the AI will complete its investigation.
+    /// </summary>
+    public Vector2 InvestigateDestPos { get; private set; }
+    
+    /// <summary>
+    /// In combat state <br></br><br></br>
+    /// To determine when the AI is in actual melee or ranged combat with a target.
+    /// </summary>
     public bool InCombat { get; private set; }
+    
+    /// <summary>
+    /// The current attack state that the AI is performing.<br></br><br></br>
+    /// Currently not used, but should be transitioned into for a more state-like system. In example, use this to
+    /// control what attack state should be performed by changing this state variable.
+    /// </summary>
+    public AttackState AttackState { get; private set; }
+    
+    /// <summary>
+    /// The current attack type that the AI is performing.<br></br><br></br>
+    /// Currently not used, but should be transitioned into for a more state-like system. In example, use this to
+    /// control what attack type should be performed by changing this state variable.
+    /// </summary>
+    public AttackType AttackType { get; private set; }
+    
+    /// <summary>
+    /// Light attack perform state, used to differentiate damage amounts when attacking a target within
+    /// `HitBoxDetection.cs`
+    /// </summary>
     public bool LightAttackPerformed { get; set; }
+    
+    /// <summary>
+    /// Slow attack perform state, used to differentiate damage amounts when attacking a target within
+    /// `HitBoxDetection.cs`
+    /// </summary>
     public bool SlowAttackPerformed { get; set; }
     
     #endregion
@@ -28,28 +88,91 @@ public class EnemyCombat : MonoBehaviour
     
     #region Serialized Fields
 
-    [Header("Combat Timing Settings")]
+    [Header("Combat Attack Timing Settings")]
     
-    [Tooltip("Wait time between attacks")] 
-    [SerializeField] private float timeBetweenAttacks = 1.5f;
+    [Tooltip("Initial wait time for melee attacks")] 
+    [SerializeField] private float initialMeleeAttackTime = 0.5f;
 
+    [Tooltip("Repeat wait time between melee attacks")] 
+    [SerializeField] private float repeatMeleeAttackTime = 1.5f;
+    
+    [Tooltip("Initial wait time for range attacks")] 
+    [SerializeField] private float initialRangeAttackTime = 0.5f;
+    
+    [Tooltip("Repeat wait time between range attacks")] 
+    [SerializeField] private float repeatRangeAttackTime = 1.5f;
+    
+    [Header("Combat Movement Timing Settings")]
+
+    [Tooltip("The wait time between advancing the target while at a ranged attack distance")] 
+    [SerializeField] private float advanceTargetTime = 2.25f;
+
+    [Tooltip("The wait time to disable the advancing of the target while at a ranged attack distance")] 
+    [SerializeField] private float stopAdvanceTargetTime = 1.25f;
+
+    [Header("Combat Movement Settings")] 
+    
+    [Tooltip("Whether the AI should advance towards the target when within ranged combat distance")]
+    [SerializeField] private bool shouldAdvanceToTarget = true;
+    
     [Header("Combat Distance Settings")]
     
-    [Tooltip("The distance from the target that is acceptable to trigger combat")] 
-    [SerializeField] private float combatReach = 2f;
+    [Tooltip("The distance from the target that is acceptable to trigger melee combat")] 
+    [SerializeField] private float meleeCombatReach = 2f;
+
+    [Tooltip("The distance from the target that is acceptable to trigger range combat")] 
+    [SerializeField] private float rangeCombatReach = 4f;
+
+    [Tooltip("The distance the AI will move when investigating when an invoker engages combat from behind")]
+    [SerializeField] private float investigateMoveDistance = 3f;
+
+    [Tooltip("The tolerance distance that will trigger investigate completion reaching the investigate" +
+             " destination position.")]
+    [SerializeField] private float investigateCompletionDistance = 0.5f;
     
     [Tooltip("Distance on the X-axis to cause disengage from target")] 
-    [SerializeField] private float disengageXDistance = 5f;
+    [SerializeField] private float disengageXDistance = 7f;
     
     [Tooltip("Distance on the Y-axis to cause disengage from target")] 
     [SerializeField] private float disengageYDistance = 2f;
+
+    [Header("Sight Detection Settings")]
+    
+    [Tooltip("The size of the sight detection 2D box collider")]
+    [SerializeField] private Vector2 sightCollider2DSize = new(5f, 0.5f);
+    
+    [Tooltip("The offset of the sight detection 2D box collider")]
+    [SerializeField] private Vector2 sightCollider2DOffset = new(0f, 0f);
+    
+     [Header("Throwing Knife Settings")]
+        
+     [Tooltip("The knife prefab that will be instantiated into the scene")]
+     [SerializeField] private GameObject throwKnifePrefab;
+        
+     [Tooltip("The knife sprite that will be visible when the knife is active within the scene")]
+     [SerializeField] private Sprite throwKnifeSprite;
+        
+     [Tooltip("The transform the knife will use as a starting spawn position")]
+     [SerializeField] private Transform throwKnifeSpawnTransform;
+    
+     [Tooltip("A position offset to adjust spawn positioning further in relation to the spawn transform used")]
+     [SerializeField] private Vector2 throwKnifeSpawnOffset = new (1f, 0f);
 
     #endregion
     
     #region Private Fields
     
+    // Combat timers
+    private float _meleeAttackTimer;
+    private float _rangeAttackTimer;
+    private float _advanceTargetTimer;
+    private float _stopAdvanceTargetTimer;
+    
+    // Animator / Animation
     private Animator _animator;
-    private float _timeBetweenAttacksTimer;
+
+    // Sight Detection Box Collider
+    private BoxCollider2D _sightCollider2D;
 
     // Enemy Scripts
     private Health _health;
@@ -65,7 +188,25 @@ public class EnemyCombat : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _health = GetComponent<Health>();
-        _timeBetweenAttacksTimer = timeBetweenAttacks;
+        
+        _meleeAttackTimer = initialMeleeAttackTime;
+        _rangeAttackTimer = initialRangeAttackTime;
+        _advanceTargetTimer = advanceTargetTime;
+        _stopAdvanceTargetTimer = stopAdvanceTargetTime;
+        
+        AttackState = AttackState.None;
+        AttackType = AttackType.None;
+
+        InvestigateDestPos = Vector2.zero;
+        
+        // Retrieve and setup sight colliders
+        _sightCollider2D = gameObject.transform.Find("SightDetection").GetComponent<BoxCollider2D>();
+
+        if (!_sightCollider2D)
+            return;
+        
+        _sightCollider2D.size = sightCollider2DSize;
+        _sightCollider2D.offset = sightCollider2DOffset;
     }
 
     // Update is called once per frame
@@ -76,6 +217,7 @@ public class EnemyCombat : MonoBehaviour
         
         CombatStateUpdate();
         TargetRangeUpdate();
+        InvestigateRangeUpdate();
     }
 
     private void OnTriggerEnter2D(Collider2D col)
@@ -84,7 +226,7 @@ public class EnemyCombat : MonoBehaviour
             return;
 
         Debug.Log("TARGET ACQUIRED!");
-        
+
         _targetHealth = col.gameObject.GetComponentInParent<Health>();
         
         if (!_targetHealth || _targetHealth.Dead)
@@ -112,14 +254,25 @@ public class EnemyCombat : MonoBehaviour
             ResetTarget();
             return;
         }
-
-        if (Vector2.Distance(Target.transform.position, transform.position) <= combatReach)
+        
+        if (Vector2.Distance(Target.transform.position, transform.position) <= meleeCombatReach)
         {
             InCombat = true;
+            ChaseTarget = false;
+            AdvanceTarget = false;
             ExecuteRandomMeleeAttack();
         }
+        else if (Vector2.Distance(Target.transform.position, transform.position) <= rangeCombatReach)
+        {
+            InCombat = true;
+            ChaseTarget = false;
+            ExecuteRangeAttack();
+        }
         else
+        {
             InCombat = false;
+            ChaseTarget = true;
+        }
     }
     
     /// <summary>
@@ -130,11 +283,11 @@ public class EnemyCombat : MonoBehaviour
         if (!Target)
             return;
 
-        Vector2 targetPosition = Target.transform.position;
-        Vector2 currentPosition = transform.position;
+        Vector2 targetPos = Target.transform.position;
+        Vector2 currentPos = transform.position;
 
-        float yDist = Mathf.Abs(targetPosition.y - currentPosition.y);
-        float xDist = Mathf.Abs(targetPosition.x - currentPosition.x);
+        float yDist = Mathf.Abs(targetPos.y - currentPos.y);
+        float xDist = Mathf.Abs(targetPos.x - currentPos.x);
 
         if (xDist < disengageXDistance && yDist < disengageYDistance)
             return;
@@ -144,39 +297,116 @@ public class EnemyCombat : MonoBehaviour
         ResetCombatStates();
         ResetTarget();
     }
+
+    private void InvestigateRangeUpdate()
+    {
+        if (!InvestigateEngagement || Target)
+            return;
+
+        Vector2 currentPos = transform.position;
+
+        if (Mathf.Abs(Vector2.Distance(currentPos, InvestigateDestPos)) > investigateCompletionDistance)
+            return;
+        
+        Debug.Log("Completed investigation!");
+        InvestigateEngagement = false;
+    }
     
     /// <summary>
-    /// Execute a random melee attack, will only attack based on the set time that has passed from the last attack.
+    /// Execute a random melee attack, will only perform attack based on the set time
+    /// that has passed from the last attack.
     /// </summary>
     private void ExecuteRandomMeleeAttack()
     {
-        if (_timeBetweenAttacksTimer <= 0)
+        if (_meleeAttackTimer <= 0)
         {
+            AttackType = AttackType.Melee;
+            
             switch (Random.Range(1, 100))
             {
                 case <= 25:
+                    AttackState = AttackState.LightAttack;
                     _animator.SetTrigger("LightAttackLeft");
                     LightAttackPerformed = true;
                     break;
                 case > 25 and <= 50:
+                    AttackState = AttackState.LightAttack;
                     _animator.SetTrigger("LightAttackRight");
                     LightAttackPerformed = true;
                     break;
                 default:
+                    AttackState = AttackState.SlowAttack;
                     _animator.SetTrigger("SlowAttack");
                     SlowAttackPerformed = true;
                     break;
             }
 
-            _timeBetweenAttacksTimer = timeBetweenAttacks;
+            _meleeAttackTimer = repeatMeleeAttackTime;
         }
         else
-            _timeBetweenAttacksTimer -= Time.deltaTime;
+            _meleeAttackTimer -= Time.deltaTime;
+    }
+
+    /// <summary>
+    /// Execute a ranged attack, will only perform attack based on the set time that has passed from the last attack.
+    /// If the AI should advance on the target, then it will do so.
+    /// </summary>
+    private void ExecuteRangeAttack()
+    {
+        if (_rangeAttackTimer <= 0)
+        {
+            AttackType = AttackType.Ranged;
+            AttackState = AttackState.ThrowKnife;
+
+            _animator.SetTrigger("ThrowKnife");
+            _rangeAttackTimer = repeatRangeAttackTime;
+        }
+        else
+        {
+            _rangeAttackTimer -= Time.deltaTime;
+            
+        }
+        
+        AdvanceOnTarget();
+        StopAdvanceOnTarget();
+    }
+
+    /// <summary>
+    /// The timer that controls when the AI should advance on the target, currently used during ranged attacking.
+    /// If `shouldAdvanceToTarget` is set to true, then the AI will advance on the target once the timer has passed
+    /// when within a ranged attack distance from the target.
+    /// </summary>
+    private void AdvanceOnTarget()
+    {
+        if (!shouldAdvanceToTarget && AdvanceTarget)
+            return;
+
+        if (_advanceTargetTimer <= 0)
+        {
+            AdvanceTarget = true;
+            _advanceTargetTimer = advanceTargetTime;
+        }
+        else
+            _advanceTargetTimer -= Time.deltaTime;
+    }
+
+    private void StopAdvanceOnTarget()
+    {
+        if (!shouldAdvanceToTarget && !AdvanceTarget)
+            return;
+
+        if (_stopAdvanceTargetTimer <= 0)
+        {
+            AdvanceTarget = false;
+            _stopAdvanceTargetTimer = stopAdvanceTargetTime;
+        }
+        else
+            _stopAdvanceTargetTimer -= Time.deltaTime;
     }
     
     #endregion
 
-    #region Public Methods
+    #region Public Helper Methods
 
     /// <summary>
     /// Notify the AI of an engagement when not already in chase movement or combat.
@@ -188,8 +418,55 @@ public class EnemyCombat : MonoBehaviour
             return;
         
         FaceTarget(invoker);
+
+        Debug.Log("Investigating!");
+        
+        bool facingLeft = transform.localScale.x < 0;
+        
+        Vector2 currentPos = transform.position;
+        InvestigateDestPos =
+            new Vector2(currentPos.x + (facingLeft ? -investigateMoveDistance : investigateMoveDistance), currentPos.y);
+        
+        InvestigateEngagement = true;
     }
 
+
+    /// <summary>
+    /// Method to instantiate a throwing knife into the scene. It will create the object, adjust parameters, and then
+    /// activate the gameobject. Activating the gameobject will trigger the movement of the throwing knife.<br></br><br></br>
+    /// Note: This is currently executed on its own by an Animation Event through the `Rogue_throw_knife` animation.
+    /// </summary>
+    public void InstantiateThrowingKnife()
+    {
+        // Create throwing knife object
+        GameObject knifeToCreate = Instantiate(throwKnifePrefab, throwKnifeSpawnTransform.position,
+            new Quaternion());
+
+        if (!knifeToCreate)
+            return;
+
+        ThrowKnife throwKnife = knifeToCreate.GetComponent<ThrowKnife>();
+        SpriteRenderer knifeSpriteRenderer = knifeToCreate.GetComponent<SpriteRenderer>();
+        Rigidbody2D knifeRigidBody2D = knifeToCreate.GetComponent<Rigidbody2D>();
+
+        if (!throwKnife || !knifeSpriteRenderer || !knifeRigidBody2D)
+            return;
+
+        // Throwing knife setup
+        throwKnife.Owner = gameObject;
+        throwKnife.ThrowLeft = transform.localScale.x < 0;
+        knifeSpriteRenderer.sprite = throwKnifeSprite;
+        knifeToCreate.transform.Find("Hitbox").gameObject.layer = LayerMask.NameToLayer("EnemyRangeAttack");
+
+        knifeToCreate.transform.position +=
+            new Vector3(throwKnife.ThrowLeft ? -throwKnifeSpawnOffset.x + -0.5f : throwKnifeSpawnOffset.x,
+                throwKnifeSpawnOffset.y, 0f);
+
+        // Activate throwing knife object
+        knifeRigidBody2D.bodyType = RigidbodyType2D.Dynamic;
+        knifeToCreate.SetActive(true);
+    }
+    
     #endregion
     
     #region Helper Methods
@@ -202,7 +479,6 @@ public class EnemyCombat : MonoBehaviour
     {
         Debug.Log("Setting Target!");
         Target = target;
-        ChaseTarget = true;
     }
 
     /// <summary>
@@ -235,6 +511,7 @@ public class EnemyCombat : MonoBehaviour
         _animator.ResetTrigger("LightAttackLeft");
         _animator.ResetTrigger("LightAttackRight");
         _animator.ResetTrigger("SlowAttack");
+        _animator.ResetTrigger("ThrowKnife");
     }
     
     /// <summary>
@@ -245,7 +522,19 @@ public class EnemyCombat : MonoBehaviour
         Debug.Log("Resetting combat states!");
         InCombat = false;
         ChaseTarget = false;
+        AdvanceTarget = false;
+        InvestigateEngagement = false;
         ResetAllAttackTriggers();
+        ResetCombatTimers();
+    }
+
+    private void ResetCombatTimers()
+    {
+        Debug.Log("Resetting combat timers!");
+        _meleeAttackTimer = initialMeleeAttackTime;
+        _rangeAttackTimer = initialRangeAttackTime;
+        _advanceTargetTimer = advanceTargetTime;
+        _stopAdvanceTargetTimer = stopAdvanceTargetTime;
     }
     
     #endregion

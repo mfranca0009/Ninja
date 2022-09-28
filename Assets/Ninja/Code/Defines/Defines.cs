@@ -11,6 +11,13 @@ public enum UpdateMode
     FixedUpdate = 1
 }
 
+public enum AttackType
+{
+    None = 0,
+    Melee = 1,
+    Ranged = 2
+}
+
 public enum AttackState
 {
     None = 0,
