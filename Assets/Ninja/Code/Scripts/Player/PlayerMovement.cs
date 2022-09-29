@@ -31,15 +31,22 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Restrictions")]
     [Tooltip("The amount of allowable jumps the player can use while in-air")]
     [SerializeField] private int maxJumps = 2;
-
+    
     [Header("Movement Tolerances")]
     [Tooltip("Raycast distance for transitioning from in-air to land")]
     [SerializeField] private float landingTolerance = 0.003f;
-    
+
     #endregion
-    
+
+    #region Public Field
+
+    [Tooltip("Determines if the player's movement needs to be restricted for knockback")]
+    public bool IncomingKnockback { get; set; }
+
+    #endregion
+
     #region Private Fields
-    
+
     private PlayerInputActions _playerInputActions;
     private InputAction _movement;
     private InputAction _jump;
@@ -54,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
     private bool _handledJump;
     private bool _isLanding;
     private bool _inAir;
-    private bool _incomingKnockbackEffect; //Added by Tyler
     private int _jumpCount;
     
     // Player Scripts
@@ -75,8 +81,6 @@ public class PlayerMovement : MonoBehaviour
 
         _health = GetComponent<Health>();
         _playerCombat = GetComponent<PlayerCombat>();
-
-        _incomingKnockbackEffect = false; //Added by Tyler
     }
 
     private void OnEnable()
@@ -339,25 +343,6 @@ public class PlayerMovement : MonoBehaviour
         return _rigidBody2D.velocity.y < 0;
     }
     
-    /// <summary>
-    /// Checks if the player is about to experience a knockback effect
-    /// </summary>
-    /// <returns>Returns true if there's an incoming knockback effect, otherwise false</returns>
-    /// Added by Tyler
-    
-    public bool GetIncomingKnockbackEffect()
-    {
-        return _incomingKnockbackEffect;
-    }
-    /// <summary>
-    /// Sets if the player is about to experience a knockback effect
-    /// </summary>
-    /// <returns> Nothing</returns>
-    /// Added by Tyler
-    public void SetIncomingKnockBackEffect(bool incomingKnockbackEffect)
-    {
-        _incomingKnockbackEffect = incomingKnockbackEffect;
-    }
     #endregion
 
     #region Private Helper Methods
@@ -385,7 +370,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to move, otherwise false.</returns>
     private bool CanMove()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && !GetIncomingKnockbackEffect();
+        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && !IncomingKnockback;
     }
 
     /// <summary>
@@ -394,7 +379,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to walk, otherwise false.</returns>
     private bool CanWalk()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && IsGrounded() && !GetIncomingKnockbackEffect();
+        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && IsGrounded() && !IncomingKnockback;
     }
     
     /// <summary>
@@ -403,7 +388,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to jump, otherwise false.</returns>
     private bool CanJump()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && _jumpCount < maxJumps && !GetIncomingKnockbackEffect();
+        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && _jumpCount < maxJumps && !IncomingKnockback;
     }
 
     #endregion

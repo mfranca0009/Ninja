@@ -14,12 +14,17 @@ public class damagePlayer_Trap : MonoBehaviour
     [Tooltip("The ammount of knockback provided to the entity colliding with the swinging trap.")]
     public Vector2 knockback = Vector2.one;
     
+    [Tooltip("How many frames to wait before reenabling player movement.")]
+    [SerializeField]private int frameDelay = 10;
+    
+    private int frameCount = 0;
     private SwingingTrap sTrap;
     private GameObject foreignEntity = null;
-    private bool hasHit = false;
-    private bool wait = false;
-    private int frameDelay = 10;
-    private int frameCount = 0;
+    private bool hasHit;
+    private bool wait;
+    private bool trapTriggered;
+    
+    
 
     void Start()
     {
@@ -29,35 +34,34 @@ public class damagePlayer_Trap : MonoBehaviour
 
     private void Update()
     {
-        //If the trap has been triggered, toss the player.
-        if (foreignEntity != null)
+        if (foreignEntity == null)
         {
-            if (wait)
-            {
-                foreignEntity.GetComponent<Rigidbody2D>().AddRelativeForce(knockback, ForceMode2D.Impulse);
-                
-            }
-            else
-            {
-                wait = true;
-            }
+            return;
         }
 
-        //If trap has been triggered, wait so many frames before allowing player to move again.
-        if (wait)
+        if (wait && !trapTriggered)
         {
-            if (frameCount >= frameDelay)
-            {
-                foreignEntity.GetComponent<PlayerMovement>().SetIncomingKnockBackEffect(false);
-                foreignEntity = null;
-                wait = false;
-            }
-            else
-            {
-                frameCount++;
-            }
+            foreignEntity.GetComponent<Rigidbody2D>().AddRelativeForce(knockback, ForceMode2D.Impulse);
+            trapTriggered = true;
+        }
+        else
+        {
+            wait = true;
+        }
+
+        if (frameCount >= frameDelay)
+        {
+            foreignEntity.GetComponent<PlayerMovement>().IncomingKnockback = false;
+            foreignEntity = null;
+            wait = false;
+        }
+        else
+        {
+            frameCount++;
+            return;
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //If the trap hasn't hit anyone and has been activated
@@ -69,7 +73,7 @@ public class damagePlayer_Trap : MonoBehaviour
                 //then set the foreignEntity to whichever was hit, damge them, and knock them back.
                 foreignEntity = collision.gameObject;
                 foreignEntity.GetComponent<Health>().DealDamage(damage, this.gameObject);
-                foreignEntity.GetComponent<PlayerMovement>().SetIncomingKnockBackEffect(true);
+                foreignEntity.GetComponent<PlayerMovement>().IncomingKnockback = true;
 
 
                 //Finally, set hasHit to true so that it doesn't activate additional times.
