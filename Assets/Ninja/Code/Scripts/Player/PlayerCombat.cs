@@ -1,3 +1,5 @@
+using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,15 +12,19 @@ public class PlayerCombat : MonoBehaviour
     
     /// <summary>
     /// Light attack perform state, used to differentiate damage amounts when attacking a target within
-    /// `HitBoxDetection.cs`
+    /// `HitBoxDetection.cs`<br></br><br></br>
+    /// Note: Animation Event during light attack animation(s) will trigger this state to true. Must be an int type,
+    /// animation events do not cover boolean.
     /// </summary>
-    public bool LightAttackPerformed { get; set; }
+    public int LightAttackPerformed { get; set; }
     
     /// <summary>
     /// Slow attack perform state, used to differentiate damage amounts when attacking a target within
-    /// `HitBoxDetection.cs`
+    /// `HitBoxDetection.cs`<br></br><br></br>
+    /// Note: Animation Event during slow attack animation(s) will trigger this state to true. Must be an int type,
+    /// animation events do not cover boolean.
     /// </summary>
-    public bool SlowAttackPerformed { get; set; }
+    public int SlowAttackPerformed { get; set; }
     
     /// <summary>
     /// The maximum amount of knives that can be active at one time within the scene.
@@ -36,13 +42,14 @@ public class PlayerCombat : MonoBehaviour
 
     #region Public Fields
     
-    [Header("Attack Damage Settings")]
-    
-    [Tooltip("Light attack damage amount")] 
-    public float lightAttackDmg = 12.5f;
-
-    [Tooltip("heavy attack damage amount")] 
-    public float heavyAttackDmg = 25f;
+    // Moved to `MeleeWeapon.cs` script attached to melee weapon prefab
+    // [Header("Attack Damage Settings")]
+    //
+    // [Tooltip("Light attack damage amount")] 
+    // public float lightAttackDmg = 12.5f;
+    //
+    // [Tooltip("heavy attack damage amount")] 
+    // public float heavyAttackDmg = 25f;
     
     #endregion
 
@@ -63,6 +70,20 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Vector2 throwKnifeSpawnOffset = new (1f, 0f);
 
     #endregion
+
+    [Header("Melee Weapon Settings")] 
+    
+    [Tooltip("The left melee weapon gameobject")] 
+    [SerializeField] private GameObject meleeWeaponLeft;
+    
+    [Tooltip("The right melee weapon gameobject")] 
+    [SerializeField] private GameObject meleeWeaponRight;
+    
+    [Tooltip("The left melee weapon sprite that will be visible when the weapon is active within the scene")]
+    [SerializeField] private Sprite meleeWeaponLeftSprite;
+    
+    [Tooltip("The right melee weapon sprite that will be visible when the weapon is active within the scene")]
+    [SerializeField] private Sprite meleeWeaponRightSprite;
     
     #region Private Fields
     
@@ -88,6 +109,8 @@ public class PlayerCombat : MonoBehaviour
         _animator = GetComponent<Animator>();
         _playerMovement = GetComponent<PlayerMovement>();
         MaxKnives = 1;
+        
+        SetupMeleeWeapons();
     }
 
     private void OnEnable()
@@ -145,7 +168,6 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         _animator.SetTrigger("SlowAttack");
-        SlowAttackPerformed = true;
     }
 
     private void OnSlowAttackCancel(InputAction.CallbackContext obj)
@@ -161,7 +183,6 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         _animator.SetTrigger("LightAttack");
-        LightAttackPerformed = true;
     }
 
     private void OnLightAttackCancel(InputAction.CallbackContext obj)
@@ -226,28 +247,6 @@ public class PlayerCombat : MonoBehaviour
         return attackState;
     }
     
-    #endregion
-
-    #region Private Helper Methods
-
-    /// <summary>
-    /// Checks if the player is allowed to attack
-    /// </summary>
-    /// <returns>Returns true if player is allowed to attack, otherwise false.</returns>
-    private bool CanAttack()
-    {
-        return IsInAttackState() && !_playerMovement.IsMoving() && !IsInAttackAnim() && _playerMovement.IsGrounded();
-    }
-    
-    /// <summary>
-    /// Checks if the player is allowed to throw a knife
-    /// </summary>
-    /// <returns>Returns true if player is allowed to throw a knife, otherwise false.</returns>
-    private bool CanThrowKnife()
-    {
-        return ActiveKnives != MaxKnives;
-    }
-    
     /// <summary>
     /// Method to instantiate a throwing knife into the scene. It will create the object, adjust parameters, and then
     /// activate the gameobject. Activating the gameobject will trigger the movement of the throwing knife.<br></br><br></br>
@@ -284,6 +283,63 @@ public class PlayerCombat : MonoBehaviour
         knifeToCreate.SetActive(true);
         ActiveKnives++;
     }
+    
+    #endregion
 
+    #region Private Helper Methods
+
+    /// <summary>
+    /// Checks if the player is allowed to attack
+    /// </summary>
+    /// <returns>Returns true if player is allowed to attack, otherwise false.</returns>
+    private bool CanAttack()
+    {
+        return IsInAttackState() && !_playerMovement.IsMoving() && !IsInAttackAnim() && _playerMovement.IsGrounded();
+    }
+    
+    /// <summary>
+    /// Checks if the player is allowed to throw a knife
+    /// </summary>
+    /// <returns>Returns true if player is allowed to throw a knife, otherwise false.</returns>
+    private bool CanThrowKnife()
+    {
+        return ActiveKnives != MaxKnives;
+    }
+
+    /// <summary>
+    /// Setup melee weapons, includes sprites, tag, layer, and owner of left and right weapon.
+    /// </summary>
+    private void SetupMeleeWeapons()
+    {
+        SpriteRenderer meleeWeaponSpriteRenderer;
+        MeleeWeapon meleeWeapon;
+        
+        if (meleeWeaponLeft)
+        {
+            meleeWeaponSpriteRenderer = meleeWeaponLeft.GetComponent<SpriteRenderer>();
+            
+            if (!meleeWeaponSpriteRenderer)
+                return;
+            
+            meleeWeaponSpriteRenderer.sprite = meleeWeaponLeftSprite;
+
+            meleeWeapon = meleeWeaponLeft.GetComponent<MeleeWeapon>();
+            meleeWeapon.Owner = gameObject;
+        }
+
+        if (meleeWeaponRight)
+        {
+            meleeWeaponSpriteRenderer = meleeWeaponRight.GetComponent<SpriteRenderer>();
+            
+            if (!meleeWeaponSpriteRenderer)
+                return;
+            
+            meleeWeaponSpriteRenderer.sprite = meleeWeaponRightSprite;
+
+            meleeWeapon = meleeWeaponRight.GetComponent<MeleeWeapon>();
+            meleeWeapon.Owner = gameObject;
+        }
+    }
+    
     #endregion
 }

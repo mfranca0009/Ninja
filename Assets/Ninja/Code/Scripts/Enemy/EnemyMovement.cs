@@ -203,8 +203,8 @@ public class EnemyMovement : MonoBehaviour
             _rigidBody.velocity = new Vector2((_destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                                               * currentSpeed, 0f) * Time.deltaTime;
         }
-        
-        _destReached = Vector2.Distance(currentPos, _destPos) <= randomPointReachedTolerance;
+
+        _destReached = Mathf.Abs(Vector2.Distance(currentPos, _destPos)) <= randomPointReachedTolerance;
     }
     
     /// <summary>
@@ -238,7 +238,7 @@ public class EnemyMovement : MonoBehaviour
         // Check if the waypoint position and AI's current position is within range of the reached tolerance to trigger
         // the waypoint has been reached. The tolerance is added since floats are never always exact when comparing,
         // if the correct amount of tolerance is not used then the AI will never stop at the waypoint.
-        if (Vector2.Distance(waypoint.waypointPosition, currentPos) < waypointReachedTolerance)
+        if (Mathf.Abs(Vector2.Distance(waypoint.waypointPosition, currentPos)) < waypointReachedTolerance)
         {
             waypoint.WaypointReached = true;
             

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 
 public class HitBoxDetection : MonoBehaviour
@@ -6,50 +7,52 @@ public class HitBoxDetection : MonoBehaviour
     {
         Health victimHealth = col.GetComponent<Health>();
 
+        // If no health attached to victim, then we have nothing to do.
         if (!victimHealth)
             return;
 
+        float damageToApply = 0f;
+        GameObject invoker = null;
+        
+        // Combat scripts
         PlayerCombat playerCombat = GetComponentInParent<PlayerCombat>();
         EnemyCombat enemyCombat = GetComponentInParent<EnemyCombat>();
+        
+        // Weapon scripts
+        MeleeWeapon meleeWeapon = GetComponentInParent<MeleeWeapon>();
         ThrowKnife throwKnife = GetComponentInParent<ThrowKnife>();
 
-        float damageToApply = 0f;
-
-        if (playerCombat)
+        // Process type of damage, the amount to apply, and the invoker who caused it
+        if (meleeWeapon)
         {
-            damageToApply = playerCombat.LightAttackPerformed switch
+            damageToApply = !playerCombat switch
             {
-                true when !playerCombat.SlowAttackPerformed => playerCombat.lightAttackDmg,
-                false when playerCombat.SlowAttackPerformed => playerCombat.heavyAttackDmg,
+                false when !enemyCombat => playerCombat.LightAttackPerformed switch
+                {
+                    1 when playerCombat.SlowAttackPerformed == 0 => meleeWeapon.lightAttackDmg,
+                    0 when playerCombat.SlowAttackPerformed == 1 => meleeWeapon.heavyAttackDmg,
+                    _ => damageToApply
+                },
+                true when enemyCombat => enemyCombat.LightAttackPerformed switch
+                {
+                    1 when enemyCombat.SlowAttackPerformed == 0 => meleeWeapon.lightAttackDmg,
+                    0 when enemyCombat.SlowAttackPerformed == 1 => meleeWeapon.heavyAttackDmg,
+                    _ => damageToApply
+                },
                 _ => damageToApply
             };
 
-            // Reset
-            playerCombat.LightAttackPerformed = false;
-            playerCombat.SlowAttackPerformed = false;
-
-            victimHealth.DealDamage(damageToApply, playerCombat.gameObject);
-        }
-        else if (enemyCombat)
-        {
-            damageToApply = enemyCombat.LightAttackPerformed switch
-            {
-                true when !enemyCombat.SlowAttackPerformed => enemyCombat.lightAttackDmg,
-                false when enemyCombat.SlowAttackPerformed => enemyCombat.heavyAttackDmg,
-                _ => damageToApply
-            };
-
-            // Reset
-            enemyCombat.LightAttackPerformed = false;
-            enemyCombat.SlowAttackPerformed = false;
-
-            victimHealth.DealDamage(damageToApply);
+            invoker = meleeWeapon.Owner;
         }
         else if (throwKnife)
         {
-            victimHealth.DealDamage(throwKnife.throwKnifeDmg, throwKnife.Owner);
+            damageToApply = throwKnife.throwKnifeDmg;
+            invoker = throwKnife.Owner;
             throwKnife.UpdateActiveKnives();
             Destroy(throwKnife.gameObject);
         }
+        
+        // Deal damage to victim
+        victimHealth.DealDamage(damageToApply, invoker);
     }
 }
