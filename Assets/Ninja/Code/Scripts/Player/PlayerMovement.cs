@@ -31,15 +31,22 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Restrictions")]
     [Tooltip("The amount of allowable jumps the player can use while in-air")]
     [SerializeField] private int maxJumps = 2;
-
+    
     [Header("Movement Tolerances")]
     [Tooltip("Raycast distance for transitioning from in-air to land")]
     [SerializeField] private float landingTolerance = 0.003f;
-    
+
     #endregion
-    
+
+    #region Public Field
+
+    [Tooltip("Determines if the player's movement needs to be restricted for knockback")]
+    public bool IncomingKnockback { get; set; }
+
+    #endregion
+
     #region Private Fields
-    
+
     private PlayerInputActions _playerInputActions;
     private InputAction _movement;
     private InputAction _jump;
@@ -363,7 +370,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to move, otherwise false.</returns>
     private bool CanMove()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim();
+        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && !IncomingKnockback;
     }
 
     /// <summary>
@@ -372,7 +379,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to walk, otherwise false.</returns>
     private bool CanWalk()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && IsGrounded();
+        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && IsGrounded() && !IncomingKnockback;
     }
     
     /// <summary>
@@ -381,7 +388,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to jump, otherwise false.</returns>
     private bool CanJump()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && _jumpCount < maxJumps;
+        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && _jumpCount < maxJumps && !IncomingKnockback;
     }
 
     #endregion
