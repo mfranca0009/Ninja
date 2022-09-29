@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trap: {fileID: 1981374691745054557}
+  blade: {fileID: 1981374690932121859}
+  rotationSpeed: 170
 --- !u!61 &1981374690810215378
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -135,8 +137,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1981374690932121858}
   - component: {fileID: 1981374690932121863}
-  - component: {fileID: 1981374690932121860}
-  - component: {fileID: 1981374690932121861}
   m_Layer: 0
   m_Name: blade_1
   m_TagString: Untagged
@@ -211,43 +211,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &1981374690932121860
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1981374690932121859}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.0000076293945, y: 0}
-  serializedVersion: 2
-  m_Radius: 2.4799998
---- !u!50 &1981374690932121861
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1981374690932121859}
-  m_BodyType: 0
-  m_Simulated: 0
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1 &1981374691486121141
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,7 +328,7 @@ Transform:
   - {fileID: 1981374691745054556}
   - {fileID: 1981374690810215377}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1981374691745054557
 GameObject:
@@ -376,6 +339,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1981374691745054556}
+  - component: {fileID: 6876877213712695659}
+  - component: {fileID: 1157371122347182377}
   m_Layer: 0
   m_Name: Trap
   m_TagString: Untagged
@@ -400,6 +365,37 @@ Transform:
   m_Father: {fileID: 1981374691509572839}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &6876877213712695659
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981374691745054557}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 14.85, y: 0.1}
+  serializedVersion: 2
+  m_Radius: 2.5
+--- !u!114 &1157371122347182377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981374691745054557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616dc2b5cbd88f34a8310ac93d60709f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  presurePlate: {fileID: 1981374690810215390}
+  damage: 20
+  knockback: {x: -10, y: 10}
 --- !u!1 &1981374691961847433
 GameObject:
   m_ObjectHideFlags: 0

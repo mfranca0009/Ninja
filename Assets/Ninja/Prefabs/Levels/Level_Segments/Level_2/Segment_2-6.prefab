@@ -29,9 +29,175 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 28575744600517028}
+  - {fileID: 1981374690579537824}
+  - {fileID: 1981374691324540685}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &221881322
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 2
+    m_TransformParent: {fileID: 8975747647859032918}
+    m_Modifications:
+    - target: {fileID: 1981374690810215377, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374690810215377, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -17.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572836, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_Name
+      value: Swinging Hazard Trap (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalScale.x
+      value: -0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 15.139999
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 13.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691961847432, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -9.1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_AddedGameObjects: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+--- !u!4 &1981374691324540685 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+  m_PrefabInstance: {fileID: 221881322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &949078855
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 2
+    m_TransformParent: {fileID: 8975747647859032918}
+    m_Modifications:
+    - target: {fileID: 1981374690810215377, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374690810215377, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -17.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572836, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_Name
+      value: Swinging Hazard Trap (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_RootOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.264923
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_AddedGameObjects: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+--- !u!4 &1981374690579537824 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1981374691509572839, guid: 3004f9eb0c0af074eaf3c2ba1d8b2c74, type: 3}
+  m_PrefabInstance: {fileID: 949078855}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9107766775568019387
 PrefabInstance:
   m_ObjectHideFlags: 0
