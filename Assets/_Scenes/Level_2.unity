@@ -4610,6 +4610,14 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 1894500184}
     m_Modifications:
+    - target: {fileID: 1157371121809251487, guid: 25eb6a0cc2d43de428fc52031885872e, type: 3}
+      propertyPath: knockback.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1157371121809251487, guid: 25eb6a0cc2d43de428fc52031885872e, type: 3}
+      propertyPath: knockback.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1217117508255629625, guid: 25eb6a0cc2d43de428fc52031885872e, type: 3}
       propertyPath: m_Name
       value: Segment_2-4

@@ -4,23 +4,22 @@ using UnityEngine;
 
 public class damagePlayer_Trap : MonoBehaviour
 {
-    //Presure Plate - Used to prevent excess hits on an entity when hit.
+
     [Tooltip("The object that triggers the trap")]
     public GameObject presurePlate;
-    //The Swinging Trap Component of the presure plate
-    private SwingingTrap sTrap;
 
     [Tooltip("The ammount of damage to be dealt to the affected enemy.")]
     public float damage = 20.0f;
 
     [Tooltip("The ammount of knockback provided to the entity colliding with the swinging trap.")]
     public Vector2 knockback = Vector2.one;
-
-    //Varriable to store the GameObject hit by the trap.
-    private GameObject foreignEntity;
-
-    //Determines if the trap has hit anyone
+    
+    private SwingingTrap sTrap;
+    private GameObject foreignEntity = null;
     private bool hasHit = false;
+    private bool wait = false;
+    private int frameDelay = 10;
+    private int frameCount = 0;
 
     void Start()
     {
@@ -28,23 +27,51 @@ public class damagePlayer_Trap : MonoBehaviour
         sTrap = presurePlate.GetComponent<SwingingTrap>();    
     }
 
+    private void Update()
+    {
+        //If the trap has been triggered, toss the player.
+        if (foreignEntity != null)
+        {
+            if (wait)
+            {
+                foreignEntity.GetComponent<Rigidbody2D>().AddRelativeForce(knockback, ForceMode2D.Impulse);
+                
+            }
+            else
+            {
+                wait = true;
+            }
+        }
+
+        //If trap has been triggered, wait so many frames before allowing player to move again.
+        if (wait)
+        {
+            if (frameCount >= frameDelay)
+            {
+                foreignEntity.GetComponent<PlayerMovement>().SetIncomingKnockBackEffect(false);
+                foreignEntity = null;
+                wait = false;
+            }
+            else
+            {
+                frameCount++;
+            }
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //If the trap hasn't hit anyone and has been activated
         if (!hasHit && sTrap.ShouldRotate())
         {
             //and the object hit is either the player or an enemy.
-            if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.tag == "Player") // || collision.gameObject.tag == "Enemy")
             {
                 //then set the foreignEntity to whichever was hit, damge them, and knock them back.
                 foreignEntity = collision.gameObject;
                 foreignEntity.GetComponent<Health>().DealDamage(damage, this.gameObject);
+                foreignEntity.GetComponent<PlayerMovement>().SetIncomingKnockBackEffect(true);
 
-                /***PROBLEM: If the player is holding a direction when hit, they ignore the knockback. ***/
 
-                // Failed attempt to prevent movement -> foreignEntity.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                foreignEntity.GetComponent<Rigidbody2D>().AddRelativeForce(knockback, ForceMode2D.Impulse);
-                
                 //Finally, set hasHit to true so that it doesn't activate additional times.
                 hasHit = true;
             }
