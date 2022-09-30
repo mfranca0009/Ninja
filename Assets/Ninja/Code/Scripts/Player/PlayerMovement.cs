@@ -120,7 +120,15 @@ public class PlayerMovement : MonoBehaviour
         
         // Update player movement input.
         MovementInputUpdate();
-        
+
+        if ((_animator.IsPlayingAnimation("Walk", (int)AnimationLayers.BaseAnimLayer) &&
+             _playerCombat.GetAttackState() == AttackState.LightAttack) ||
+            (_animator.IsPlayingAnimation("Run", (int)AnimationLayers.BaseAnimLayer) &&
+             _playerCombat.GetAttackState() == AttackState.ThrowKnife))
+            _animator.speed = 1.25f;
+        else
+            _animator.speed = 1f;
+
         // Update velocity every update.
         _animator.SetFloat("VelocityX", _rigidBody2D.velocity.x);
         _animator.SetFloat("VelocityY", _rigidBody2D.velocity.y);
@@ -285,7 +293,7 @@ public class PlayerMovement : MonoBehaviour
         
         float moveSpeed = _sprint.IsInProgress() switch
         {
-            true or false when _playerCombat.IsInAttackState() || _playerCombat.IsInAttackAnim() => attackMoveSpeed,
+            // true or false when _playerCombat.IsInAttackState() || _playerCombat.IsInAttackAnim() => attackMoveSpeed,
             true  => runSpeed,
             false  => walkSpeed
         };
