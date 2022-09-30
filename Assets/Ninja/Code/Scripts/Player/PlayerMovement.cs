@@ -1,11 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// TODO - CanMove() is technically useless right now, unless we were to implement a stun effect. Remove if not needed.
-// TODO - Cancel attack if start to move or jump for slow attack, get rid of "force" stand-in-place while attacking.
-// TODO - Allow moving with light attacks (maybe just slow down velocity when performing light attacks)
-
-// TODO -
+// TODO (WANT) -
 // If at any point we add ladders, we should allow the player to use up/down arrows to climb up or down the ladder.
 // Jump is handled from the spacebar (default keybind) so pass 0 to the Vector2 Y plane value in MovementFixedUpdate()
 // for now.
@@ -14,27 +10,36 @@ public class PlayerMovement : MonoBehaviour
 {
     #region Serialized Fields
     
-    [Header("Movement Speeds")]
-    [Tooltip("Player walk speed")]
+    [Header("Movement Speed Settings")]
+    
+    [Tooltip("Player walk movement speed")]
     [SerializeField] private float walkSpeed = 70f;
     
-    [Tooltip("Player run speed")]
+    [Tooltip("Player run movement speed")]
     [SerializeField] private float runSpeed = 120f;
     
     [Tooltip("The velocity the player will move upward at")]
     [SerializeField] private float jumpSpeed = 160f;
     
     [Header("Movement Distances")]
+    
     [Tooltip("The distance to move the player upward")]
     [SerializeField] private float jumpDistance = 2.5f;
 
     [Header("Movement Restrictions")]
+    
     [Tooltip("The amount of allowable jumps the player can use while in-air")]
     [SerializeField] private int maxJumps = 2;
     
     [Header("Movement Tolerances")]
+    
     [Tooltip("Raycast distance for transitioning from in-air to land")]
     [SerializeField] private float landingTolerance = 0.003f;
+
+    [Header("Animator Settings")]
+    
+    [Tooltip("Animator speed adjustment, which will be used for better sync of certain combat/movement animations")]
+    [SerializeField] private float animatorSpeed = 1.25f;
 
     #endregion
 
@@ -47,20 +52,33 @@ public class PlayerMovement : MonoBehaviour
 
     #region Private Fields
 
+    // Input
     private PlayerInputActions _playerInputActions;
     private InputAction _movement;
     private InputAction _jump;
     private InputAction _sprint;
-    private Vector2 _movePos;
-    private Rigidbody2D _rigidBody2D;
+    
+    // Animator / Animation
     private Animator _animator;
-    private BoxCollider2D _boxCollider2D;
-    private Bounds _boxBounds;
+    
+    // Rigidbody / Physics
+    private Rigidbody2D _rigidBody2D;
+    
+    // Movement
+    private Vector2 _movePos;
+
+    // Input states
     private bool _moved;
     private bool _jumped;
-    private bool _handledJump;
+    
+    // Raycast landing
     private bool _isLanding;
     private bool _inAir;
+    private BoxCollider2D _boxCollider2D;
+    private Bounds _boxBounds;
+    
+    // Multi-jump system
+    private bool _handledJump;
     private int _jumpCount;
     
     // Player Scripts
@@ -113,12 +131,10 @@ public class PlayerMovement : MonoBehaviour
         if (_health.Dead)
             return;
         
-        // Update ground check every update.
         GroundCheckUpdate();
-        
-        // Update player movement input.
         MovementInputUpdate();
-        
+        AnimatorSpeedUpUpdate();
+
         // Update velocity every update.
         _animator.SetFloat("VelocityX", _rigidBody2D.velocity.x);
         _animator.SetFloat("VelocityY", _rigidBody2D.velocity.y);
@@ -264,6 +280,23 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Update animator speed to better sync certain movement/combat animations
+    /// </summary>
+    private void AnimatorSpeedUpUpdate()
+    {
+        bool shouldUpdate =
+            (_animator.IsPlayingAnimation("Walk", (int)AnimationLayers.BaseAnimLayer) &&
+             _playerCombat.GetAttackState() == AttackState.LightAttack) ||
+            (_animator.IsPlayingAnimation("Run", (int)AnimationLayers.BaseAnimLayer) &&
+             _playerCombat.GetAttackState() == AttackState.ThrowKnife);
+
+        if (_animator.speed <= 1f && !shouldUpdate)
+            return;
+        
+        _animator.speed = shouldUpdate ? animatorSpeed : 1f;
+    }
+    
     #endregion
     
     #region Fixed Update Methods
@@ -273,8 +306,6 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void MovementFixedUpdate()
     {
-        // Flip sprite to correct facing direction regardless if they can actually move.
-        // For instance, flip sprite while in-air.
         FlipPlayerSprite();
         
         if (!CanWalk())
@@ -283,8 +314,13 @@ public class PlayerMovement : MonoBehaviour
         if (!_moved)
             return;
         
-        _rigidBody2D.velocity = new Vector2(_movePos.x * (_sprint.IsInProgress() ? runSpeed : walkSpeed), 0f) *
-                              Time.deltaTime;
+        float moveSpeed = _sprint.IsInProgress() switch
+        {
+            true  => runSpeed,
+            false  => walkSpeed
+        };
+        
+        _rigidBody2D.velocity = new Vector2(_movePos.x * moveSpeed, 0f) * Time.deltaTime;
     }
     
     /// <summary>
@@ -363,14 +399,14 @@ public class PlayerMovement : MonoBehaviour
         Vector3 currentScale = transform.localScale;
         transform.localScale = new Vector3(-currentScale.x, currentScale.y, currentScale.z);
     }
-    
+
     /// <summary>
     /// Checks if the player is allowed to move at all.
     /// </summary>
     /// <returns>Returns true if player is allowed to move, otherwise false.</returns>
     private bool CanMove()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && !IncomingKnockback;
+        return _playerCombat.GetAttackState() != AttackState.SlowAttack && !IncomingKnockback;
     }
 
     /// <summary>
@@ -379,7 +415,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to walk, otherwise false.</returns>
     private bool CanWalk()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && IsGrounded() && !IncomingKnockback;
+        return _playerCombat.GetAttackState() != AttackState.SlowAttack && IsGrounded() && !IncomingKnockback;
     }
     
     /// <summary>
@@ -388,7 +424,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to jump, otherwise false.</returns>
     private bool CanJump()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && _jumpCount < maxJumps && !IncomingKnockback;
+        return _playerCombat.GetAttackState() != AttackState.SlowAttack && _jumpCount < maxJumps && !IncomingKnockback;
     }
 
     #endregion

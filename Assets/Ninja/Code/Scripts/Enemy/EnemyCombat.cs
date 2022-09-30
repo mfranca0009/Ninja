@@ -1,8 +1,10 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-// TODO: Prevent movement when AI is performing slow attack
-// TODO: Either use a second animation layer and blending, or prevent movement all together with attacks.
+// TODO (NEED): Cancel movement when AI is performing slow attack
+
+// TODO (WANT): Use a second animation layer and blending to allow combat/movement at same time for
+// light and throw attack
 
 public class EnemyCombat : MonoBehaviour
 {
@@ -76,20 +78,7 @@ public class EnemyCombat : MonoBehaviour
     public int SlowAttackPerformed { get; set; }
     
     #endregion
-    
-    #region Public Fields
-    
-    // Moved to `MeleeWeapon.cs` script attached to melee weapon prefab
-    // [Header("Attack Damage Settings")]
-    //
-    // [Tooltip("Light attack damage amount")] 
-    // public float lightAttackDmg = 12.5f;
-    //
-    // [Tooltip("heavy attack damage amount")] 
-    // public float heavyAttackDmg = 25f;
-    
-    #endregion
-    
+
     #region Serialized Fields
 
     [Header("Combat Attack Timing Settings")]
