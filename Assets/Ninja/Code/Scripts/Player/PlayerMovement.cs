@@ -13,12 +13,14 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     #region Serialized Fields
+
+    [Header("Movement Speeds")] [Tooltip("Player attack movement speed")] 
+    [SerializeField] private float attackMoveSpeed = 35f;
     
-    [Header("Movement Speeds")]
-    [Tooltip("Player walk speed")]
+    [Tooltip("Player walk movement speed")]
     [SerializeField] private float walkSpeed = 70f;
     
-    [Tooltip("Player run speed")]
+    [Tooltip("Player run movement speed")]
     [SerializeField] private float runSpeed = 120f;
     
     [Tooltip("The velocity the player will move upward at")]
@@ -273,8 +275,6 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void MovementFixedUpdate()
     {
-        // Flip sprite to correct facing direction regardless if they can actually move.
-        // For instance, flip sprite while in-air.
         FlipPlayerSprite();
         
         if (!CanWalk())
@@ -283,8 +283,14 @@ public class PlayerMovement : MonoBehaviour
         if (!_moved)
             return;
         
-        _rigidBody2D.velocity = new Vector2(_movePos.x * (_sprint.IsInProgress() ? runSpeed : walkSpeed), 0f) *
-                              Time.deltaTime;
+        float moveSpeed = _sprint.IsInProgress() switch
+        {
+            true or false when _playerCombat.IsInAttackState() || _playerCombat.IsInAttackAnim() => attackMoveSpeed,
+            true  => runSpeed,
+            false  => walkSpeed
+        };
+        
+        _rigidBody2D.velocity = new Vector2(_movePos.x * moveSpeed, 0f) * Time.deltaTime;
     }
     
     /// <summary>
@@ -370,7 +376,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to move, otherwise false.</returns>
     private bool CanMove()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && !IncomingKnockback;
+        return _playerCombat.GetAttackState() != AttackState.SlowAttack && !IncomingKnockback;
     }
 
     /// <summary>
@@ -379,7 +385,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to walk, otherwise false.</returns>
     private bool CanWalk()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && IsGrounded() && !IncomingKnockback;
+        return _playerCombat.GetAttackState() != AttackState.SlowAttack && IsGrounded() && !IncomingKnockback;
     }
     
     /// <summary>
@@ -388,7 +394,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to jump, otherwise false.</returns>
     private bool CanJump()
     {
-        return !_playerCombat.IsInAttackState() && !_playerCombat.IsInAttackAnim() && _jumpCount < maxJumps && !IncomingKnockback;
+        return _playerCombat.GetAttackState() != AttackState.SlowAttack && _jumpCount < maxJumps && !IncomingKnockback;
     }
 
     #endregion

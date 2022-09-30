@@ -1125,7 +1125,7 @@ Transform:
   m_Children:
   - {fileID: 1863393140278986437}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1766446573384302901
 Animator:
@@ -1206,6 +1206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021df95764f962c4098487c03d53ec67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackMoveSpeed: 35
   walkSpeed: 70
   runSpeed: 120
   jumpSpeed: 160
@@ -1227,7 +1228,7 @@ MonoBehaviour:
   throwKnifePrefab: {fileID: 4566541791185861260, guid: 5c9a2cd76d14e42499b833af047b4938, type: 3}
   throwKnifeSprite: {fileID: 21300000, guid: f57ffb33cc05fcc46b89c050467dcd7f, type: 3}
   throwKnifeSpawnTransform: {fileID: 1863393143438914901}
-  throwKnifeSpawnOffset: {x: 1, y: 0}
+  throwKnifeSpawnOffset: {x: 1, y: 0.25}
   meleeWeaponLeft: {fileID: 1184516971892487724}
   meleeWeaponRight: {fileID: 38690589857573370}
   meleeWeaponLeftSprite: {fileID: 21300000, guid: 0a4a3c212d77eb243aeaac660261fb0f, type: 3}
@@ -1247,7 +1248,7 @@ MonoBehaviour:
   camera: {fileID: 0}
   applySmoothing: 1
   applyXAxisLock: 1
-  verticalOffset: 1.5
+  verticalOffset: 3.5
   horizontalOffset: 2
   smoothTime: 0.4
   maxSmoothSpeed: 50

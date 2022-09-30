@@ -76,20 +76,7 @@ public class EnemyCombat : MonoBehaviour
     public int SlowAttackPerformed { get; set; }
     
     #endregion
-    
-    #region Public Fields
-    
-    // Moved to `MeleeWeapon.cs` script attached to melee weapon prefab
-    // [Header("Attack Damage Settings")]
-    //
-    // [Tooltip("Light attack damage amount")] 
-    // public float lightAttackDmg = 12.5f;
-    //
-    // [Tooltip("heavy attack damage amount")] 
-    // public float heavyAttackDmg = 25f;
-    
-    #endregion
-    
+
     #region Serialized Fields
 
     [Header("Combat Attack Timing Settings")]

@@ -40,19 +40,6 @@ public class PlayerCombat : MonoBehaviour
 
     #endregion
 
-    #region Public Fields
-    
-    // Moved to `MeleeWeapon.cs` script attached to melee weapon prefab
-    // [Header("Attack Damage Settings")]
-    //
-    // [Tooltip("Light attack damage amount")] 
-    // public float lightAttackDmg = 12.5f;
-    //
-    // [Tooltip("heavy attack damage amount")] 
-    // public float heavyAttackDmg = 25f;
-    
-    #endregion
-
     #region Serialized Fields
 
     [Header("Throwing Knife Settings")]
@@ -164,7 +151,7 @@ public class PlayerCombat : MonoBehaviour
     {
         Debug.Log("[PlayerCombat/OnSlowAttack] Slow attack performed!");
 
-        if (!CanAttack())
+        if (!CanAttack() || !_playerMovement.IsGrounded())
             return;
 
         _animator.SetTrigger("SlowAttack");
@@ -212,11 +199,11 @@ public class PlayerCombat : MonoBehaviour
     public bool IsInAttackAnim()
     {
         bool inAttackAnim = _animator.IsPlayingAnimation("Light Attack",
-                                (int)AnimationLayers.BaseAnimLayer) ||
+                                (int)AnimationLayers.AttackAnimLayer) ||
                             _animator.IsPlayingAnimation("Slow Attack",
-                                (int)AnimationLayers.BaseAnimLayer) ||
+                                (int)AnimationLayers.AttackAnimLayer) ||
                             _animator.IsPlayingAnimation("Throw Knife",
-                                (int)AnimationLayers.BaseAnimLayer);
+                                (int)AnimationLayers.AttackAnimLayer);
 
         return inAttackAnim;
     }
@@ -227,22 +214,16 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns an attack state from the AttackState enum [See Defines.cs]</returns>
     public AttackState GetAttackState()
     {
-        AttackState attackState = AttackState.None;
-        
-        switch (_animator.IsPlayingAnimation("Light Attack", (int)AnimationLayers.BaseAnimLayer))
-        {
-            case true when _lightAttack.inProgress || !_lightAttack.inProgress:
-                attackState = AttackState.LightAttack;
-                break;
-            case false when _animator.IsPlayingAnimation("Slow Attack",
-                (int)AnimationLayers.BaseAnimLayer) && _slowAttack.inProgress || !_slowAttack.inProgress:
-                attackState = AttackState.SlowAttack;
-                break;
-            case false when _animator.IsPlayingAnimation("Throw Knife",
-                (int)AnimationLayers.BaseAnimLayer) && _throwKnife.inProgress || !_throwKnife.inProgress:
-                attackState = AttackState.ThrowKnife;
-                break;
-        }
+        AttackState attackState =
+            _animator.IsPlayingAnimation("Light Attack", (int)AnimationLayers.AttackAnimLayer) switch
+            {
+                true when _lightAttack.inProgress || !_lightAttack.inProgress => AttackState.LightAttack,
+                false when _animator.IsPlayingAnimation("Slow Attack", (int)AnimationLayers.AttackAnimLayer) &&
+                    (_slowAttack.inProgress || !_slowAttack.inProgress) => AttackState.SlowAttack,
+                false when _animator.IsPlayingAnimation("Throw Knife", (int)AnimationLayers.AttackAnimLayer) &&
+                    (_throwKnife.inProgress || !_throwKnife.inProgress) => AttackState.ThrowKnife,
+                _ => AttackState.None
+            };
 
         return attackState;
     }
@@ -294,7 +275,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is allowed to attack, otherwise false.</returns>
     private bool CanAttack()
     {
-        return IsInAttackState() && !_playerMovement.IsMoving() && !IsInAttackAnim() && _playerMovement.IsGrounded();
+        return IsInAttackState() && !IsInAttackAnim();
     }
     
     /// <summary>
