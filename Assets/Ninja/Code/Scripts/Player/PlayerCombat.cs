@@ -134,11 +134,11 @@ public class PlayerCombat : MonoBehaviour
     // it has been thrown.
     private void OnThrowKnife(InputAction.CallbackContext obj)
     {
-        Debug.Log("[PlayerCombat/OnThrowKnife] Knife throw performed!");
-
         if (!CanAttack() || !CanThrowKnife())
             return;
 
+        Debug.Log("[PlayerCombat/OnThrowKnife] Knife throw performed!");
+        
         _animator.SetTrigger("ThrowKnife");
     }
 
@@ -149,11 +149,11 @@ public class PlayerCombat : MonoBehaviour
     
     private void OnSlowAttack(InputAction.CallbackContext obj)
     {
-        Debug.Log("[PlayerCombat/OnSlowAttack] Slow attack performed!");
-
         if (!CanAttack() || !_playerMovement.IsGrounded())
             return;
 
+        Debug.Log("[PlayerCombat/OnSlowAttack] Slow attack performed!");
+        
         _animator.SetTrigger("SlowAttack");
     }
 
@@ -164,11 +164,11 @@ public class PlayerCombat : MonoBehaviour
     
     private void OnLightAttack(InputAction.CallbackContext obj)
     {
-        Debug.Log("[PlayerCombat/OnLightAttack] Light attack performed!");
-
         if (!CanAttack())
             return;
 
+        Debug.Log("[PlayerCombat/OnLightAttack] Light attack performed!");
+        
         _animator.SetTrigger("LightAttack");
     }
 
