@@ -1,10 +1,5 @@
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-// TODO: Separate the attacks from base animation layer, add them to attack animation layer, allow attack animation layer
-// to only trigger upper body movement by using an Avatar Mask and blending (Allows movement with attacking).
 
 public class PlayerCombat : MonoBehaviour
 {
