@@ -1380,6 +1380,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2088129700, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: shouldDamage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1000013304306144, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: m_Name
       value: Rogue_05

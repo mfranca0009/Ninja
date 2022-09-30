@@ -16,13 +16,20 @@ public class NoLand : MonoBehaviour
     
     [Tooltip("X-axis position tolerance to compare, as best as possible," +
              " matching x-position with colliding and collided object")]
-    [SerializeField]
-    private float positionXTolerance = 0.001f;
+    [SerializeField] private float positionXTolerance = 0.001f;
 
     [Tooltip("Velocity X tolerance (both left and right) to which the provided force will be used" +
              " instead of the colliding object's velocity X")]
     [SerializeField] private float velocityXTolerance = 0.5f;
 
+    [Header("Damage Settings")]
+    
+    [Tooltip("Enable damage dealt to the owning gameobject when an invoking gameobject lands on it")]
+    [SerializeField] private bool shouldDamage;
+
+    [Tooltip("Damage amount that will applied to the owning gameobject")] 
+    [SerializeField] private float landingDamage = 10f;
+    
     #endregion
     
     #region Unity Events
@@ -52,6 +59,9 @@ public class NoLand : MonoBehaviour
         collidingRigidBody2D.AddForce(
             ShouldUseProvidedForce(collidingGoVelocity) ? force : new Vector2(collidingGoVelocity.x, force.y),
             forceMode2D);
+
+        if (shouldDamage)
+            gameObject.GetComponent<Health>().DealDamage(landingDamage, col.gameObject);
     }
     
     #endregion
