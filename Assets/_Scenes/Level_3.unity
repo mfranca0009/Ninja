@@ -1875,6 +1875,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 325115533}
     m_Modifications:
+    - target: {fileID: 960625873759820079, guid: fbef957e822309145881b5ceffe70a36, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
+      objectReference: {fileID: 0}
     - target: {fileID: 2930704741784363086, guid: fbef957e822309145881b5ceffe70a36, type: 3}
       propertyPath: m_LocalScale.x
       value: 17.22
@@ -1886,6 +1890,10 @@ PrefabInstance:
     - target: {fileID: 4130573993740468681, guid: fbef957e822309145881b5ceffe70a36, type: 3}
       propertyPath: m_Name
       value: Segment-3-4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4719973538694458916, guid: fbef957e822309145881b5ceffe70a36, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
       objectReference: {fileID: 0}
     - target: {fileID: 5872493633364184811, guid: fbef957e822309145881b5ceffe70a36, type: 3}
       propertyPath: m_RootOrder
@@ -1930,6 +1938,10 @@ PrefabInstance:
     - target: {fileID: 5872493633364184811, guid: fbef957e822309145881b5ceffe70a36, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7547790676172549347, guid: fbef957e822309145881b5ceffe70a36, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1995,6 +2007,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Segment-3-3
       objectReference: {fileID: 0}
+    - target: {fileID: 7891023368818838150, guid: a3b0ea3a643a8f8459045b6283fe03d4, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: a3b0ea3a643a8f8459045b6283fe03d4, type: 3}
@@ -2058,6 +2074,14 @@ PrefabInstance:
     - target: {fileID: 1895014075221446873, guid: 3e0c735ee30930c42adaacb00875f343, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3438300172528063596, guid: 3e0c735ee30930c42adaacb00875f343, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
+      objectReference: {fileID: 0}
+    - target: {fileID: 3518634811858021566, guid: 3e0c735ee30930c42adaacb00875f343, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -2137,9 +2161,17 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 325115533}
     m_Modifications:
+    - target: {fileID: 814531792214008886, guid: d52110e97c830084899f4e53587133e8, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
+      objectReference: {fileID: 0}
     - target: {fileID: 1553808142973472288, guid: d52110e97c830084899f4e53587133e8, type: 3}
       propertyPath: m_Name
       value: Segment-3-2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116754643154565497, guid: d52110e97c830084899f4e53587133e8, type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 12927
       objectReference: {fileID: 0}
     - target: {fileID: 5969852802016316377, guid: d52110e97c830084899f4e53587133e8, type: 3}
       propertyPath: m_RootOrder
