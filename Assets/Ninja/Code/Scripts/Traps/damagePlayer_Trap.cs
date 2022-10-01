@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class damagePlayer_Trap : MonoBehaviour
+public class DamagePlayer_Trap : MonoBehaviour
 {
 
     [Tooltip("The object that triggers the trap")]
@@ -34,7 +34,7 @@ public class damagePlayer_Trap : MonoBehaviour
 
     private void Update()
     {
-        if (foreignEntity == null)
+        if (!foreignEntity)
         {
             return;
         }
