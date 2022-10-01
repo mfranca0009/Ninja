@@ -6,16 +6,17 @@ public class Health : MonoBehaviour
     
     public bool Dead { get; private set; }
     public float HealthPoints { get; private set; }
+    public GameObject Killer { get; private set; }
     
     #endregion
     
-    #region Serialized Fields
-    
-    [Tooltip("Maximum health points to start with on spawn")]
-    [SerializeField] private float maxHealth = 100f;
+    #region Public Fields
 
-    #endregion
+    [Tooltip("Maximum health points to start with on spawn")]
+    public float maxHealth = 100f;
     
+    #endregion
+
     #region Private Fields
     
     private Animator _animator;
@@ -67,6 +68,10 @@ public class Health : MonoBehaviour
         {
             HealthPoints = 0f;
             Dead = true;
+            
+            if (invoker)
+                Killer = invoker;
+            
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}. {gameObjectName} has been killed!");
         }
         else
