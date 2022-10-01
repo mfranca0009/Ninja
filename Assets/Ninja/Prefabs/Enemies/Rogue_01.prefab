@@ -298,7 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 045fe8bea02fdb3469e417ef9013256d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 30
+  maxHealth: 50
 --- !u!114 &-3414372509782617640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +315,8 @@ MonoBehaviour:
   forceMode2D: 1
   positionXTolerance: 0.001
   velocityXTolerance: 0.5
+  shouldDamage: 0
+  landingDamage: 10
 --- !u!1 &1000010251440012
 GameObject:
   m_ObjectHideFlags: 0

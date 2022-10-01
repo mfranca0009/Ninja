@@ -973,7 +973,7 @@ Transform:
   - {fileID: 4000012976587322}
   - {fileID: 7626496350687094712}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &95000010123886660
 Animator:
@@ -1089,10 +1089,10 @@ MonoBehaviour:
   stopAdvanceTargetTime: 1.25
   shouldAdvanceToTarget: 1
   meleeCombatReach: 2
-  rangeCombatReach: 4
+  rangeCombatReach: 6
   investigateMoveDistance: 3
   investigateCompletionDistance: 0.5
-  disengageXDistance: 7
+  disengageXDistance: 8
   disengageYDistance: 2
   sightCollider2DSize: {x: 5, y: 0.5}
   sightCollider2DOffset: {x: 0, y: 0}
@@ -1116,7 +1116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 045fe8bea02fdb3469e417ef9013256d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 70
 --- !u!114 &6745165502749186396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1133,6 +1133,8 @@ MonoBehaviour:
   forceMode2D: 1
   positionXTolerance: 0.001
   velocityXTolerance: 0.5
+  shouldDamage: 0
+  landingDamage: 10
 --- !u!1 &1000012139601564
 GameObject:
   m_ObjectHideFlags: 0
@@ -1979,8 +1981,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8952598464637980683}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.16, y: 5.74, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 0}
+  m_LocalPosition: {x: 15.53, y: 5.74, z: 0}
+  m_LocalScale: {x: 7, y: 5, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000014012963586}
