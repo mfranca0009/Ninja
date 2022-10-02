@@ -1589,7 +1589,7 @@ MonoBehaviour:
   alwaysWalk: 1
   noRandomDelay: 0
   maxTravelDistance: 3
-  randomPointReachedTolerance: 0.03
+  randomPointReachedTolerance: 0.003
   minDelay: 1.5
   maxDelay: 3
 --- !u!114 &4667243710740860061
