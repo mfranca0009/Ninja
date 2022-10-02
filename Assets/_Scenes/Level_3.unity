@@ -1604,6 +1604,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
       propertyPath: waypoints.Array.data[0].shouldRun
       value: 1
       objectReference: {fileID: 0}
@@ -2139,7 +2143,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
       propertyPath: maxTravelDistance
-      value: 2.25
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -2171,6 +2179,10 @@ PrefabInstance:
     - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
       propertyPath: applyWaypointMovement
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
       propertyPath: waypoints.Array.data[0].shouldRun
@@ -3444,7 +3456,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5217846934405740818, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
       propertyPath: maxTravelDistance
-      value: 4
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5217846934405740818, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -3999,7 +4015,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
       propertyPath: maxTravelDistance
-      value: 1.5
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -5017,6 +5037,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
       propertyPath: waypoints.Array.data[0].shouldRun
       value: 1
       objectReference: {fileID: 0}
@@ -5382,7 +5406,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
       propertyPath: maxTravelDistance
-      value: 1.25
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -5503,6 +5531,10 @@ PrefabInstance:
     - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
       propertyPath: applyWaypointMovement
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: -4384117372760910665, guid: f75821cb4b3ebdc428edf865361f220c, type: 3}
       propertyPath: waypoints.Array.data[0].shouldRun
@@ -6193,6 +6225,10 @@ PrefabInstance:
       propertyPath: maxTravelDistance
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5217846934405740818, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
@@ -6259,6 +6295,14 @@ PrefabInstance:
     - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
       propertyPath: alwaysWalk
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
+      propertyPath: maxTravelDistance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8690237177552365377, guid: d716a0c2db62ac449a57fd7c6ee2b250, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -6549,6 +6593,10 @@ PrefabInstance:
     - target: {fileID: 5217846934405740818, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
       propertyPath: maxTravelDistance
       value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5217846934405740818, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
+      propertyPath: randomPointReachedTolerance
+      value: 0.03
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
