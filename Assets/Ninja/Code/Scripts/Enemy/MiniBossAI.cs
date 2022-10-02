@@ -40,62 +40,36 @@ public class MiniBossAI : MonoBehaviour
 
     private void DamageCheck()
     {
-        if (_healthComponent.HealthPoints <= 0)
+        //If the char is dead, or their hp hasn't lowered, return
+        if (_healthComponent.Dead || _healthComponent.HealthPoints >= previousHealth)
         {
             return;
         }
-        if (_healthComponent.HealthPoints < previousHealth)
-        {
-            int randnum;
-            do
-            {
-                randnum = (int)Math.Truncate(Random.value * 4);
-            } while (randnum == teleportLocation);
 
-            Teleport(randnum);
-            previousHealth = _healthComponent.HealthPoints;
-        }
+        //otherwise, teleport randomly to a new spot. 
+        int randNum;
+        do
+        {
+            randNum = Random.Range(0, waypoints.Length - 1);
+        } while (randNum == teleportLocation);
+
+        Teleport(randNum);
+        previousHealth = _healthComponent.HealthPoints;
+        
     }
 
     private void Teleport(int num)
     {
-        //TO-DO: When hit, play smoke particles and teleport to a new location
         //Play Particles
         smokeBombParticle.Play();
 
         //Change Location based on sent number
-        switch (num)
-        {
-            case 0:
-                transform.position = waypoints[0].teleportPosition;
-                teleportLocation = 0;
-                break;
-            case 1:
-                transform.position = waypoints[1].teleportPosition;
-                teleportLocation = 1;
-                break;
-            case 2:
-                transform.position = waypoints[2].teleportPosition;
-                teleportLocation = 2;
-                break;
-            default:
-                transform.position = waypoints[3].teleportPosition;
-                teleportLocation = 3;
-                break;
-        }
-        //play particles
-        smokeBombParticle.Play();
-        if (waypoints[teleportLocation].faceRight)
-        {
-            FaceRight(true);
-        }
-        else
-        {
-            FaceRight(false);
-        }
-        
-        
+        transform.position = waypoints[num].teleportPosition;
+        teleportLocation = num;
 
+        //Play particles
+        smokeBombParticle.Play();
+        FaceRight(waypoints[teleportLocation].faceRight);
     }
 
     /// <summary>
@@ -103,13 +77,8 @@ public class MiniBossAI : MonoBehaviour
     /// </summary>
     private void FaceRight(bool faceRight)
     {
-        if (faceRight)
-        {
-            transform.localScale = new Vector3(0.2f, 0.2f, 0);
-        }
-        else
-        {
-            transform.localScale = new Vector3(-0.2f, 0.2f, 0);
-        }
+        Vector3 curLocalScale = transform.localScale;
+        transform.localScale =
+            new Vector3(faceRight ? curLocalScale.x : -curLocalScale.x, curLocalScale.y, curLocalScale.z);
     }
 }
