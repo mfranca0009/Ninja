@@ -6552,7 +6552,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010355002302, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -69.11424
+      value: -68.81
       objectReference: {fileID: 0}
     - target: {fileID: 4000010355002302, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6592,7 +6592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5217846934405740818, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
       propertyPath: maxTravelDistance
-      value: 2.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5217846934405740818, guid: 8bee021d29272414f83476ebd90637c3, type: 3}
       propertyPath: randomPointReachedTolerance
