@@ -1687,6 +1687,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4731336740663516498, guid: 19699e3e814d7c645a02f99399fe035d, type: 3}
+      propertyPath: range
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731336740663516498, guid: 19699e3e814d7c645a02f99399fe035d, type: 3}
       propertyPath: levelToLoad
       value: Level_Boss
       objectReference: {fileID: 0}
@@ -4119,7 +4123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.777
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4159,7 +4163,7 @@ PrefabInstance:
       objectReference: {fileID: 1940300151}
     - target: {fileID: 8862957453690271467, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: verticalOffset
-      value: 3.5
+      value: 1.37
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
