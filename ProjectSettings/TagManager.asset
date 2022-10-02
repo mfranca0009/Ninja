@@ -8,6 +8,7 @@ TagManager:
   - ShowOnPause
   - ShowOnFinish
   - Cloud
+  - ScrollCanvas
   layers:
   - Default
   - TransparentFX
@@ -46,5 +47,5 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: Foreground
-    uniqueID: 176360577
+    uniqueID: 3370871555
     locked: 0
