@@ -714,7 +714,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3043887842111933677, guid: ae68236ed9ab8c441bf1fe4b8e3b4e12, type: 3}
       propertyPath: m_SortingLayerID
-      value: 176360577
+      value: -924095741
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: ae68236ed9ab8c441bf1fe4b8e3b4e12, type: 3}
       propertyPath: m_RootOrder
@@ -5250,7 +5250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8046720978344592385, guid: d8222b54f00dead468106de937b294d8, type: 3}
       propertyPath: m_SortingLayerID
-      value: 176360577
+      value: -924095741
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
