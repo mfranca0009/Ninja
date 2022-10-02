@@ -1687,6 +1687,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4731336740663516498, guid: 19699e3e814d7c645a02f99399fe035d, type: 3}
+      propertyPath: range
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731336740663516498, guid: 19699e3e814d7c645a02f99399fe035d, type: 3}
       propertyPath: levelToLoad
       value: Level_Boss
       objectReference: {fileID: 0}
