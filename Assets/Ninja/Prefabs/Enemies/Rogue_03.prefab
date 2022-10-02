@@ -1496,7 +1496,7 @@ Transform:
   - {fileID: 4000014081584180}
   - {fileID: 4928365908968070277}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &95000014247705796
 Animator:
@@ -1639,7 +1639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 045fe8bea02fdb3469e417ef9013256d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 30
 --- !u!114 &735645710760100235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1656,6 +1656,8 @@ MonoBehaviour:
   forceMode2D: 1
   positionXTolerance: 0.001
   velocityXTolerance: 0.5
+  shouldDamage: 0
+  landingDamage: 10
 --- !u!1 &1000013282564718
 GameObject:
   m_ObjectHideFlags: 0
