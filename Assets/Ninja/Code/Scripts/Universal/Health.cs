@@ -85,6 +85,25 @@ public class Health : MonoBehaviour
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}; {HealthPoints} remaining.");
         }
     }
+
+    public void DealHeal(float heal)
+    {
+        if (HealthPoints >= maxHealth || heal == 0)
+            return;
+
+        string gameObjectName = gameObject.name;
+        
+        if (HealthPoints + heal >= maxHealth)
+        {
+            HealthPoints = 100f;
+            Debug.Log($"[Health/DealHeal] {gameObjectName} healed to full health!");
+        }
+        else
+        {
+            HealthPoints += heal;
+            Debug.Log($"[Health/DealHeal] {gameObjectName} healed for {heal}! Now has {HealthPoints} health.");
+        }
+    }
     
     /// <summary>
     /// Instantly kill the gameobject that has this health script attached.

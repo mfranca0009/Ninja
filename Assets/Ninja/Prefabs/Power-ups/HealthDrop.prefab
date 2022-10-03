@@ -95,14 +95,15 @@ GameObject:
   - component: {fileID: 6130167382926871554}
   - component: {fileID: 7569516934067870733}
   - component: {fileID: 4300089408187723002}
+  - component: {fileID: 8019561387023547653}
   - component: {fileID: 4452667887727809845}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: HealthDrop
-  m_TagString: Untagged
+  m_TagString: HealthPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6130167382926871554
 Transform:
   m_ObjectHideFlags: 0
@@ -117,7 +118,7 @@ Transform:
   m_Children:
   - {fileID: 968629458398850601}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &7569516934067870733
 Rigidbody2D:
@@ -156,6 +157,18 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 2.5, y: 3.8}
   m_Direction: 0
+--- !u!114 &8019561387023547653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2883904645011931590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e77127b72d1d844e955a5beec3858c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4452667887727809845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,4 +184,5 @@ MonoBehaviour:
   rotate: 1
   rocketDistance: 2
   rocketSpeed: 4
+  horizontalSpeed: 4
   rotationSpeed: 0.5

@@ -2,18 +2,30 @@ using UnityEngine;
 
 public class ItemDropEffectRocket : MonoBehaviour
 {
+    #region Public Properties
+    
+    /// <summary>
+    /// The distance to move the target horizontally 
+    /// </summary>
+    public float HorizontalDistance { get; set; } = 2f;
+    
+    #endregion
+    
     #region Serialized Fields
     [Tooltip("Enable rotate effect")]
     [SerializeField] private bool rotate = true;
     
     [Tooltip("The distance to move the target upward")]
-    [SerializeField] private float rocketDistance = 2;
+    [SerializeField] private float rocketDistance = 2f;
     
     [Tooltip("The speed the target will move upward at")]
-    [SerializeField] private float rocketSpeed = 4;
+    [SerializeField] private float rocketSpeed = 4f;
+
+    [Tooltip("The speed the target will move horizontally")] 
+    [SerializeField] private float horizontalSpeed = 4f;
     
     [Tooltip("The speed the target will rotate at")]
-    [SerializeField] private float rotationSpeed = 2;
+    [SerializeField] private float rotationSpeed = 2f;
     #endregion
 
     #region Private Fields
@@ -67,7 +79,8 @@ public class ItemDropEffectRocket : MonoBehaviour
 
         _applyImpulse = false;
         _impulseApplied = true;
-        _rigidbody2D.AddForce(new Vector2(0f, rocketDistance * rocketSpeed), ForceMode2D.Impulse);
+        _rigidbody2D.AddForce(new Vector2(HorizontalDistance * horizontalSpeed, rocketDistance * rocketSpeed),
+            ForceMode2D.Impulse);
     }
 
     /// <summary>

@@ -32,7 +32,17 @@ public class PlayerCombat : MonoBehaviour
     /// hitting an enemy and damaging them.
     /// </summary>
     public int ActiveKnives { get; set; }
-
+    
+    /// <summary>
+    /// Whether the player has an active melee strength boost or not.
+    /// </summary>
+    public bool HasMeleeStrengthBoost { get; set; }
+    
+    /// <summary>
+    /// Timer that will tick when a melee strength boost is active.
+    /// </summary>
+    public float StrengthBoostTimer { get; set; }
+    
     #endregion
 
     #region Serialized Fields
@@ -56,10 +66,10 @@ public class PlayerCombat : MonoBehaviour
     [Header("Melee Weapon Settings")] 
     
     [Tooltip("The left melee weapon gameobject")] 
-    [SerializeField] private GameObject meleeWeaponLeft;
+    public GameObject meleeWeaponLeft;
     
     [Tooltip("The right melee weapon gameobject")] 
-    [SerializeField] private GameObject meleeWeaponRight;
+    public GameObject meleeWeaponRight;
     
     [Tooltip("The left melee weapon sprite that will be visible when the weapon is active within the scene")]
     [SerializeField] private Sprite meleeWeaponLeftSprite;
@@ -85,16 +95,6 @@ public class PlayerCombat : MonoBehaviour
     
     #region Unity Events
     
-    private void Awake()
-    {
-        _playerInputActions = new PlayerInputActions();
-        _animator = GetComponent<Animator>();
-        _playerMovement = GetComponent<PlayerMovement>();
-        MaxKnives = 1;
-        
-        SetupMeleeWeapons();
-    }
-
     private void OnEnable()
     {
         _lightAttack = _playerInputActions.Player.LightAttack;
@@ -120,6 +120,21 @@ public class PlayerCombat : MonoBehaviour
         _throwKnife.Disable();
     }
 
+    private void Awake()
+    {
+        _playerInputActions = new PlayerInputActions();
+        _animator = GetComponent<Animator>();
+        _playerMovement = GetComponent<PlayerMovement>();
+        MaxKnives = 1;
+        
+        SetupMeleeWeapons();
+    }
+
+    private void Update()
+    {
+        StrengthBoostUpdate();
+    }
+    
     #endregion
     
     #region Input Callbacks
@@ -170,6 +185,49 @@ public class PlayerCombat : MonoBehaviour
     private void OnLightAttackCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("[PlayerCombat/OnLightAttackCancel] Light attack ended!");
+    }
+
+    #endregion
+
+    #region Update Methods
+
+    /// <summary>
+    /// Update strength boost timer, the strength boost expires once the timer expires.
+    /// </summary>
+    private void StrengthBoostUpdate()
+    {
+        if (!HasMeleeStrengthBoost)
+            return;
+
+        if (StrengthBoostTimer <= 0)
+        {
+            HasMeleeStrengthBoost = false;
+            MeleeWeapon meleeWeapon;
+            
+            if (meleeWeaponLeft)
+            {
+                meleeWeapon = meleeWeaponLeft.GetComponent<MeleeWeapon>();
+
+                if (!meleeWeapon)
+                    return;
+                
+                meleeWeapon.LightAttackDmg = meleeWeapon.baseLightAttackDmg;
+                meleeWeapon.HeavyAttackDmg = meleeWeapon.baseHeavyAttackDmg;
+            }
+
+            if (meleeWeaponRight)
+            {
+                meleeWeapon = meleeWeaponRight.GetComponent<MeleeWeapon>();
+                
+                if (!meleeWeapon)
+                    return;
+                
+                meleeWeapon.LightAttackDmg = meleeWeapon.baseLightAttackDmg;
+                meleeWeapon.HeavyAttackDmg = meleeWeapon.baseHeavyAttackDmg;
+            }
+        }
+        else
+            StrengthBoostTimer -= Time.deltaTime;
     }
 
     #endregion
