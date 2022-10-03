@@ -262,6 +262,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kill-Plane
       objectReference: {fileID: 0}
+    - target: {fileID: 3170512139047335511, guid: b2c870d9fd49903428677ec854450b63, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b2c870d9fd49903428677ec854450b63, type: 3}
