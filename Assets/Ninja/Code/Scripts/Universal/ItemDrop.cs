@@ -28,7 +28,11 @@ public class ItemDrop : MonoBehaviour
     [Tooltip("The amount of items to drop")] 
     [SerializeField] private int amountToDrop = 1;
 
+    [Tooltip("Knife drop threshold, where if this value is surpassed, the conditional drop chance is used")]
+    [SerializeField] private int maxKnivesThreshold = 5;
+    
     [Header("Random Number Generator Settings")]
+    
     [Tooltip("Use current date as random number generator seed, if enabled it will ignore the integer seed setting")]
     [SerializeField] private bool useCurrentDateTicks;
     
@@ -198,9 +202,9 @@ public class ItemDrop : MonoBehaviour
     {
         PlayerCombat playerCombat = _health.Killer.GetComponent<PlayerCombat>();
 
-        return (playerCombat.MaxKnives < 5 &&
+        return (playerCombat.MaxKnives < maxKnivesThreshold &&
                 itemDrops[(int)ItemType.ThrowingKnife].dropChance >= GetRandomFloat()) ||
-               (playerCombat.MaxKnives >= 5 &&
+               (playerCombat.MaxKnives >= maxKnivesThreshold &&
                 itemDrops[(int)ItemType.StrengthPotion].conditionalDropChance >= GetRandomFloat());
     }
     

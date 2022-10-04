@@ -133,11 +133,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2040199262144703276, guid: 7f33a826e0a5e5b4ab1b8619913b6d1e, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 5423749032462894954, guid: 7f33a826e0a5e5b4ab1b8619913b6d1e, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 8973773098016872936, guid: 7f33a826e0a5e5b4ab1b8619913b6d1e, type: 3}
       propertyPath: m_Name
@@ -2775,11 +2775,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7422258558920079486, guid: a4eb7278fb6d91446a356079d0a4ed74, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 8653320234929538798, guid: a4eb7278fb6d91446a356079d0a4ed74, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 8973773098016872936, guid: a4eb7278fb6d91446a356079d0a4ed74, type: 3}
       propertyPath: m_Name
@@ -4174,7 +4174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2213893529433434990, guid: ecc0d15de0e949246b179a97b4dad663, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 4053601197636986207, guid: ecc0d15de0e949246b179a97b4dad663, type: 3}
       propertyPath: m_Name
@@ -5158,7 +5158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5874624233107232792, guid: 25eb6a0cc2d43de428fc52031885872e, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 6908429112671556319, guid: 25eb6a0cc2d43de428fc52031885872e, type: 3}
       propertyPath: rotationSpeed
@@ -5303,7 +5303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1901291155098578054, guid: abc6ca63d2770544391cd50d9c171311, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 2529045475570493844, guid: abc6ca63d2770544391cd50d9c171311, type: 3}
       propertyPath: m_RootOrder
@@ -5351,11 +5351,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7675022610329972290, guid: abc6ca63d2770544391cd50d9c171311, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     - target: {fileID: 7961291386210235100, guid: abc6ca63d2770544391cd50d9c171311, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 12927
+      value: 45695
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

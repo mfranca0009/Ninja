@@ -32,7 +32,7 @@ Transform:
   - {fileID: 2432425608537471676}
   - {fileID: 2788870157667316404}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4091537004610710713
 PrefabInstance:
@@ -172,7 +172,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1016745003, guid: 9fed25258db47654f947b5937e899eee, type: 3}
       propertyPath: m_ColliderMask.m_Bits
-      value: 29311
+      value: 62079
       objectReference: {fileID: 0}
     - target: {fileID: 5734839133879489406, guid: 9fed25258db47654f947b5937e899eee, type: 3}
       propertyPath: m_Name
