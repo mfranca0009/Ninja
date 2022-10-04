@@ -1104,6 +1104,7 @@ GameObject:
   - component: {fileID: 8862957453690271467}
   - component: {fileID: 6367404513073764285}
   - component: {fileID: 2345012281786925401}
+  - component: {fileID: 351400722}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1125,7 +1126,7 @@ Transform:
   m_Children:
   - {fileID: 1863393140278986437}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1766446573384302901
 Animator:
@@ -1206,13 +1207,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021df95764f962c4098487c03d53ec67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackMoveSpeed: 35
   walkSpeed: 70
   runSpeed: 120
   jumpSpeed: 160
   jumpDistance: 2.5
   maxJumps: 2
   landingTolerance: 0.003
+  animatorSpeed: 1.25
 --- !u!114 &2466898825072249287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1347,6 +1348,19 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &351400722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860446570756328647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 594aa9eb5e4019548ac18a4039e1afa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnTimer: 3
 --- !u!1 &1860446570833100665
 GameObject:
   m_ObjectHideFlags: 0
