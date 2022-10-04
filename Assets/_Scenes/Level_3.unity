@@ -5019,7 +5019,23 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: alwaysRun
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: alwaysWalk
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: waypoints.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: applyWaypointMovement
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 523960201, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
