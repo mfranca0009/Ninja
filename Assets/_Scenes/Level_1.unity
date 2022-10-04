@@ -4065,6 +4065,50 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[2].faceRight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[3].faceRight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[0].teleportPosition.x
+      value: 135
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[0].teleportPosition.y
+      value: -1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[1].teleportPosition.x
+      value: 135
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[1].teleportPosition.y
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[2].teleportPosition.x
+      value: 118
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[2].teleportPosition.y
+      value: -1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[3].teleportPosition.x
+      value: 118
+      objectReference: {fileID: 0}
+    - target: {fileID: 5919368611714708678, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: waypoints.Array.data[3].teleportPosition.y
+      value: 1.6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
