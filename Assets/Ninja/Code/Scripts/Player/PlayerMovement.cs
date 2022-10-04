@@ -390,10 +390,11 @@ public class PlayerMovement : MonoBehaviour
     private void FlipPlayerSprite()
     {
         bool isFacingLeft = transform.localScale.x < 0;
+        
         if (_movement.ReadValue<Vector2>() == Vector2.zero ||
-            _movement.ReadValue<Vector2>() == Vector2.left && isFacingLeft ||
-            _movement.ReadValue<Vector2>() == Vector2.right && !isFacingLeft ||
-            _playerCombat.IsInAttackAnim() || _playerCombat.IsInAttackState())
+            (_movement.ReadValue<Vector2>() == Vector2.left && isFacingLeft) ||
+            (_movement.ReadValue<Vector2>() == Vector2.right && !isFacingLeft) ||
+            _playerCombat.GetAttackState() == AttackState.SlowAttack)
             return;
         
         Vector3 currentScale = transform.localScale;

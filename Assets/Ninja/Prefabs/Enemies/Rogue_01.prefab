@@ -332,18 +332,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropOnDeath: 1
   dropOnActivate: 0
+  amountToDrop: 2
   itemDrops:
   - item: {fileID: 2883904645011931590, guid: 272e415953413fb4c80c490ea6291b7f, type: 3}
+    itemType: 0
     dropChance: 100
     conditionalDropChance: 100
   - item: {fileID: 2883904645011931590, guid: 9790276f45a15a9429b134ee10cda2ee, type: 3}
+    itemType: 1
     dropChance: 75
     conditionalDropChance: 25
   - item: {fileID: 3249815658152621353, guid: 333c306648291cc4299f043c2e2ce7ba, type: 3}
+    itemType: 2
     dropChance: 75
     conditionalDropChance: 25
-  amountToDrop: 2
-  maxKnivesThreshold: 5
+  lowerDropChanceKnivesThreshold: 2
+  maxKnivesThreshold: 4
+  maxStrengthBoostDuration: 60
   useCurrentDateTicks: 1
   seed: 0
 --- !u!1 &1000010251440012

@@ -4,8 +4,19 @@ public class Health : MonoBehaviour
 {
     #region Public Properties
     
+    /// <summary>
+    /// The living state of the gameobject
+    /// </summary>
     public bool Dead { get; private set; }
+    
+    /// <summary>
+    /// The current health points of the gameobject
+    /// </summary>
     public float HealthPoints { get; private set; }
+    
+    /// <summary>
+    /// The gameobject who has killed the owning gameobject of this script
+    /// </summary>
     public GameObject Killer { get; private set; }
     
     #endregion
@@ -86,6 +97,10 @@ public class Health : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Deal a heal and increase the health of the gameobject that has this script attached.
+    /// </summary>
+    /// <param name="heal">The heal amount that will be added to health.</param>
     public void DealHeal(float heal)
     {
         if (HealthPoints >= maxHealth || heal == 0)

@@ -133,7 +133,6 @@ public class PlayerCombat : MonoBehaviour
     private void Update()
     {
         StrengthBoostUpdate();
-        _animator.SetFloat("MaxKnives", MaxKnives);
     }
     
     #endregion

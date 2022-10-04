@@ -85,6 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c584fa6ceff1f642bc5a3a7a1c34040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  knifeAmount: 1
 --- !u!114 &2716998906824794190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +102,7 @@ MonoBehaviour:
   rocketDistance: 2
   rocketSpeed: 4
   horizontalSpeed: 4
-  rotationSpeed: 2
+  rotationSpeed: 1
 --- !u!1 &6399942730091287114
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
@@ -6,6 +7,7 @@ using Random = System.Random;
 public class ItemEntry
 {
     public GameObject item;
+    public ItemType itemType;
     public float dropChance;
     public float conditionalDropChance;
 }
@@ -14,7 +16,7 @@ public class ItemDrop : MonoBehaviour
 {
     #region Serialized Fields
 
-    [Header("Item Drop Settings")]
+    [Header("Item Drop Mechanic Settings")]
     
     [Tooltip("Should the item drop on death?")] 
     [SerializeField] private bool dropOnDeath = true;
@@ -22,19 +24,29 @@ public class ItemDrop : MonoBehaviour
     [Tooltip("Should the item drop when activated?")] 
     [SerializeField] private bool dropOnActivate;
 
+    [Tooltip("The amount of items to drop")]
+    [SerializeField, Range(1,3)] private int amountToDrop = 1;
+
+    [Header("Item Settings")]
+    
     [Tooltip("The items that could potentially drop")]
     [SerializeField] private ItemEntry[] itemDrops;
-
-    [Tooltip("The amount of items to drop")] 
-    [SerializeField] private int amountToDrop = 1;
-
-    [Tooltip("Knife drop threshold, where if this value is surpassed, the conditional drop chance is used")]
-    [SerializeField] private int maxKnivesThreshold = 5;
     
+    [Header("Item condition Settings")]
+    
+    [Tooltip("Knife drop threshold, where if this value is surpassed, the conditional drop chance is used")]
+    [SerializeField] private int lowerDropChanceKnivesThreshold = 2;
+    
+    [Tooltip("Maximum Knife drop threshold, where if this value is met, knife drops will stop dropping")]
+    [SerializeField] private int maxKnivesThreshold = 4;
+
+    [Tooltip("The maximum duration threshold, where if this value is met, strength potions will stop dropping")]
+    [SerializeField] private float maxStrengthBoostDuration = 60f;
+
     [Header("Random Number Generator Settings")]
     
     [Tooltip("Use current date as random number generator seed, if enabled it will ignore the integer seed setting")]
-    [SerializeField] private bool useCurrentDateTicks;
+    [SerializeField] private bool useCurrentDateTicks = true;
     
     [Tooltip("Seed used for the random number generator")] 
     [SerializeField] private int seed;
@@ -43,11 +55,14 @@ public class ItemDrop : MonoBehaviour
 
     #region Private Fields
     
+    // Item drop
     private bool _hasDroppedItems;
     private int _droppedItemsCount;
     
     // Health script
     private Health _health;
+    
+    // RNG
     private Random _random;
     
     #endregion
@@ -72,142 +87,142 @@ public class ItemDrop : MonoBehaviour
         if (!CanDropItems())
             return;
         
-        DropItemOnDeath();
+        DropItemsOnDeath();
+    }
+    
+    #endregion
+    
+    #region Update Methods
+    
+    /// <summary>
+    /// Drop items on death.
+    /// </summary>
+    private void DropItemsOnDeath()
+    {
+        if (!CanDropOnDeath())
+            return;
+
+        _hasDroppedItems = true;
+        
+        SpawnRandomItemDrops();
+    }
+
+    /// <summary>
+    /// Drop items on activation.
+    /// </summary>
+    private void DropItemOnActivate()
+    {
+        // TODO: should it have the same item drop concept as "drop on death"?
     }
     
     #endregion
     
     #region Private Helper Methods
 
-    private void DropItemOnDeath()
+    /// <summary>
+    /// Spawn a random item drop after shuffling the available items to drop and making sure that the item type is
+    /// allowed to be dropped. Conditional checks include normal/conditional drop chances, as well as additional
+    /// specialized conditions such as strength boost already active, number of max knives, or current health.
+    /// </summary>
+    private void SpawnRandomItemDrops()
     {
-        if (!CanDropOnDeath())
-            return;
+        // shuffle items
+        itemDrops = itemDrops.OrderBy(x => _random.Next(0,itemDrops.Length)).ToArray();
 
-        _hasDroppedItems = true;
+        foreach (ItemEntry itemEntry in itemDrops)
+        {
+            // Determine if drop count has already met its amount required
+            if (_droppedItemsCount >= amountToDrop || !CanDropItemType(itemEntry))
+                return;
 
-        SpawnHealthDrop();
-        SpawnRandomItemDrop();
+            GameObject itemToDrop = Instantiate(itemEntry.item, transform.position,
+                new Quaternion());
+
+            if (!itemToDrop)
+                return;
+            
+            ItemDropEffectRocket itemDropEffectRocket = itemToDrop.GetComponent<ItemDropEffectRocket>();
+
+            if (!itemDropEffectRocket)
+                return;
+
+            itemDropEffectRocket.HorizontalDistance = _droppedItemsCount switch
+            {
+                1 => 0.5f,
+                2 => -0.5f,
+                _ => 0f
+            };
+
+            itemToDrop.SetActive(true);
+            _droppedItemsCount++;
+        }
     }
 
-    private void DropItemOnActivate()
-    {
-        // TODO: should it have the same item drop concept as "drop on death"?
-    }
-
-    private void SpawnHealthDrop()
-    {
-        if (!CanDropHealthPotion())
-            return;
-
-        GameObject healthPotion =
-            Instantiate(itemDrops[(int)ItemType.HealthPotion].item, transform.position, new Quaternion());
-
-        if (!healthPotion)
-            return;
-        
-        ItemDropEffectRocket itemDropEffectRocket = healthPotion.GetComponent<ItemDropEffectRocket>();
-
-        if (!itemDropEffectRocket)
-            return;
-        
-        itemDropEffectRocket.HorizontalDistance = 0f;
-
-        healthPotion.SetActive(true);
-        _droppedItemsCount++;
-    }
-
-    private void SpawnStrengthDrop()
-    {
-        if (!CanDropStrengthPotion())
-            return;
-
-        GameObject strengthPotion = Instantiate(itemDrops[(int)ItemType.StrengthPotion].item, transform.position,
-            new Quaternion());
-        
-        if (!strengthPotion)
-            return;
-        
-        ItemDropEffectRocket itemDropEffectRocket = strengthPotion.GetComponent<ItemDropEffectRocket>();
-
-        if (!itemDropEffectRocket)
-            return;
-        
-        itemDropEffectRocket.HorizontalDistance = 0.5f;
-
-        strengthPotion.SetActive(true);
-        _droppedItemsCount++;
-    }
-
-    private void SpawnKnifeDrop()
-    {
-        if (!CanDropKnife())
-            return;
-
-        GameObject throwKnife = Instantiate(itemDrops[(int)ItemType.ThrowingKnife].item, transform.position,
-            new Quaternion());
-        
-        if (!throwKnife)
-            return;
-        
-        ItemDropEffectRocket itemDropEffectRocket = throwKnife.GetComponent<ItemDropEffectRocket>();
-
-        if (!itemDropEffectRocket)
-            return;
-        
-        itemDropEffectRocket.HorizontalDistance = -0.5f;
-
-        throwKnife.SetActive(true);
-        _droppedItemsCount++;
-    }
-
-    private void SpawnRandomItemDrop()
-    {
-        if (_droppedItemsCount + 1 > amountToDrop)
-            return;
-        
-        SpawnStrengthDrop();
-        SpawnKnifeDrop();
-    }
-
+    /// <summary>
+    /// Retrieve a random float multiplied by 100.
+    /// </summary>
+    /// <returns>Returns a value between 1 and 100.</returns>
     private float GetRandomFloat()
     {
         return (float)_random.NextDouble() * 100f;
     }
     
+    /// <summary>
+    /// Determine if dropping item(s) on death is allowed.
+    /// </summary>
+    /// <returns>Returns true if item(s) can be dropped on death, otherwise false.</returns>
     private bool CanDropOnDeath()
     {
         return dropOnDeath && _health.Dead && !_hasDroppedItems;
     }
 
-    private bool CanDropHealthPotion()
+    /// <summary>
+    /// Determine if the item can be dropped filtered by the item type.
+    /// </summary>
+    /// <param name="itemEntry">The item that is being processed for a drop.</param>
+    /// <returns>Returns true if the item is allowed to be dropped, otherwise false.</returns>
+    private bool CanDropItemType(ItemEntry itemEntry)
     {
-        Health killerHealth = _health.Killer.GetComponent<Health>();
+        // Potential scripts to be used to check certain conditions
+        Health killerHealth;
+        PlayerCombat playerCombat;
+        
+        switch (itemEntry.itemType)
+        {
+            case ItemType.HealthPotion:
+            {
+                killerHealth = _health.Killer.GetComponent<Health>();
+                
+                return killerHealth && killerHealth.HealthPoints < killerHealth.maxHealth &&
+                       itemEntry.dropChance >= GetRandomFloat();
+            }
+            case ItemType.StrengthPotion:
+            {
+                playerCombat = _health.Killer.GetComponent<PlayerCombat>();
+                
+                return playerCombat.StrengthBoostTimer < maxStrengthBoostDuration &&
+                       ((!playerCombat.HasMeleeStrengthBoost && itemEntry.dropChance >= GetRandomFloat()) ||
+                        (playerCombat.HasMeleeStrengthBoost && itemEntry.conditionalDropChance >= GetRandomFloat()));
+            }
+            case ItemType.ThrowingKnife:
+            {
+                playerCombat = _health.Killer.GetComponent<PlayerCombat>();
 
-        return killerHealth && killerHealth.HealthPoints < killerHealth.maxHealth &&
-               itemDrops[(int)ItemType.HealthPotion].dropChance >= GetRandomFloat();
+                return playerCombat.MaxKnives != maxKnivesThreshold && (
+                    (playerCombat.MaxKnives < lowerDropChanceKnivesThreshold &&
+                     itemEntry.dropChance >= GetRandomFloat()) ||
+                    (playerCombat.MaxKnives >= lowerDropChanceKnivesThreshold &&
+                     itemEntry.conditionalDropChance >= GetRandomFloat()));   
+            }
+            default:
+                return false;
+        }
     }
-    
-    private bool CanDropStrengthPotion()
-    {
-        PlayerCombat playerCombat = _health.Killer.GetComponent<PlayerCombat>();
 
-        return (!playerCombat.HasMeleeStrengthBoost &&
-                itemDrops[(int)ItemType.StrengthPotion].dropChance >= GetRandomFloat()) ||
-               (playerCombat.HasMeleeStrengthBoost &&
-                itemDrops[(int)ItemType.StrengthPotion].conditionalDropChance >= GetRandomFloat());
-    }
-    
-    private bool CanDropKnife()
-    {
-        PlayerCombat playerCombat = _health.Killer.GetComponent<PlayerCombat>();
-
-        return (playerCombat.MaxKnives < maxKnivesThreshold &&
-                itemDrops[(int)ItemType.ThrowingKnife].dropChance >= GetRandomFloat()) ||
-               (playerCombat.MaxKnives >= maxKnivesThreshold &&
-                itemDrops[(int)ItemType.StrengthPotion].conditionalDropChance >= GetRandomFloat());
-    }
-    
+    /// <summary>
+    /// Determine if any items can be dropped.
+    /// </summary>
+    /// <returns>Returns true if any items can be dropped, otherwise false.</returns>
     private bool CanDropItems()
     {
         return (dropOnDeath || dropOnActivate) && itemDrops.Length != 0 && amountToDrop != 0;
