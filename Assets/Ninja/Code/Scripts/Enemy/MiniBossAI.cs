@@ -50,7 +50,7 @@ public class MiniBossAI : MonoBehaviour
         int randNum;
         do
         {
-            randNum = Random.Range(0, waypoints.Length - 1);
+            randNum = Random.Range(0, waypoints.Length);
         } while (randNum == teleportLocation);
 
         Teleport(randNum);
@@ -62,10 +62,15 @@ public class MiniBossAI : MonoBehaviour
         //Play Particles
         smokeBombParticle.Play();
 
-        //Change Location based on sent number
-        transform.position = waypoints[num].teleportPosition;
-        teleportLocation = num;
-
+        try
+        {
+            //Change Location based on sent number
+            transform.position = waypoints[num].teleportPosition;
+            teleportLocation = num;
+        }catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
         //Play particles
         smokeBombParticle.Play();
         FaceRight(waypoints[teleportLocation].faceRight);
