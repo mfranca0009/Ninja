@@ -133,6 +133,7 @@ public class PlayerCombat : MonoBehaviour
     private void Update()
     {
         StrengthBoostUpdate();
+        _animator.SetFloat("MaxKnives", MaxKnives);
     }
     
     #endregion
@@ -144,10 +145,11 @@ public class PlayerCombat : MonoBehaviour
     // it has been thrown.
     private void OnThrowKnife(InputAction.CallbackContext obj)
     {
-        if (!CanAttack() || !CanThrowKnife())
+        if (!CanThrowKnife())
             return;
 
         Debug.Log("[PlayerCombat/OnThrowKnife] Knife throw performed!");
+        ActiveKnives++;
         
         _animator.SetTrigger("ThrowKnife");
     }
@@ -315,7 +317,6 @@ public class PlayerCombat : MonoBehaviour
         // Activate throwing knife object
         knifeRigidBody2D.bodyType = RigidbodyType2D.Dynamic;
         knifeToCreate.SetActive(true);
-        ActiveKnives++;
     }
     
     #endregion
@@ -337,7 +338,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is allowed to throw a knife, otherwise false.</returns>
     private bool CanThrowKnife()
     {
-        return ActiveKnives != MaxKnives;
+        return IsInAttackState() && ActiveKnives != MaxKnives;
     }
 
     /// <summary>

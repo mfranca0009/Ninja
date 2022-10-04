@@ -147,7 +147,7 @@ public class ThrowKnife : MonoBehaviour
 
         PlayerCombat playerCombat = Owner.GetComponent<PlayerCombat>();
 
-        if (!playerCombat || playerCombat.ActiveKnives == 0)
+        if (!playerCombat || playerCombat.ActiveKnives < 1)
             return;
         
         playerCombat.ActiveKnives--;
