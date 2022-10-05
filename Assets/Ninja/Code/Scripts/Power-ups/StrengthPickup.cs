@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class StrengthPickup : MonoBehaviour
@@ -14,50 +15,83 @@ public class StrengthPickup : MonoBehaviour
     
     [Tooltip("The extend duration, in seconds, to increase the melee strength boost timer")] 
     [SerializeField] private float extendDuration = 15f;
+    
+    [Header("Sound Effect Settings")] 
+    
+    [Tooltip("The sound effect when picking up this item")]
+    [SerializeField] private AudioClip pickupSoundClip;
+
+    [Tooltip("The sound effect when this item hits the ground")] 
+    [SerializeField] private AudioClip hitGroundSoundClip;
 
     #endregion
 
+    #region Private Fields
+
+    private SoundManager _soundManager;
+    
+    #endregion
+    
+    #region Unity Events
+
+    private void Awake()
+    {
+        _soundManager = FindObjectOfType<SoundManager>();
+    }
+
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.layer != LayerMask.NameToLayer("Player"))
+        LayerMask playerMask = LayerMask.NameToLayer("Player");
+        LayerMask groundMask = LayerMask.NameToLayer("Ground");
+        LayerMask collidingObjectLayer = col.gameObject.layer;
+
+        if (collidingObjectLayer != playerMask && collidingObjectLayer != groundMask)
             return;
 
-        PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
-        
-        if (!playerCombat)
-            return;
-
-        if (!playerCombat.HasMeleeStrengthBoost)
+        if (collidingObjectLayer == playerMask)
         {
-            playerCombat.HasMeleeStrengthBoost = true;
-            playerCombat.StrengthBoostTimer = baseDuration;
-            MeleeWeapon meleeWeapon;
+            PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
+        
+            if (!playerCombat)
+                return;
 
-            if (playerCombat.meleeWeaponLeft)
+            if (!playerCombat.HasMeleeStrengthBoost)
             {
-                meleeWeapon = playerCombat.meleeWeaponLeft.GetComponent<MeleeWeapon>();
+                playerCombat.HasMeleeStrengthBoost = true;
+                playerCombat.StrengthBoostTimer = baseDuration;
+                MeleeWeapon meleeWeapon;
 
-                if (!meleeWeapon)
-                    return;
+                if (playerCombat.meleeWeaponLeft)
+                {
+                    meleeWeapon = playerCombat.meleeWeaponLeft.GetComponent<MeleeWeapon>();
 
-                meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
-                meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
+                    if (!meleeWeapon)
+                        return;
+
+                    meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
+                    meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
+                }
+
+                if (playerCombat.meleeWeaponRight)
+                {
+                    meleeWeapon = playerCombat.meleeWeaponRight.GetComponent<MeleeWeapon>();
+
+                    if (!meleeWeapon)
+                        return;
+
+                    meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
+                    meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
+                }
             }
+            else
+                playerCombat.StrengthBoostTimer += extendDuration;
 
-            if (playerCombat.meleeWeaponRight)
-            {
-                meleeWeapon = playerCombat.meleeWeaponRight.GetComponent<MeleeWeapon>();
-
-                if (!meleeWeapon)
-                    return;
-
-                meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
-                meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
-            }
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            Destroy(gameObject);   
         }
-        else
-            playerCombat.StrengthBoostTimer += extendDuration;
-
-        Destroy(gameObject);
+        else if (collidingObjectLayer == groundMask)
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
     }
+    
+    #endregion
 }

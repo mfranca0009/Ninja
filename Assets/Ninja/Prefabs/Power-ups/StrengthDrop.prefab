@@ -169,6 +169,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ccac48e234026544901b8db0c2947b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meleeDamageMultiplier: 1.2
+  baseDuration: 15
+  extendDuration: 15
+  pickupSoundClip: {fileID: 8300000, guid: c364ec6a816c4124fbd75abeffb99439, type: 3}
+  hitGroundSoundClip: {fileID: 8300000, guid: e3917f7fadd633b4ba0d7e38e314f103, type: 3}
 --- !u!114 &4452667887727809845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,7 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotate: 1
-  rocketDistance: 2
-  rocketSpeed: 4
+  verticalDistance: 2
+  verticalSpeed: 4
   horizontalSpeed: 4
   rotationSpeed: 0.5

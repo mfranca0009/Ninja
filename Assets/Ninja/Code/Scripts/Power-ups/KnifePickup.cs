@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class KnifePickup : MonoBehaviour
@@ -9,20 +10,53 @@ public class KnifePickup : MonoBehaviour
     [Tooltip("The amount that will be used to increase the max amount of knives allowed on screen")]
     [SerializeField] private int knifeAmount = 1;
 
+    [Header("Sound Effect Settings")] 
+    
+    [Tooltip("The sound effect when picking up this item")]
+    [SerializeField] private AudioClip pickupSoundClip;
+
+    [Tooltip("The sound effect when this item hits the ground")] 
+    [SerializeField] private AudioClip hitGroundSoundClip;
+    
     #endregion
+
+    #region Private Fields
+
+    private SoundManager _soundManager;
+
+    #endregion
+    
+    #region Unity Events
+
+    private void Awake()
+    {
+        _soundManager = FindObjectOfType<SoundManager>();
+    }
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.layer != LayerMask.NameToLayer("Player"))
+        LayerMask playerMask = LayerMask.NameToLayer("Player");
+        LayerMask groundMask = LayerMask.NameToLayer("Ground");
+        LayerMask collidingObjectLayer = col.gameObject.layer;
+
+        if (collidingObjectLayer != playerMask && collidingObjectLayer != groundMask)
             return;
 
-        PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
+        if (collidingObjectLayer == playerMask)
+        {
+            PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
         
-        if (!playerCombat)
-            return;
+            if (!playerCombat)
+                return;
 
-        playerCombat.MaxKnives += knifeAmount;
+            playerCombat.MaxKnives += knifeAmount;
 
-        Destroy(gameObject);
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            Destroy(gameObject);   
+        }
+        else if (collidingObjectLayer == groundMask)
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
     }
+    
+    #endregion
 }
