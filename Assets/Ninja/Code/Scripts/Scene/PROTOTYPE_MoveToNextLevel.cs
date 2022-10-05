@@ -13,15 +13,18 @@ public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
     public string levelToLoad = "";
 
     //Scroll Motion
-    [SerializeField][Range(0, 1)] float speed = 1f;
-    [SerializeField][Range(-2, 1)] float range = -2f;
+    [SerializeField] private float amplifier = 0.3f;
+    [SerializeField] private float frequency = 3f;
 
-
+    private Vector2 _homePos;
+    
     void Start()
     {
         _sceneManager = FindObjectOfType<SceneManagement>();
         _UIManager = FindObjectOfType<UIManager>();
         _UIManager.hideScroll();
+
+        _homePos = transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -39,7 +42,6 @@ public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
 
     void LoopScrollMotion()
     {
-        float yPos = Mathf.PingPong(Time.time * speed, 1) * -range;
-        transform.position = new Vector2(transform.position.x, yPos);    
+        transform.position = new Vector3(_homePos.x, Mathf.Sin(Time.time * frequency) * amplifier + _homePos.y, 0);
     }
 }
