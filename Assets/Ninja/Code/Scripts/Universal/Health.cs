@@ -23,16 +23,46 @@ public class Health : MonoBehaviour
     
     #region Public Fields
 
+    [Header("Health Settings")]
+    
     [Tooltip("Maximum health points to start with on spawn")]
     public float maxHealth = 100f;
     
     #endregion
 
-    #region Private Fields
+    #region Serialized Fields
+
+    [Header("Player Sound Effect Settings")] 
     
-    private Animator _animator;
-    private BoxCollider2D _boxCollider2D;
+    [Tooltip("Death sound effect to play when player dies")] 
+    [SerializeField] private AudioClip playerDeathSoundClip;
+
+    [Header("Enemy Sound Effect Settings")] 
+    
+    [Tooltip("Should randomize enemy death sound effect pitch?")] 
+    [SerializeField] private bool shouldRandomizePitch;
+    
+    [Tooltip("Should sound effect be simultaneous with other sound effects?")] 
+    [SerializeField] private bool isOneShot;
+    
+    [Tooltip("Death sound effects to use at random")] 
+    [SerializeField] private AudioClip[] enemyDeathSoundClips;
+
+    #endregion
+    
+    #region Private Fields
+
+    // Rigidbody / Physics
     private Rigidbody2D _rigidbody2D;
+    
+    // Animator / animations
+    private Animator _animator;
+    
+    // Sound Effects / Music
+    private SoundManager _soundManager;
+
+    // Death
+    private BoxCollider2D _boxCollider2D;
     private bool _playedDeathAnimation;
     
     #endregion
@@ -44,6 +74,7 @@ public class Health : MonoBehaviour
         _animator = GetComponent<Animator>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _soundManager = FindObjectOfType<SoundManager>();
         HealthPoints = maxHealth;
     }
 
@@ -61,7 +92,7 @@ public class Health : MonoBehaviour
     
     #endregion
 
-    #region Public Methods
+    #region Public Helper Methods
     
     /// <summary>
     /// Deal damage and reduce the health of the gameobject that has this script attached.
@@ -79,7 +110,7 @@ public class Health : MonoBehaviour
         {
             HealthPoints = 0f;
             Dead = true;
-            
+
             if (invoker)
                 Killer = invoker;
             
@@ -129,6 +160,22 @@ public class Health : MonoBehaviour
         HealthPoints = 0f;
         Dead = true;
         _playedDeathAnimation = skipDeathAnimation;
+    }
+
+    /// <summary>
+    /// Play death sound effect.<br></br><br></br>
+    /// Note: This is currently executed on its own by an Animation Event through the `Rogue_death_01` animation.
+    /// </summary>
+    public void ExecuteDeathSoundEffect()
+    {
+        if (!Dead)
+            return;
+        
+        if(gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            _soundManager.RandomSoundEffect(AudioSourceType.DamageEffects, isOneShot, shouldRandomizePitch,
+                enemyDeathSoundClips);
+        else
+            _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, playerDeathSoundClip);
     }
     
     #endregion

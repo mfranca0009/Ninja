@@ -61,8 +61,6 @@ public class PlayerCombat : MonoBehaviour
     [Tooltip("A position offset to adjust spawn positioning further in relation to the spawn transform used")]
     [SerializeField] private Vector2 throwKnifeSpawnOffset = new (1f, 0f);
 
-    #endregion
-
     [Header("Melee Weapon Settings")] 
     
     [Tooltip("The left melee weapon gameobject")] 
@@ -76,7 +74,14 @@ public class PlayerCombat : MonoBehaviour
     
     [Tooltip("The right melee weapon sprite that will be visible when the weapon is active within the scene")]
     [SerializeField] private Sprite meleeWeaponRightSprite;
+
+    [Header("Sound Effect Settings")]
     
+    [Tooltip("The sound effects played when using a specific attack")]
+    [SerializeField] private AudioClip[] attackSoundClips;
+    
+    #endregion
+
     #region Private Fields
     
     // Input
@@ -87,6 +92,9 @@ public class PlayerCombat : MonoBehaviour
 
     // Animator / animations
     private Animator _animator;
+
+    // Sound Effects / Music
+    private SoundManager _soundManager;
 
     // Player Scripts
     private PlayerMovement _playerMovement;
@@ -125,6 +133,7 @@ public class PlayerCombat : MonoBehaviour
         _playerInputActions = new PlayerInputActions();
         _animator = GetComponent<Animator>();
         _playerMovement = GetComponent<PlayerMovement>();
+        _soundManager = FindObjectOfType<SoundManager>();
         MaxKnives = 1;
         
         SetupMeleeWeapons();
@@ -316,6 +325,33 @@ public class PlayerCombat : MonoBehaviour
         // Activate throwing knife object
         knifeRigidBody2D.bodyType = RigidbodyType2D.Dynamic;
         knifeToCreate.SetActive(true);
+    }
+
+    /// <summary>
+    /// Play sound effect for light attack.<br></br><br></br>
+    /// Note: This is currently executed on its own by an Animation Event through the `Rogue_attack_light` animation.
+    /// </summary>
+    public void PlayLightAttackSfx()
+    {
+        _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, attackSoundClips[(int)AttackState.LightAttack]);
+    }
+    
+    /// <summary>
+    /// Play sound effect for slow attack.<br></br><br></br>
+    /// Note: This is currently executed on its own by an Animation Event through the `Rogue_attack_slow` animation.
+    /// </summary>
+    public void PlaySlowAttackSfx()
+    {
+        _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, attackSoundClips[(int)AttackState.SlowAttack]);
+    }
+    
+    /// <summary>
+    /// Play sound effect for throw knife.<br></br><br></br>
+    /// Note: This is currently executed on its own by an Animation Event through the `Rogue_throw_knife` animation. 
+    /// </summary>
+    public void PlayThrowKnifeSfx()
+    {
+        _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, attackSoundClips[(int)AttackState.ThrowKnife]);
     }
     
     #endregion

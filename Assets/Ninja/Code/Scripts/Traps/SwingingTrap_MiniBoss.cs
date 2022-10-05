@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class SwingingTrap_MiniBoss : MonoBehaviour
 {
-    #region Varriables
+    #region Variables
+    
     [Tooltip("When this entity is dead, stop the trap")]
     public GameObject miniboss;
     private Health _minibossHealth;
@@ -28,6 +29,9 @@ public class SwingingTrap_MiniBoss : MonoBehaviour
     
     [Tooltip("Rotation speed of the trap as a whole")]
     [SerializeField] private float trapRotationSpeed = -10.0f;
+
+    [Tooltip("Trap hit sound effect")] 
+    [SerializeField] private AudioClip trapHitSoundClip;
     
     //What got hit?
     private GameObject foreignEntity = null;
@@ -42,12 +46,17 @@ public class SwingingTrap_MiniBoss : MonoBehaviour
 
     //object's renderer for post fight stopping of trap
     private Renderer _renderer;
+
+    // Sound Effects / Music
+    private SoundManager _soundManager;
+    
     #endregion
 
     void Start()
     {
         _minibossHealth = miniboss.GetComponent<Health>();
         _renderer = blade.GetComponent<Renderer>();
+        _soundManager = FindObjectOfType<SoundManager>();
     }
 
     // Update is called once per frame
@@ -105,6 +114,9 @@ public class SwingingTrap_MiniBoss : MonoBehaviour
         {
             return;
         }
+        
+        // Trap hit sound effect
+        _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, trapHitSoundClip);
         
         //then set the foreignEntity to who got hit, deal them damage, and prep them for knockback.
         foreignEntity = collision.gameObject;

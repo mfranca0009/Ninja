@@ -17,6 +17,9 @@ public class DamagePlayer_Trap : MonoBehaviour
     [Tooltip("How many frames to wait before reenabling player movement.")]
     [SerializeField]private int frameDelay = 10;
     
+    [Tooltip("Trap hit sound effect")] 
+    [SerializeField] private AudioClip trapHitSoundClip;
+    
     private int frameCount = 0;
     private SwingingTrap sTrap;
     private GameObject foreignEntity = null;
@@ -24,12 +27,16 @@ public class DamagePlayer_Trap : MonoBehaviour
     private bool wait;
     private bool trapTriggered;
     
+    // Sound Effects / Music
+    private SoundManager _soundManager;
+    
     
 
     void Start()
     {
         //set sTrap equal to the SwingingTrap component on the presure plate
-        sTrap = presurePlate.GetComponent<SwingingTrap>();    
+        sTrap = presurePlate.GetComponent<SwingingTrap>();
+        _soundManager = FindObjectOfType<SoundManager>();
     }
 
     private void Update()
@@ -70,6 +77,10 @@ public class DamagePlayer_Trap : MonoBehaviour
             //and the object hit is either the player or an enemy.
             if (collision.gameObject.tag == "Player") // || collision.gameObject.tag == "Enemy")
             {
+                
+                // Trap hit sound effect
+                _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, trapHitSoundClip);
+                
                 //then set the foreignEntity to whichever was hit, damge them, and knock them back.
                 foreignEntity = collision.gameObject;
                 foreignEntity.GetComponent<Health>().DealDamage(damage, this.gameObject);

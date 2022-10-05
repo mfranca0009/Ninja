@@ -9,7 +9,7 @@ public class TestAudioScript : MonoBehaviour
 
     public AudioClip soundEffect;
 
-    void Start()
+    private void Start()
     {
         _soundManager = FindObjectOfType<SoundManager>();
     }
@@ -18,7 +18,8 @@ public class TestAudioScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            _soundManager.PlaySoundEffect(soundEffect);
+            // Matt: randomly place attack effects source, this is only a test anyways.
+            _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, soundEffect);
 
         }
     }

@@ -2,6 +2,35 @@ using UnityEngine;
 
 public class HitBoxDetection : MonoBehaviour
 {
+    #region Serialized Fields
+
+    [Header("Sound Effect Settings")] 
+    
+    [Tooltip("Sound effect for light attack hit")]
+    [SerializeField] private AudioClip lightAttackHitSoundClip;
+
+    [Tooltip("Sound effect for slow attack hit")]
+    [SerializeField] private AudioClip slowAttackHitSoundClip;
+
+    [Tooltip("Sound effect for throw knife hit")] 
+    [SerializeField] private AudioClip knifeHitSoundClip;
+    
+    #endregion
+
+    #region Private Fields
+
+    // Sound Effects / Music
+    private SoundManager _soundManager;
+    
+    #endregion
+    
+    #region Unity Events
+
+    private void Awake()
+    {
+        _soundManager = FindObjectOfType<SoundManager>();
+    }
+    
     private void OnTriggerEnter2D(Collider2D col)
     {
         Health victimHealth = col.GetComponent<Health>();
@@ -40,8 +69,16 @@ public class HitBoxDetection : MonoBehaviour
                 },
                 _ => damageToApply
             };
-
+            
             invoker = meleeWeapon.Owner;
+
+            // Hit sound effect (light / slow attack)
+            bool lightAttackPerformed = !playerCombat
+                ? enemyCombat.LightAttackPerformed == 1
+                : playerCombat.LightAttackPerformed == 1;
+
+            _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects,
+                lightAttackPerformed ? lightAttackHitSoundClip : slowAttackHitSoundClip);
         }
         else if (throwKnife)
         {
@@ -49,9 +86,14 @@ public class HitBoxDetection : MonoBehaviour
             invoker = throwKnife.Owner;
             throwKnife.UpdateActiveKnives();
             Destroy(throwKnife.gameObject);
+
+            // Hit sound effect (throw knife)
+            _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, knifeHitSoundClip);
         }
         
         // Deal damage to victim
         victimHealth.DealDamage(damageToApply, invoker);
     }
+    
+    #endregion
 }

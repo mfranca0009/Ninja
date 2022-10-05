@@ -61,6 +61,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae0c73ce7bd90f4cb8b31c379dabb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lightAttackHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
+  slowAttackHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
+  knifeHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
 --- !u!1 &4566541791185861260
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,3 +210,4 @@ MonoBehaviour:
   ySpeed: 15
   maximumAngularVelocity: 180
   rotationSpeed: 150
+  knifeSpinSoundClip: {fileID: 8300000, guid: 14d5ffaa38832b241a4b70425848cae0, type: 3}
