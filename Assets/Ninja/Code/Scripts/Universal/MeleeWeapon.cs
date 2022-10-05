@@ -9,17 +9,37 @@ public class MeleeWeapon : MonoBehaviour
     /// </summary>
     public GameObject Owner { get; set; }
     
+    /// <summary>
+    /// The light attack damage that will be applied once a light attack is performed and hits a target
+    /// </summary>
+    public float LightAttackDmg { get; set; }
+    
+    /// <summary>
+    /// The heavy attack damage that will be applied once a slow attack is performed and hits a target
+    /// </summary>
+    public float HeavyAttackDmg { get; set; }
+
     #endregion
     
     #region Public Fields
     
     [Header("Damage Settings")]
     
-    [Tooltip("Light attack damage amount")] 
-    public float lightAttackDmg = 12.5f;
+    [Tooltip("Base light attack damage amount")] 
+    public float baseLightAttackDmg = 12.5f;
 
-    [Tooltip("heavy attack damage amount")] 
-    public float heavyAttackDmg = 25f;
+    [Tooltip("Base heavy attack damage amount")] 
+    public float baseHeavyAttackDmg = 25f;
     
+    #endregion
+
+    #region Unity Events
+
+    private void Awake()
+    {
+        LightAttackDmg = baseLightAttackDmg;
+        HeavyAttackDmg = baseHeavyAttackDmg;
+    }
+
     #endregion
 }

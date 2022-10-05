@@ -951,6 +951,7 @@ GameObject:
   - component: {fileID: 2775486092767371955}
   - component: {fileID: -4991500247275969128}
   - component: {fileID: 6745165502749186396}
+  - component: {fileID: 4710522390037936239}
   m_Layer: 9
   m_Name: Rogue_04
   m_TagString: Enemy
@@ -1135,6 +1136,39 @@ MonoBehaviour:
   velocityXTolerance: 0.5
   shouldDamage: 0
   landingDamage: 10
+--- !u!114 &4710522390037936239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011922212602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7fdf844246820b45a896ad4a23341b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropOnDeath: 1
+  dropOnActivate: 0
+  amountToDrop: 2
+  itemDrops:
+  - item: {fileID: 2883904645011931590, guid: 272e415953413fb4c80c490ea6291b7f, type: 3}
+    itemType: 0
+    dropChance: 100
+    conditionalDropChance: 100
+  - item: {fileID: 2883904645011931590, guid: 9790276f45a15a9429b134ee10cda2ee, type: 3}
+    itemType: 1
+    dropChance: 75
+    conditionalDropChance: 25
+  - item: {fileID: 3249815658152621353, guid: 333c306648291cc4299f043c2e2ce7ba, type: 3}
+    itemType: 2
+    dropChance: 75
+    conditionalDropChance: 25
+  lowerDropChanceKnivesThreshold: 2
+  maxKnivesThreshold: 4
+  maxStrengthBoostDuration: 60
+  useCurrentDateTicks: 1
+  seed: 0
 --- !u!1 &1000012139601564
 GameObject:
   m_ObjectHideFlags: 0

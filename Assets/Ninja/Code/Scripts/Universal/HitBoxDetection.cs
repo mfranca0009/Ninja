@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 public class HitBoxDetection : MonoBehaviour
@@ -29,14 +28,14 @@ public class HitBoxDetection : MonoBehaviour
             {
                 false when !enemyCombat => playerCombat.LightAttackPerformed switch
                 {
-                    1 when playerCombat.SlowAttackPerformed == 0 => meleeWeapon.lightAttackDmg,
-                    0 when playerCombat.SlowAttackPerformed == 1 => meleeWeapon.heavyAttackDmg,
+                    1 when playerCombat.SlowAttackPerformed == 0 => meleeWeapon.LightAttackDmg,
+                    0 when playerCombat.SlowAttackPerformed == 1 => meleeWeapon.HeavyAttackDmg,
                     _ => damageToApply
                 },
                 true when enemyCombat => enemyCombat.LightAttackPerformed switch
                 {
-                    1 when enemyCombat.SlowAttackPerformed == 0 => meleeWeapon.lightAttackDmg,
-                    0 when enemyCombat.SlowAttackPerformed == 1 => meleeWeapon.heavyAttackDmg,
+                    1 when enemyCombat.SlowAttackPerformed == 0 => meleeWeapon.LightAttackDmg,
+                    0 when enemyCombat.SlowAttackPerformed == 1 => meleeWeapon.HeavyAttackDmg,
                     _ => damageToApply
                 },
                 _ => damageToApply

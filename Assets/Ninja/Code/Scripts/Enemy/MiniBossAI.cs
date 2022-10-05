@@ -55,7 +55,6 @@ public class MiniBossAI : MonoBehaviour
 
         Teleport(randNum);
         previousHealth = _healthComponent.HealthPoints;
-        
     }
 
     private void Teleport(int num)

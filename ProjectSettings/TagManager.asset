@@ -9,6 +9,9 @@ TagManager:
   - ShowOnFinish
   - Cloud
   - ScrollCanvas
+  - HealthPickup
+  - StrengthPickup
+  - KnifePickup
   layers:
   - Default
   - TransparentFX
@@ -25,7 +28,7 @@ TagManager:
   - IgnorePlayer
   - IgnoreEnemy
   - IgnorePlayerAndEnemy
-  - 
+  - Pickup
   - 
   - 
   - 

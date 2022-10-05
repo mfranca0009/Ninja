@@ -25,3 +25,10 @@ public enum AttackState
     SlowAttack = 2,
     ThrowKnife = 3
 }
+
+public enum ItemType
+{
+    HealthPotion = 0,
+    StrengthPotion = 1,
+    ThrowingKnife  = 2
+}
