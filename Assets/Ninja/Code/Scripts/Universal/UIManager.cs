@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 	GameObject[] pauseObjects;
 	GameObject[] finishObjects;
 	public Canvas scrollCanvas;
+	public Canvas healthCanvas;
 
 	//
 	private Health _playerHealth;
@@ -41,7 +42,7 @@ public class UIManager : MonoBehaviour
 	{
 		Scene currentScene = SceneManager.GetActiveScene();
 		//uses the p button to pause and unpause the game
-		if ( (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && currentScene.buildIndex != 0)
+		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && currentScene.buildIndex != 0)
 		{
 			//if (Time.timeScale == 1 && playerController.alive == true) //&& !_playerHealth.Dead
 			if (Time.timeScale == 1 && !_playerHealth.Dead)
@@ -63,7 +64,16 @@ public class UIManager : MonoBehaviour
 		{
 			showFinished();
 		}
-	}
+
+		if (currentScene.buildIndex == 0)
+		{
+			hideHealth();
+		}
+		else if (currentScene.buildIndex != 0)
+		{
+			showHealth();
+		}
+	}//close update
 
 
 	//controls the pausing of the scene
@@ -99,6 +109,19 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
+	//Health Canvas
+	public void showHealth()
+	{
+		healthCanvas.gameObject.SetActive(true);
+	}
+
+	public void hideHealth()
+	{
+		healthCanvas.gameObject.SetActive(false);
+	}
+
+
+	//Scroll Canvas
 	public void showScroll()
 	{
 		//foreach (GameObject g in scrollCanvas)
