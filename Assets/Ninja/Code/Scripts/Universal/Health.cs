@@ -4,18 +4,30 @@ public class Health : MonoBehaviour
 {
     #region Public Properties
     
+    /// <summary>
+    /// The living state of the gameobject
+    /// </summary>
     public bool Dead { get; private set; }
+    
+    /// <summary>
+    /// The current health points of the gameobject
+    /// </summary>
     public float HealthPoints { get; private set; }
     
+    /// <summary>
+    /// The gameobject who has killed the owning gameobject of this script
+    /// </summary>
+    public GameObject Killer { get; private set; }
+    
     #endregion
     
-    #region Serialized Fields
-    
-    [Tooltip("Maximum health points to start with on spawn")]
-    [SerializeField] private float maxHealth = 100f;
+    #region Public Fields
 
-    #endregion
+    [Tooltip("Maximum health points to start with on spawn")]
+    public float maxHealth = 100f;
     
+    #endregion
+
     #region Private Fields
     
     private Animator _animator;
@@ -67,6 +79,10 @@ public class Health : MonoBehaviour
         {
             HealthPoints = 0f;
             Dead = true;
+            
+            if (invoker)
+                Killer = invoker;
+            
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}. {gameObjectName} has been killed!");
         }
         else
@@ -78,6 +94,29 @@ public class Health : MonoBehaviour
                 enemyCombat.NotifyEngagement(invoker);
             
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}; {HealthPoints} remaining.");
+        }
+    }
+
+    /// <summary>
+    /// Deal a heal and increase the health of the gameobject that has this script attached.
+    /// </summary>
+    /// <param name="heal">The heal amount that will be added to health.</param>
+    public void DealHeal(float heal)
+    {
+        if (HealthPoints >= maxHealth || heal == 0)
+            return;
+
+        string gameObjectName = gameObject.name;
+        
+        if (HealthPoints + heal >= maxHealth)
+        {
+            HealthPoints = 100f;
+            Debug.Log($"[Health/DealHeal] {gameObjectName} healed to full health!");
+        }
+        else
+        {
+            HealthPoints += heal;
+            Debug.Log($"[Health/DealHeal] {gameObjectName} healed for {heal}! Now has {HealthPoints} health.");
         }
     }
     
