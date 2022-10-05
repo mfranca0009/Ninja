@@ -132,9 +132,13 @@ public class ItemDrop : MonoBehaviour
         foreach (ItemEntry itemEntry in itemDrops)
         {
             // Determine if drop count has already met its amount required
-            if (_droppedItemsCount >= amountToDrop || !CanDropItemType(itemEntry))
+            if (_droppedItemsCount >= amountToDrop)
                 return;
 
+            // If this item cannot be dropped, just continue.
+            if (!CanDropItemType(itemEntry))
+                continue;
+            
             GameObject itemToDrop = Instantiate(itemEntry.item, transform.position,
                 new Quaternion());
 
@@ -201,18 +205,18 @@ public class ItemDrop : MonoBehaviour
                 playerCombat = _health.Killer.GetComponent<PlayerCombat>();
                 
                 return playerCombat.StrengthBoostTimer < maxStrengthBoostDuration &&
-                       ((!playerCombat.HasMeleeStrengthBoost && itemEntry.dropChance >= GetRandomFloat()) ||
-                        (playerCombat.HasMeleeStrengthBoost && itemEntry.conditionalDropChance >= GetRandomFloat()));
+                       !playerCombat.HasMeleeStrengthBoost && itemEntry.dropChance >= GetRandomFloat() ||
+                        playerCombat.HasMeleeStrengthBoost && itemEntry.conditionalDropChance >= GetRandomFloat();
             }
             case ItemType.ThrowingKnife:
             {
                 playerCombat = _health.Killer.GetComponent<PlayerCombat>();
 
-                return playerCombat.MaxKnives != maxKnivesThreshold && (
-                    (playerCombat.MaxKnives < lowerDropChanceKnivesThreshold &&
-                     itemEntry.dropChance >= GetRandomFloat()) ||
-                    (playerCombat.MaxKnives >= lowerDropChanceKnivesThreshold &&
-                     itemEntry.conditionalDropChance >= GetRandomFloat()));   
+                return playerCombat.MaxKnives != maxKnivesThreshold &&
+                       playerCombat.MaxKnives < lowerDropChanceKnivesThreshold &&
+                       itemEntry.dropChance >= GetRandomFloat() ||
+                       playerCombat.MaxKnives >= lowerDropChanceKnivesThreshold &&
+                       itemEntry.conditionalDropChance >= GetRandomFloat();
             }
             default:
                 return false;
