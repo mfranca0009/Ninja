@@ -1131,14 +1131,6 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2391246082500215454, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2391246082500215454, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -924095741
-      objectReference: {fileID: 0}
     - target: {fileID: 2756860390625946155, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1193,7 +1185,15 @@ PrefabInstance:
       objectReference: {fileID: 731935193}
     - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: timesHitBeforeTeleporting
-      value: 5
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: waypoints.Array.data[0].teleportPosition.y
+      value: -1.783544
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: waypoints.Array.data[1].teleportPosition.y
+      value: -1.783544
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

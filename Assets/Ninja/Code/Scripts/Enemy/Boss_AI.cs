@@ -12,7 +12,7 @@ public class Boss_AI : MonoBehaviour
     private int teleportLocation;
     private int previousLocation;
     [SerializeField] private int timesHitBeforeTeleporting = 3;
-    private int hitCounter;
+    private int hitCounter = 0;
 
      //ShadowClone Logic 
     [Tooltip("The particle effect used in a burst when the Enemy is hit and teleports")]
@@ -29,6 +29,9 @@ public class Boss_AI : MonoBehaviour
     private Health _healthComponent;
     private float previousHealth;
 
+    //flip logic
+    Vector3 curLocalScale;
+
 
 
     // Start is called before the first frame update
@@ -36,6 +39,7 @@ public class Boss_AI : MonoBehaviour
     {
         _healthComponent = GetComponent<Health>();
         previousHealth = _healthComponent.HealthPoints;
+        curLocalScale = transform.localScale;
         Teleport(0);
     }
 
@@ -55,8 +59,11 @@ public class Boss_AI : MonoBehaviour
             return;
         }
 
-        //increment the hit counter, and check if the char was hit enough times to justify teleporting.
+        //increment the hit counter, set previous health to current health,
         hitCounter++;
+        previousHealth = _healthComponent.HealthPoints;
+        
+        //check if the char has been hit enough times to justify teleporting. 
         if (hitCounter < timesHitBeforeTeleporting)
         {
             return;
@@ -73,11 +80,13 @@ public class Boss_AI : MonoBehaviour
             teleportLocation = 0;
         }
 
-        Instantiate(
+        //Create a shadowClone where he was, then teleport.
+        GameObject clone = Instantiate(
             shadowClone, 
-            new Vector3(waypoints[previousLocation].teleportPosition.x, waypoints[previousLocation].teleportPosition.y, transform.position.z), 
+            transform.position, 
             new Quaternion()
             );
+        clone.GetComponent<EnemyCombat>().enabled = true;
         Teleport(teleportLocation);
         previousHealth = _healthComponent.HealthPoints;
     }
@@ -105,6 +114,7 @@ public class Boss_AI : MonoBehaviour
         FaceRight(waypoints[teleportLocation].faceRight);
     }
 
+    //Summon the end of level scroll when the boss dies.
     private void ScrollCheck()
     {
         if (_healthComponent.Dead || scroll.activeSelf)
@@ -118,7 +128,6 @@ public class Boss_AI : MonoBehaviour
     /// </summary>
     private void FaceRight(bool faceRight)
     {
-        Vector3 curLocalScale = transform.localScale;
         transform.localScale =
             new Vector3(faceRight ? curLocalScale.x : -curLocalScale.x, curLocalScale.y, curLocalScale.z);
     }

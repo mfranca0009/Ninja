@@ -50,9 +50,9 @@ GameObject:
   - component: {fileID: 6169659395082176970}
   - component: {fileID: 6169659395082176971}
   - component: {fileID: 3137691398772435829}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Rogue_06
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -230,11 +230,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints:
-  - teleportPosition: {x: 7.15, y: -1.76}
+  - teleportPosition: {x: 7, y: -1.76}
     faceRight: 0
-  - teleportPosition: {x: -7.15, y: -1.76}
+  - teleportPosition: {x: -7, y: -1.76}
     faceRight: 1
-  timesHitBeforeTeleporting: 3
+  timesHitBeforeTeleporting: 5
   smokeBombParticle: {fileID: 6683146191807833571, guid: 2dfcb250618860f428126e63e64c8c6f, type: 3}
   shadowClone: {fileID: 2760686329527456855, guid: 11894436e09fbe84f9e3502e73cb8a7a, type: 3}
   scroll: {fileID: 0}
@@ -2143,6 +2143,14 @@ PrefabInstance:
     - target: {fileID: 7579357130351951067, guid: 2dfcb250618860f428126e63e64c8c6f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7728455838472081780, guid: 2dfcb250618860f428126e63e64c8c6f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7728455838472081780, guid: 2dfcb250618860f428126e63e64c8c6f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -924095741
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

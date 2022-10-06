@@ -49,10 +49,10 @@ GameObject:
   - component: {fileID: 3312847318929877357}
   - component: {fileID: 4603946036839470887}
   - component: {fileID: 8413278941546686308}
-  - component: {fileID: 2291278466421648492}
-  m_Layer: 0
+  - component: {fileID: 2997192015889249995}
+  m_Layer: 9
   m_Name: Rogue_06 clone
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -175,11 +175,11 @@ MonoBehaviour:
   stopAdvanceTargetTime: 1.25
   shouldAdvanceToTarget: 1
   meleeCombatReach: 2
-  rangeCombatReach: 4
+  rangeCombatReach: 10
   investigateMoveDistance: 3
   investigateCompletionDistance: 0.5
-  disengageXDistance: 7
-  disengageYDistance: 2
+  disengageXDistance: 99
+  disengageYDistance: 99
   sightCollider2DSize: {x: 5, y: 0.5}
   sightCollider2DOffset: {x: 0, y: 0}
   throwKnifePrefab: {fileID: 4566541791185861260, guid: 5c9a2cd76d14e42499b833af047b4938, type: 3}
@@ -208,7 +208,7 @@ MonoBehaviour:
   applyRandomMovement: 1
   loopWaypointPath: 0
   waypoints: []
-  waypointReachedTolerance: 0.03
+  waypointReachedTolerance: 1
   randomizeRunWalk: 1
   alwaysRun: 0
   alwaysWalk: 0
@@ -231,26 +231,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropOnDeath: 1
   dropOnActivate: 0
-  amountToDrop: 2
+  amountToDrop: 1
   itemDrops:
   - item: {fileID: 2883904645011931590, guid: 272e415953413fb4c80c490ea6291b7f, type: 3}
     itemType: 0
-    dropChance: 100
+    dropChance: 75
     conditionalDropChance: 100
   - item: {fileID: 2883904645011931590, guid: 9790276f45a15a9429b134ee10cda2ee, type: 3}
     itemType: 1
-    dropChance: 75
+    dropChance: 50
     conditionalDropChance: 25
   - item: {fileID: 3249815658152621353, guid: 333c306648291cc4299f043c2e2ce7ba, type: 3}
     itemType: 2
-    dropChance: 75
+    dropChance: 50
     conditionalDropChance: 25
   lowerDropChanceKnivesThreshold: 2
   maxKnivesThreshold: 4
   maxStrengthBoostDuration: 60
   useCurrentDateTicks: 1
   seed: 0
---- !u!114 &2291278466421648492
+--- !u!114 &2997192015889249995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

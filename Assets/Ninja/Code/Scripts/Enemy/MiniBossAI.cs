@@ -23,12 +23,15 @@ public class MiniBossAI : MonoBehaviour
     private Health _healthComponent;
     private float previousHealth;
 
+    private Vector3 curLocalScale;
+
 
     // Start is called before the first frame update
     void Start()
     {
         _healthComponent = GetComponent<Health>();
         previousHealth = _healthComponent.HealthPoints;
+        curLocalScale = transform.localScale;
         Teleport(0);
     }
 
@@ -85,7 +88,6 @@ public class MiniBossAI : MonoBehaviour
     /// </summary>
     private void FaceRight(bool faceRight)
     {
-        Vector3 curLocalScale = transform.localScale;
         transform.localScale =
             new Vector3(faceRight ? curLocalScale.x : -curLocalScale.x, curLocalScale.y, curLocalScale.z);
     }
