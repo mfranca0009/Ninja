@@ -37,19 +37,8 @@ public enum AudioSourceType
 {
     None = 0,
     Music = 1,
-    AttackEffects = 2,
-    DamageEffects = 3,
-    ItemEffects = 4
-}
-
-public enum AudioMixerGroup
-{
-    Master = 1,
-    BGMusic = 2,
-    MasterSFX = 3,
-    AttackSFX = 4,
-    DamageSFX = 5,
-    ItemSFX = 6,
-    
-    Max = 6
+    MovementEffects = 2,
+    AttackEffects = 3,
+    DamageEffects = 4,
+    ItemEffects = 5
 }

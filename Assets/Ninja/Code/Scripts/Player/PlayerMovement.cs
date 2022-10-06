@@ -41,6 +41,28 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Animator speed adjustment, which will be used for better sync of certain combat/movement animations")]
     [SerializeField] private float animatorSpeed = 1.25f;
 
+    [Header("Audio Source Settings")]
+    
+    [Tooltip("Dedicated movement audio source for walk/run loop")]
+    [SerializeField] private AudioSource movementAudioSource;
+
+    [Tooltip("Normal pitch amount during walk speed for walk/run sound effect")] 
+    [SerializeField] private float normalWalkPitch;
+
+    [Tooltip("Fast pitch amount during run speed for walk/run sound effect")] 
+    [SerializeField] private float fastRunPitch;
+    
+    [Tooltip("Dedicated movement audio source for simultaneous one shot sound effects")] 
+    [SerializeField] private AudioSource movementOneShotAudioSource;
+    
+    [Header("Sound Effect Settings")]
+
+    [Tooltip("Walk/Run sound effect to play")]
+    [SerializeField] private AudioClip walkRunSoundClip;
+
+    [Tooltip("Jump sound effect to play")]
+    [SerializeField] private AudioClip jumpSoundClip;
+    
     #endregion
 
     #region Public Field
@@ -99,6 +121,10 @@ public class PlayerMovement : MonoBehaviour
 
         _health = GetComponent<Health>();
         _playerCombat = GetComponent<PlayerCombat>();
+
+        // Override default walk/run sound effect clip if one is present
+        if (walkRunSoundClip)
+            movementAudioSource.clip = walkRunSoundClip;
     }
 
     private void OnEnable()
@@ -312,15 +338,26 @@ public class PlayerMovement : MonoBehaviour
             _moved = false;
 
         if (!_moved)
-            return;
-        
+        {
+            movementAudioSource.Pause();
+            return;   
+        }
+
         float moveSpeed = _sprint.IsInProgress() switch
         {
             true  => runSpeed,
             false  => walkSpeed
         };
+
+        UpdateWalkRunSFXPitch(moveSpeed);
         
         _rigidBody2D.velocity = new Vector2(_movePos.x * moveSpeed, 0f) * Time.deltaTime;
+        
+        if (movementAudioSource.isPlaying)
+            return;
+
+        // Play movement sound effect
+        movementAudioSource.Play();
     }
     
     /// <summary>
@@ -337,6 +374,9 @@ public class PlayerMovement : MonoBehaviour
         _handledJump = true;
         _rigidBody2D.velocity = new Vector2(_movePos.x, _movePos.y) * (jumpSpeed * Time.deltaTime);
         _animator.SetTrigger("Jump");
+
+        // Play one shot jump sound effect
+        movementOneShotAudioSource.PlayOneShot(jumpSoundClip, movementOneShotAudioSource.volume);
     }
     
     #endregion
@@ -401,6 +441,18 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = new Vector3(-currentScale.x, currentScale.y, currentScale.z);
     }
 
+    /// <summary>
+    /// Determine pitch of movement sound effect based on current speed.
+    /// <param name="currentSpeed">The gameobject's current speed</param>
+    /// </summary>
+    private void UpdateWalkRunSFXPitch(float currentSpeed)
+    {
+        if (movementAudioSource.pitch != normalWalkPitch && currentSpeed == walkSpeed)
+            movementAudioSource.pitch = normalWalkPitch;
+        else if (movementAudioSource.pitch != fastRunPitch && currentSpeed == runSpeed)
+            movementAudioSource.pitch = fastRunPitch;
+    }
+    
     /// <summary>
     /// Checks if the player is allowed to move at all.
     /// </summary>

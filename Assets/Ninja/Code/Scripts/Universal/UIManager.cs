@@ -22,8 +22,8 @@ public class UIManager : MonoBehaviour
 	private void Awake()
 	{
 		_soundManager = FindObjectOfType<SoundManager>();
-		_currSoundSettings = new float[6];
-		_soundSettingChanges = new float[6];
+		_currSoundSettings = new float[3];
+		_soundSettingChanges = new float[3];
 		
 		// gets all objects with tag ShowOnSettings
 		settingsObjects = GameObject.FindGameObjectsWithTag("ShowOnSettings");
@@ -156,20 +156,11 @@ public class UIManager : MonoBehaviour
 			case "MasterVolumeSlider":
 				_soundSettingChanges[0] = Mathf.Log(slider.value) * 20;
 				break;
-			case "BGMusicVolumeSlider":
-				_soundSettingChanges[1] = Mathf.Log(slider.value) * 20;
-				break;
 			case "MasterSFXVolumeSlider":
 				_soundSettingChanges[2] = Mathf.Log(slider.value) * 20;
 				break;
-			case "AttackSFXVolumeSlider":
-				_soundSettingChanges[3] = Mathf.Log(slider.value) * 20;
-				break;
-			case "DamageSFXVolumeSlider":
-				_soundSettingChanges[4] = Mathf.Log(slider.value) * 20;
-				break;
-			case "ItemSFXVolumeSlider":
-				_soundSettingChanges[5] = Mathf.Log(slider.value) * 20;
+			case "BGMusicVolumeSlider":
+				_soundSettingChanges[1] = Mathf.Log(slider.value) * 20;
 				break;
 		}
 
@@ -200,13 +191,6 @@ public class UIManager : MonoBehaviour
 						_currSoundSettings[0] = _soundSettingChanges[0];
 					}
 					break;
-				case "BGMusicVolumeSlider":
-					if (_currSoundSettings[1] != _soundSettingChanges[1])
-					{
-						_soundManager.MainAudioMixer.SetFloat("BGMusicVol", _soundSettingChanges[1]);
-						_currSoundSettings[1] = _soundSettingChanges[1];
-					}
-					break;
 				case "MasterSFXVolumeSlider":
 					if (_currSoundSettings[2] != _soundSettingChanges[2])
 					{
@@ -214,25 +198,11 @@ public class UIManager : MonoBehaviour
 						_currSoundSettings[2] = _soundSettingChanges[2];
 					}
 					break;
-				case "AttackSFXVolumeSlider":
-					if (_currSoundSettings[3] != _soundSettingChanges[3])
+				case "BGMusicVolumeSlider":
+					if (_currSoundSettings[1] != _soundSettingChanges[1])
 					{
-						_soundManager.MainAudioMixer.SetFloat("AttackSFXVol", _soundSettingChanges[3]);
-						_currSoundSettings[3] = _soundSettingChanges[3];
-					}
-					break;
-				case "DamageSFXVolumeSlider":
-					if (_currSoundSettings[4] != _soundSettingChanges[4])
-					{
-						_soundManager.MainAudioMixer.SetFloat("DamageSFXVol", _soundSettingChanges[4]);
-						_currSoundSettings[4] = _soundSettingChanges[4];
-					}
-					break;
-				case "ItemSFXVolumeSlider":
-					if (_currSoundSettings[5] != _soundSettingChanges[5])
-					{
-						_soundManager.MainAudioMixer.SetFloat("ItemSFXVol", _soundSettingChanges[5]);
-						_currSoundSettings[5] = _soundSettingChanges[5];
+						_soundManager.MainAudioMixer.SetFloat("BGMusicVol", _soundSettingChanges[1]);
+						_currSoundSettings[1] = _soundSettingChanges[1];
 					}
 					break;
 			}

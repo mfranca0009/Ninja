@@ -8,6 +8,7 @@ public class SoundManager : MonoBehaviour
 	// Audio players components.
 	public AudioMixer MainAudioMixer;
 	public AudioSource MusicSource;
+	public AudioSource MovementEffectsSource;
 	public AudioSource AttackEffectsSource;
 	public AudioSource DamageEffectsSource;
 	public AudioSource ItemEffectsSource;
@@ -31,6 +32,7 @@ public class SoundManager : MonoBehaviour
 	{
 		AudioSource sourceSfx = source switch
 		{
+			AudioSourceType.MovementEffects => MovementEffectsSource,
 			AudioSourceType.AttackEffects => AttackEffectsSource,
 			AudioSourceType.DamageEffects => DamageEffectsSource,
 			AudioSourceType.ItemEffects => ItemEffectsSource,
@@ -64,6 +66,7 @@ public class SoundManager : MonoBehaviour
 
 		AudioSource sourceSfx = source switch
 		{
+			AudioSourceType.MovementEffects => MovementEffectsSource,
 			AudioSourceType.AttackEffects => AttackEffectsSource,
 			AudioSourceType.DamageEffects => DamageEffectsSource,
 			AudioSourceType.ItemEffects => ItemEffectsSource,
