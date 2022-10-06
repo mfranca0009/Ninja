@@ -1,28 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
+
 public class UIManager : MonoBehaviour
 {
-	GameObject[] pauseObjects;
-	GameObject[] finishObjects;
+	private GameObject[] pauseObjects;
+	private GameObject[] finishObjects;
+	private GameObject[] settingsObjects;
+	private GameObject[] soundSettingsObjects;
 	public Canvas scrollCanvas;
 
-	//
+	// sound setting changes
+	private float[] _currSoundSettings;
+	private float[] _soundSettingChanges;
+	
+	// Scripts
 	private Health _playerHealth;
+	private SoundManager _soundManager;
 
 
-	void Start()
+	private void Awake()
+	{
+		_soundManager = FindObjectOfType<SoundManager>();
+		_currSoundSettings = new float[6];
+		_soundSettingChanges = new float[6];
+		
+		// gets all objects with tag ShowOnSettings
+		settingsObjects = GameObject.FindGameObjectsWithTag("ShowOnSettings");
+		// gets all objects with tag ShowOnSoundSettings
+		soundSettingsObjects = GameObject.FindGameObjectsWithTag("ShowOnSoundSettings");
+	}
+
+	private void Start()
 	{
 		Time.timeScale = 1;
-
+		
 		// gets all objects with tag ShowOnPause
 		 pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
-		//gets all objects with tag ShowOnFinish
+		// gets all objects with tag ShowOnFinish
 		finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
 		//scrollCanvas = GameObject.FindGameObjectWithTag("ScrollCanvas");
 
+		hideSettings();
+		hideSoundSettings(true);
 		hidePaused();
 		hideFinished();
 		hideScroll();
@@ -37,7 +57,7 @@ public class UIManager : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
+	private void Update()
 	{
 		Scene currentScene = SceneManager.GetActiveScene();
 		//uses the p button to pause and unpause the game
@@ -99,6 +119,153 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Used during main menu button press for the `Settings` button on the `OnClick` hook.
+	/// </summary>
+	public void showSettings()
+	{
+		foreach (GameObject g in settingsObjects)
+			g.SetActive(true);
+	}
+
+	/// <summary>
+	/// Hide settings menu
+	/// </summary>
+	public void hideSettings()
+	{
+		foreach (GameObject g in settingsObjects)
+			g.SetActive(false);
+	}
+
+	/// <summary>
+	/// Used during the settings menu button press for the `Sound` button on the `OnClick` hook.
+	/// </summary>
+	public void showSoundSettings()
+	{
+		foreach (GameObject g in settingsObjects)
+			g.SetActive(false);
+
+		foreach (GameObject g in soundSettingsObjects)
+			g.SetActive(true);
+	}
+
+	public void OnSoundSliderChanged(Slider slider)
+	{
+		switch (slider.name)
+		{
+			case "MasterVolumeSlider":
+				_soundSettingChanges[0] = Mathf.Log(slider.value) * 20;
+				break;
+			case "BGMusicVolumeSlider":
+				_soundSettingChanges[1] = Mathf.Log(slider.value) * 20;
+				break;
+			case "MasterSFXVolumeSlider":
+				_soundSettingChanges[2] = Mathf.Log(slider.value) * 20;
+				break;
+			case "AttackSFXVolumeSlider":
+				_soundSettingChanges[3] = Mathf.Log(slider.value) * 20;
+				break;
+			case "DamageSFXVolumeSlider":
+				_soundSettingChanges[4] = Mathf.Log(slider.value) * 20;
+				break;
+			case "ItemSFXVolumeSlider":
+				_soundSettingChanges[5] = Mathf.Log(slider.value) * 20;
+				break;
+		}
+
+		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
+		
+		if (applyBtn && !applyBtn.interactable)
+			applyBtn.interactable = true;
+	}
+	
+	/// <summary>
+	/// Used during the sound setings menu button press for the `Apply` button on the `OnClick` hook.
+	/// </summary>
+	public void applySoundSettings()
+	{
+		GameObject[] soundSliders = GameObject.FindGameObjectsWithTag("SoundSliders");
+
+		foreach (GameObject gSlider in soundSliders)
+		{
+			Slider slider = gSlider.GetComponent<Slider>();
+
+			Debug.Log(slider.value);
+			switch (slider.name)
+			{
+				case "MasterVolumeSlider":
+					if (_currSoundSettings[0] != _soundSettingChanges[0])
+					{
+						_soundManager.MainAudioMixer.SetFloat("MasterVol", _soundSettingChanges[0]);
+						_currSoundSettings[0] = _soundSettingChanges[0];
+					}
+					break;
+				case "BGMusicVolumeSlider":
+					if (_currSoundSettings[1] != _soundSettingChanges[1])
+					{
+						_soundManager.MainAudioMixer.SetFloat("BGMusicVol", _soundSettingChanges[1]);
+						_currSoundSettings[1] = _soundSettingChanges[1];
+					}
+					break;
+				case "MasterSFXVolumeSlider":
+					if (_currSoundSettings[2] != _soundSettingChanges[2])
+					{
+						_soundManager.MainAudioMixer.SetFloat("MasterSFXVol", _soundSettingChanges[2]);
+						_currSoundSettings[2] = _soundSettingChanges[2];
+					}
+					break;
+				case "AttackSFXVolumeSlider":
+					if (_currSoundSettings[3] != _soundSettingChanges[3])
+					{
+						_soundManager.MainAudioMixer.SetFloat("AttackSFXVol", _soundSettingChanges[3]);
+						_currSoundSettings[3] = _soundSettingChanges[3];
+					}
+					break;
+				case "DamageSFXVolumeSlider":
+					if (_currSoundSettings[4] != _soundSettingChanges[4])
+					{
+						_soundManager.MainAudioMixer.SetFloat("DamageSFXVol", _soundSettingChanges[4]);
+						_currSoundSettings[4] = _soundSettingChanges[4];
+					}
+					break;
+				case "ItemSFXVolumeSlider":
+					if (_currSoundSettings[5] != _soundSettingChanges[5])
+					{
+						_soundManager.MainAudioMixer.SetFloat("ItemSFXVol", _soundSettingChanges[5]);
+						_currSoundSettings[5] = _soundSettingChanges[5];
+					}
+					break;
+			}
+		}
+
+		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
+		if (applyBtn && applyBtn.interactable)
+			applyBtn.interactable = false;
+	}
+	
+	/// <summary>
+	/// Hide sound settings menu
+	/// </summary>
+	/// <param name="sceneStart">Whether this method is being called on start of first frame</param>
+	public void hideSoundSettings(bool sceneStart)
+	{
+		for (int i = 0; i < _soundSettingChanges.Length; i++)
+			_soundSettingChanges[i] = 0f;
+		
+		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
+		if (applyBtn && applyBtn.interactable)
+			applyBtn.interactable = false;
+
+		foreach(GameObject g in soundSettingsObjects)
+			g.SetActive(false);
+
+		if (sceneStart)
+			return;
+
+		foreach (GameObject g in settingsObjects)
+			g.SetActive(true);
+	}
+	
 	public void showScroll()
 	{
 		//foreach (GameObject g in scrollCanvas)

@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
 	// Audio players components.
+	public AudioMixer MainAudioMixer;
 	public AudioSource MusicSource;
 	public AudioSource AttackEffectsSource;
 	public AudioSource DamageEffectsSource;

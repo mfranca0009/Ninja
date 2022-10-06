@@ -41,3 +41,15 @@ public enum AudioSourceType
     DamageEffects = 3,
     ItemEffects = 4
 }
+
+public enum AudioMixerGroup
+{
+    Master = 1,
+    BGMusic = 2,
+    MasterSFX = 3,
+    AttackSFX = 4,
+    DamageSFX = 5,
+    ItemSFX = 6,
+    
+    Max = 6
+}
