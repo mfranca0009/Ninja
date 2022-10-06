@@ -4,22 +4,26 @@ using System.Collections.Generic;
 using Random = UnityEngine.Random;
 using UnityEngine;
 
-[Serializable]
-public class TeleportWaypoint
+public class Boss_AI : MonoBehaviour
 {
-    public Vector2 teleportPosition;
-    public bool faceRight;
-}
-
-public class MiniBossAI : MonoBehaviour
-{
+    //Teleport Logic
     [Tooltip("An array of waypoints that can be teleported to when hit")]
     [SerializeField] public TeleportWaypoint[] waypoints;
     private int teleportLocation;
+    private int previousLocation;
 
+    [SerializeField] private int timesHitBeforeTeleporting = 3;
+    private int hitCounter;
+
+    //Prefabs
     [Tooltip("The particle effect used in a burst when the Enemy is hit and teleports")]
     public ParticleSystem smokeBombParticle;
+    //ShadowClone Logic
+    [Tooltip("What minion prefab to be summoned")]
+    public GameObject shadowClone;
+    private Transform cloneSummonLocation;
 
+    //Health Logic
     private Health _healthComponent;
     private float previousHealth;
 
@@ -40,20 +44,33 @@ public class MiniBossAI : MonoBehaviour
 
     private void DamageCheck()
     {
-        //If the char is dead, or their hp hasn't lowered, return
+        //Return if there is no place to teleport to, the char is dead, or they haven't taken damage.
         if (waypoints.Length <= 1 || _healthComponent.Dead || _healthComponent.HealthPoints >= previousHealth)
         {
             return;
         }
 
-        //otherwise, teleport randomly to a new spot. 
-        int randNum;
-        do
+        //increment the hit counter, and check if the char was hit enough times to justify teleporting.
+        hitCounter++;
+        if (hitCounter < timesHitBeforeTeleporting)
         {
-            randNum = Random.Range(0, waypoints.Length);
-        } while (randNum == teleportLocation);
+            return;
+        }
 
-        Teleport(randNum);
+        //teleport to the next spot. 
+        previousLocation = teleportLocation;
+        teleportLocation += 1;
+        if (teleportLocation >= waypoints.Length)
+        {
+            teleportLocation = 0;
+        }
+
+        Instantiate(
+            shadowClone, 
+            new Vector3(waypoints[previousLocation].teleportPosition.x, waypoints[previousLocation].teleportPosition.y, transform.position.z), 
+            new Quaternion()
+            );
+        Teleport(teleportLocation);
         previousHealth = _healthComponent.HealthPoints;
     }
 
@@ -61,10 +78,8 @@ public class MiniBossAI : MonoBehaviour
     {
         //Play Particles
         smokeBombParticle.Play();
-        if (waypoints.Length <= 1)
-        {
-            return;
-        }
+
+        //Try to teleport, catch if there's no where to teleport to.
         try
         {
             //Change Location based on sent number
@@ -75,6 +90,7 @@ public class MiniBossAI : MonoBehaviour
         {
             Debug.LogError(ex.Message);
         }
+
         //Play particles
         smokeBombParticle.Play();
         FaceRight(waypoints[teleportLocation].faceRight);
