@@ -284,6 +284,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 9025055021dbd9f40b094f4d127b7b45, type: 3}
+--- !u!1 &731935193 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8560803086453092642, guid: 19699e3e814d7c645a02f99399fe035d, type: 3}
+  m_PrefabInstance: {fileID: 962708429}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &819547598
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,17 +1131,25 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2391246082500215454, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391246082500215454, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -924095741
+      objectReference: {fileID: 0}
     - target: {fileID: 2756860390625946155, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2756860390625946155, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.11
+      value: -6.85
       objectReference: {fileID: 0}
     - target: {fileID: 2756860390625946155, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: -1.36
       objectReference: {fileID: 0}
     - target: {fileID: 2756860390625946155, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1172,7 +1185,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2760686329527456855, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: m_Name
-      value: Rogue_06
+      value: Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: scroll
+      value: 
+      objectReference: {fileID: 731935193}
+    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: timesHitBeforeTeleporting
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

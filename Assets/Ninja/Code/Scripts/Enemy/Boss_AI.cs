@@ -11,21 +11,24 @@ public class Boss_AI : MonoBehaviour
     [SerializeField] public TeleportWaypoint[] waypoints;
     private int teleportLocation;
     private int previousLocation;
-
     [SerializeField] private int timesHitBeforeTeleporting = 3;
     private int hitCounter;
 
-    //Prefabs
+     //ShadowClone Logic 
     [Tooltip("The particle effect used in a burst when the Enemy is hit and teleports")]
     public ParticleSystem smokeBombParticle;
-    //ShadowClone Logic
     [Tooltip("What minion prefab to be summoned")]
     public GameObject shadowClone;
     private Transform cloneSummonLocation;
-
+    
+    //Scroll
+    [Tooltip("The scroll needed to beat the game.")]
+    public GameObject scroll;
+    
     //Health Logic
     private Health _healthComponent;
     private float previousHealth;
+
 
 
     // Start is called before the first frame update
@@ -40,8 +43,10 @@ public class Boss_AI : MonoBehaviour
     void Update()
     {
         DamageCheck();
+        ScrollCheck();
     }
 
+    //Check if you've been damaged
     private void DamageCheck()
     {
         //Return if there is no place to teleport to, the char is dead, or they haven't taken damage.
@@ -56,6 +61,9 @@ public class Boss_AI : MonoBehaviour
         {
             return;
         }
+
+        //Reset hit Counter
+        hitCounter = 0;
 
         //teleport to the next spot. 
         previousLocation = teleportLocation;
@@ -74,6 +82,7 @@ public class Boss_AI : MonoBehaviour
         previousHealth = _healthComponent.HealthPoints;
     }
 
+    //Teleport to the next location along the line of waypoints if any.
     private void Teleport(int num)
     {
         //Play Particles
@@ -94,6 +103,14 @@ public class Boss_AI : MonoBehaviour
         //Play particles
         smokeBombParticle.Play();
         FaceRight(waypoints[teleportLocation].faceRight);
+    }
+
+    private void ScrollCheck()
+    {
+        if (_healthComponent.Dead || scroll.activeSelf)
+        {
+            scroll.SetActive(true);
+        }
     }
 
     /// <summary>
