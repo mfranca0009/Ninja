@@ -22,7 +22,7 @@ public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
     {
         _sceneManager = FindObjectOfType<SceneManagement>();
         _UIManager = FindObjectOfType<UIManager>();
-        _UIManager.hideScroll();
+        _UIManager.ShowScrollUI(false);
 
         _homePos = transform.position;
     }
@@ -31,7 +31,7 @@ public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            _UIManager.showScroll();
+            _UIManager.ShowScrollUI(true);
         }
     }
 

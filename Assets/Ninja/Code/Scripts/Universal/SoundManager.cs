@@ -114,10 +114,9 @@ public class SoundManager : MonoBehaviour
 	// called second
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		Debug.Log("OnSceneLoaded: " + scene.name);
+		Debug.Log($"OnSceneLoaded: [Name: {scene.name}, Build Index: {scene.buildIndex}]");
 		Debug.Log(mode);
 		StartCoroutine(StartAudioFade(MusicSource, 5f, 0.3f));
-
 	}
 
 	// called third
@@ -129,7 +128,7 @@ public class SoundManager : MonoBehaviour
 
 	private void OnSceneUnloaded(Scene current)
 	{
-		Debug.Log("OnSceneUnloaded: " + current);
+		Debug.Log($"OnSceneUnloaded: [Name: {current.name}, Build Index: {current.buildIndex}]");
 		SceneManager.sceneLoaded -= OnSceneLoaded;
 		//StartCoroutine(StartAudioFade(MusicSource, 0.1f, 0f));
 		//StartCoroutine(StartAudioFade(MusicSource, 10f, 0.3f));

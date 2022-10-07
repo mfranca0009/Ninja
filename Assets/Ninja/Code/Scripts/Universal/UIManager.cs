@@ -6,24 +6,31 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-	private GameObject[] pauseObjects;
-	private GameObject[] finishObjects;
-	private GameObject[] settingsObjects;
-	private GameObject[] soundSettingsObjects;
+	// UI Gameobjects / Canvases
+	private GameObject _mainMenuObject;
+	private GameObject[] _pauseObjects;
+	private GameObject[] _finishObjects;
+	private GameObject _settingsObject;
+	private GameObject _soundSettingsObject;
 	public Canvas scrollCanvas;
 
-	// sound setting changes
+	// Sound Settings 
 	private Dictionary<string, Slider> _slidersChanged;
 	private float[] _currSoundSettings;
 	private float[] _soundSettingChanges;
 	private bool _hasAppliedSoundSettings;
+
+	// Scene
+	private Scene _currentScene;
+	
+	// UI States
+	private bool _pauseShown;
 	
 	// Scripts
 	private Health _playerHealth;
 	private SoundManager _soundManager;
 
-
-	private void Awake()
+	private void Start()
 	{
 		_soundManager = FindObjectOfType<SoundManager>();
 		_currSoundSettings = new float[(int)AudioMixerGroup.Max];
@@ -34,27 +41,25 @@ public class UIManager : MonoBehaviour
 		_soundSettingChanges = new float[(int)AudioMixerGroup.Max];
 		_slidersChanged = new Dictionary<string, Slider>();
 		
-		// gets all objects with tag ShowOnSettings
-		settingsObjects = GameObject.FindGameObjectsWithTag("ShowOnSettings");
-		// gets all objects with tag ShowOnSoundSettings
-		soundSettingsObjects = GameObject.FindGameObjectsWithTag("ShowOnSoundSettings");
-	}
-
-	private void Start()
-	{
-		Time.timeScale = 1;
+		Time.timeScale = 1f;
 		
+		// gets object with tag ShowOnMain
+		_mainMenuObject = GameObject.FindGameObjectWithTag("ShowOnMain");
+		// gets object with tag ShowOnSettings
+		_settingsObject = GameObject.FindGameObjectWithTag("ShowOnSettings");
+		// gets object with tag ShowOnSoundSettings
+		_soundSettingsObject = GameObject.FindGameObjectWithTag("ShowOnSoundSettings");
 		// gets all objects with tag ShowOnPause
-		 pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
+		_pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
 		// gets all objects with tag ShowOnFinish
-		finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
+		_finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
 		//scrollCanvas = GameObject.FindGameObjectWithTag("ScrollCanvas");
 
-		hideSettings();
-		hideSoundSettings(true);
-		hidePaused();
-		hideFinished();
-		hideScroll();
+		ShowSettingsUI(false);
+		ShowSoundSettingsUI(false);
+		ShowPauseUI(false);
+		ShowFinishedUI(false);
+		ShowScrollUI(false);
 
 		//Checks to make sure MainLevel is the loaded level
 		Scene currentScene = SceneManager.GetActiveScene();
@@ -68,138 +73,137 @@ public class UIManager : MonoBehaviour
 	// Update is called once per frame
 	private void Update()
 	{
-		Scene currentScene = SceneManager.GetActiveScene();
+		_currentScene = SceneManager.GetActiveScene();
+
+		ShowMainMenuUI(HasBuildIndex(_currentScene, 0));
+		
 		//uses the p button to pause and unpause the game
-		if ( (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && currentScene.buildIndex != 0)
+		if ( (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && _currentScene.buildIndex != 0)
 		{
-			//if (Time.timeScale == 1 && playerController.alive == true) //&& !_playerHealth.Dead
-			if (Time.timeScale == 1 && !_playerHealth.Dead)
-			{
-				Time.timeScale = 0;
-				showPaused();
-			}
+			ShowPauseUI(!_pauseShown);
+			// if(!_pauseShown)
+			// 	showPaused();
+			// else
+			// 	hidePaused();
+
+			// if (Time.timeScale == 1 && playerController.alive == true) //&& !_playerHealth.Dead
+			// if (Time.timeScale == 1f && !_playerHealth.Dead)
+			// {
+			// 	Time.timeScale = 0f;
+			// 	showPaused();
+			// }
 			//else if (Time.timeScale == 0 && playerController.alive == true) //&& !_playerHealth.Dead
-			else if (Time.timeScale == 0 && !_playerHealth.Dead)
-			{
-				Time.timeScale = 1;
-				hidePaused();
-			}
+			// else if (Time.timeScale == 0f && !_playerHealth.Dead)
+			// {
+			// 	Time.timeScale = 1f;
+			// 	hidePaused();
+			// }
 		}
 
 		//shows finish gameobjects if player is dead and timescale = 0 (DO NOT REMOVE THIS LINE)
 		//if (Time.timeScale == 0 && playerController.alive == false)
-		if (Time.timeScale == 0 && _playerHealth.Dead)
-		{
-			showFinished();
-		}
+		// if (Time.timeScale == 0f && _playerHealth.Dead)
+		// {
+		// 	showFinished();
+		// }
+		ShowFinishedUI(_playerHealth.Dead);
 	}
 
 
 	//controls the pausing of the scene
-	public void pauseControl()
+	public void PauseControl()
 	{
-		if (Time.timeScale == 1)
+		if (Time.timeScale == 1f)
 		{
-			Time.timeScale = 0;
-			showPaused();
+			Time.timeScale = 0f;
+			ShowPauseUI(true);
 		}
-		else if (Time.timeScale == 0)
+		else if (Time.timeScale == 0f)
 		{
-			Time.timeScale = 1;
-			hidePaused();
-		}
-	}
-
-	//shows objects with ShowOnPause tag
-	public void showPaused()
-	{
-		foreach (GameObject g in pauseObjects)
-		{
-			g.SetActive(true);
-		}
-	}
-
-	//hides objects with ShowOnPause tag
-	public void hidePaused()
-	{
-		foreach (GameObject g in pauseObjects)
-		{
-			g.SetActive(false);
+			Time.timeScale = 1f;
+			ShowPauseUI(false);
 		}
 	}
 
 	/// <summary>
-	/// Show settings menu<br></br><br></br>
-	/// Used during main menu button press and pause menu button press for the `Settings` button on the `OnClick` hook.
+	/// Show/hide main menu UI.
 	/// </summary>
-	public void showSettings()
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowMainMenuUI(bool show)
 	{
-		foreach (GameObject g in settingsObjects)
-			g.SetActive(true);
+		_mainMenuObject.SetActive(show);
 	}
 
 	/// <summary>
-	/// Hide settings menu<br></br><br></br>
-	/// Used during settings menu button press for `Sound` and `Back` on the `OnClick` hook.
+	/// Show/hide pause menu UI.
 	/// </summary>
-	public void hideSettings()
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowPauseUI(bool show)
 	{
-		foreach (GameObject g in settingsObjects)
-			g.SetActive(false);
-	}
-
-	/// <summary>
-	/// Show sound settings menu<br></br><br></br>
-	/// Used during the settings menu button press for the `Sound` button on the `OnClick` hook.
-	/// </summary>
-	public void showSoundSettings()
-	{
-		foreach (GameObject g in settingsObjects)
-			g.SetActive(false);
-
-		foreach (GameObject g in soundSettingsObjects)
-			g.SetActive(true);
-	}
-
-	/// <summary>
-	/// Triggered when a sound slider is changed within the sound settings menu<br></br><br></br>
-	/// Invoked through the `OnSliderChanged` hook.
-	/// </summary>
-	/// <param name="slider">The slider that has invoked this method</param>
-	public void OnSoundSliderChanged(Slider slider)
-	{
-		string volumeParam = string.Empty;
+		if (_playerHealth && _playerHealth.Dead && show)
+			return;
 		
-		switch (slider.name)
-		{
-			case "MasterVolumeSlider":
-				_soundSettingChanges[(int)AudioMixerGroup.Master] = slider.value;
-				volumeParam = "MasterVol";
-				break;
-			case "SFXVolumeSlider":
-				_soundSettingChanges[(int)AudioMixerGroup.SoundEffects] = slider.value;
-				volumeParam = "SFXVol";
-				break;
-			case "BGMusicVolumeSlider":
-				_soundSettingChanges[(int)AudioMixerGroup.BgMusic] = slider.value;
-				volumeParam = "BGMusicVol";
-				break;
-		}
+		Time.timeScale = show ? 0f : 1f;
 
-		if (volumeParam != string.Empty && !_slidersChanged.ContainsKey(volumeParam))
-			_slidersChanged.Add(volumeParam, slider);
-		
-		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
-		
-		if (applyBtn && !applyBtn.interactable)
-			applyBtn.interactable = true;
+		foreach (GameObject g in _pauseObjects)
+			g.SetActive(show);
+
+		_pauseShown = show;
 	}
-	
+
+	/// <summary>
+	/// Show/hide settings menu UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowSettingsUI(bool show)
+	{
+		_settingsObject.SetActive(show);
+	}
+
+	/// <summary>
+	/// Show/hide sound settings UI.<br></br><br></br>
+	/// Note: When sound settings menu is hidden but sound settings were not applied,
+	/// it will restore the current sound levels.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowSoundSettingsUI(bool show)
+	{
+		if (!show)
+		{
+			if (!_hasAppliedSoundSettings && _slidersChanged.Count > 0)
+			{
+				// reset changes that were never applied
+				for (int i = 0; i < (int)AudioMixerGroup.Max; i++)
+					_soundSettingChanges[i] = _currSoundSettings[i];
+
+				// Reset sliders to show appropriate volume levels
+				if (_slidersChanged.TryGetValue("MasterVol", out Slider slider))
+					slider.value = _currSoundSettings[(int)AudioMixerGroup.Master];
+
+				if(_slidersChanged.TryGetValue("SFXVol", out slider))
+					slider.value = _currSoundSettings[(int)AudioMixerGroup.SoundEffects];
+
+				if (_slidersChanged.TryGetValue("BGMusicVol", out slider))
+					slider.value = _currSoundSettings[(int)AudioMixerGroup.BgMusic];
+			
+				_slidersChanged.Clear();
+			}
+			
+			_hasAppliedSoundSettings = false;
+			
+			Button applyBtn = _soundSettingsObject.transform.Find("btn_apply").GetComponent<Button>();
+			if (applyBtn && applyBtn.interactable)
+				applyBtn.interactable = false;
+		}
+		
+		_soundSettingsObject.SetActive(show);
+	}
+
 	/// <summary>
 	/// Apply sound settings that were changed<br></br><br></br>
 	/// Used during the sound settings menu button press for the `Apply` button on the `OnClick` hook.
 	/// </summary>
-	public void applySoundSettings()
+	public void ApplySoundSettings()
 	{
 		_hasAppliedSoundSettings = true;
 		
@@ -233,89 +237,63 @@ public class UIManager : MonoBehaviour
 
 		_slidersChanged.Clear();
 		
-		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
+		Button applyBtn = _soundSettingsObject.transform.Find("btn_apply").GetComponent<Button>();
 		if (applyBtn && applyBtn.interactable)
 			applyBtn.interactable = false;
 	}
-	
+
 	/// <summary>
-	/// Hide sound settings menu<br></br><br></br>
-	/// Note: used during sound settings menu button press for `back` on the `OnClick` hook.
+	/// Triggered when a sound slider is changed within the sound settings menu<br></br><br></br>
+	/// Invoked through the `OnSliderChanged` hook.
 	/// </summary>
-	/// <param name="sceneStart">Whether this method is being called on start of first frame</param>
-	public void hideSoundSettings(bool sceneStart)
+	/// <param name="slider">The slider that has invoked this method</param>
+	public void OnSoundSliderChanged(Slider slider)
 	{
-		if (!_hasAppliedSoundSettings && _slidersChanged.Count > 0 && !sceneStart)
+		string volumeParam = string.Empty;
+		
+		switch (slider.name)
 		{
-			// reset changes that were never applied
-			for (int i = 0; i < (int)AudioMixerGroup.Max; i++)
-				_soundSettingChanges[i] = _currSoundSettings[i];
-
-			// Reset sliders to show appropriate volume levels
-			if (_slidersChanged.TryGetValue("MasterVol", out Slider slider))
-				slider.value = _currSoundSettings[(int)AudioMixerGroup.Master];
-
-			if(_slidersChanged.TryGetValue("SFXVol", out slider))
-				slider.value = _currSoundSettings[(int)AudioMixerGroup.SoundEffects];
-
-			if (_slidersChanged.TryGetValue("BGMusicVol", out slider))
-				slider.value = _currSoundSettings[(int)AudioMixerGroup.BgMusic];
-			
-			_slidersChanged.Clear();
+			case "MasterVolumeSlider":
+				_soundSettingChanges[(int)AudioMixerGroup.Master] = slider.value;
+				volumeParam = "MasterVol";
+				break;
+			case "SFXVolumeSlider":
+				_soundSettingChanges[(int)AudioMixerGroup.SoundEffects] = slider.value;
+				volumeParam = "SFXVol";
+				break;
+			case "BGMusicVolumeSlider":
+				_soundSettingChanges[(int)AudioMixerGroup.BgMusic] = slider.value;
+				volumeParam = "BGMusicVol";
+				break;
 		}
 
-		_hasAppliedSoundSettings = false;
-
-		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
-		if (applyBtn && applyBtn.interactable)
-			applyBtn.interactable = false;
-
-		foreach(GameObject g in soundSettingsObjects)
-			g.SetActive(false);
-
-		if (sceneStart)
-			return;
-
-		foreach (GameObject g in settingsObjects)
-			g.SetActive(true);
+		if (volumeParam != string.Empty && !_slidersChanged.ContainsKey(volumeParam))
+			_slidersChanged.Add(volumeParam, slider);
+		
+		Button applyBtn = _soundSettingsObject.transform.Find("btn_apply").GetComponent<Button>();
+		
+		if (applyBtn && !applyBtn.interactable)
+			applyBtn.interactable = true;
 	}
 	
-	public void showScroll()
+	public void ShowScrollUI(bool show)
 	{
 		//foreach (GameObject g in scrollCanvas)
 		//{
 			//scrollCanvas.SetActive(true);
-			scrollCanvas.gameObject.SetActive(true);
+			scrollCanvas.gameObject.SetActive(show);
 		//}
 	}
 
-	public void hideScroll()
+	public void ShowFinishedUI(bool show)
 	{
-		//foreach (GameObject g in scrollCanvas)
-		//{
-			//scrollCanvas.SetActive(false);
-			scrollCanvas.gameObject.SetActive(false);
-		//}
-	}
-
-	//shows objects with ShowOnFinish tag
-	public void showFinished()
-	{
-		foreach (GameObject g in finishObjects)
+		Time.timeScale = show ? 0f : 1f;
+		
+		foreach (GameObject g in _finishObjects)
 		{
-			g.SetActive(true);
+			g.SetActive(show);
 		}
 	}
-
-	//hides objects with ShowOnFinish tag
-	public void hideFinished()
-	{
-		foreach (GameObject g in finishObjects)
-		{
-			g.SetActive(false);
-		}
-	}
-
 
 	///
 	/// SCENE MANAGEMENT CODE
@@ -324,14 +302,14 @@ public class UIManager : MonoBehaviour
 
 	public void LoadSceneByString(string sceneString)
 	{
-		SceneManager.LoadScene(sceneString);
-		Debug.Log("sceneName to load: " + sceneString);
+		Debug.Log($"sceneName to load: {sceneString}");
+		SceneManager.LoadScene(sceneString, LoadSceneMode.Single);
 	}
 
 	public void LoadSceneByIndex(int sceneNumber)
 	{
-		SceneManager.LoadScene(sceneNumber);
-		Debug.Log("sceneBuildIndex to load: " + sceneNumber);
+		Debug.Log($"sceneBuildIndex to load: {sceneNumber}");
+		SceneManager.LoadScene(sceneNumber, LoadSceneMode.Single);
 	}
 
 	public void GetActiveScene()
@@ -347,6 +325,15 @@ public class UIManager : MonoBehaviour
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
 
+	public bool HasBuildIndex(Scene scene, params int[] buildIndices)
+	{
+		foreach (int buildIndex in buildIndices)
+			if (scene.buildIndex == buildIndex)
+				return true;
+
+		return false;
+	}
+	
 	public void QuitGame()
 	{
 		Application.Quit();
