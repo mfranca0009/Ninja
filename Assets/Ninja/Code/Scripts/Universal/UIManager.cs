@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 	private GameObject _settingsObject;
 	private GameObject _soundSettingsObject;
 	public Canvas scrollCanvas;
+	public Canvas healthCanvas;
 
 	// Sound Settings 
 	private Dictionary<string, Slider> _slidersChanged;
@@ -78,7 +79,7 @@ public class UIManager : MonoBehaviour
 		ShowMainMenuUI(HasBuildIndex(_currentScene, 0));
 		
 		//uses the p button to pause and unpause the game
-		if ( (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && _currentScene.buildIndex != 0)
+		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && currentScene.buildIndex != 0)
 		{
 			ShowPauseUI(!_pauseShown);
 			// if(!_pauseShown)
@@ -108,6 +109,16 @@ public class UIManager : MonoBehaviour
 		// }
 		ShowFinishedUI(_playerHealth.Dead);
 	}
+
+		if (currentScene.buildIndex == 0)
+		{
+			hideHealth();
+		}
+		else if (currentScene.buildIndex != 0)
+		{
+			showHealth();
+		}
+	}//close update
 
 
 	//controls the pausing of the scene
