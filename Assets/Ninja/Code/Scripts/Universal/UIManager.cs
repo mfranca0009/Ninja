@@ -79,7 +79,7 @@ public class UIManager : MonoBehaviour
 		ShowMainMenuUI(HasBuildIndex(_currentScene, 0));
 		
 		//uses the p button to pause and unpause the game
-		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && currentScene.buildIndex != 0)
+		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && _currentScene.buildIndex != 0)
 		{
 			ShowPauseUI(!_pauseShown);
 			// if(!_pauseShown)
@@ -108,17 +108,16 @@ public class UIManager : MonoBehaviour
 		// 	showFinished();
 		// }
 		ShowFinishedUI(_playerHealth.Dead);
-	}
-
-		if (currentScene.buildIndex == 0)
+		
+		if (_currentScene.buildIndex == 0)
 		{
 			hideHealth();
 		}
-		else if (currentScene.buildIndex != 0)
+		else if (_currentScene.buildIndex != 0)
 		{
 			showHealth();
 		}
-	}//close update
+	}
 
 
 	//controls the pausing of the scene
@@ -285,6 +284,16 @@ public class UIManager : MonoBehaviour
 		
 		if (applyBtn && !applyBtn.interactable)
 			applyBtn.interactable = true;
+	}
+
+	public void showHealth()
+	{
+		healthCanvas.gameObject.SetActive(true);
+	}
+
+	public void hideHealth()
+	{
+		healthCanvas.gameObject.SetActive(false);
 	}
 	
 	public void ShowScrollUI(bool show)
