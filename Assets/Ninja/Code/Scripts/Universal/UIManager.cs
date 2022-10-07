@@ -4,14 +4,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO: pausing the game via Time.timeScale not working anymore.
+
 public class UIManager : MonoBehaviour
 {
 	// UI Gameobjects / Canvases
-	private GameObject _mainMenuObject;
 	private GameObject[] _pauseObjects;
 	private GameObject[] _finishObjects;
-	private GameObject _settingsObject;
-	private GameObject _soundSettingsObject;
+	public Canvas mainMenuCanvas;
+	public Canvas settingsCanvas;
+	public Canvas soundSettingsCanvas;
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
 
@@ -23,6 +25,7 @@ public class UIManager : MonoBehaviour
 
 	// Scene
 	private Scene _currentScene;
+	private bool _paused;
 	
 	// UI States
 	private bool _pauseShown;
@@ -44,12 +47,6 @@ public class UIManager : MonoBehaviour
 		
 		Time.timeScale = 1f;
 		
-		// gets object with tag ShowOnMain
-		_mainMenuObject = GameObject.FindGameObjectWithTag("ShowOnMain");
-		// gets object with tag ShowOnSettings
-		_settingsObject = GameObject.FindGameObjectWithTag("ShowOnSettings");
-		// gets object with tag ShowOnSoundSettings
-		_soundSettingsObject = GameObject.FindGameObjectWithTag("ShowOnSoundSettings");
 		// gets all objects with tag ShowOnPause
 		_pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
 		// gets all objects with tag ShowOnFinish
@@ -77,29 +74,10 @@ public class UIManager : MonoBehaviour
 		_currentScene = SceneManager.GetActiveScene();
 
 		ShowMainMenuUI(HasBuildIndex(_currentScene, 0));
-		
-		//uses the p button to pause and unpause the game
-		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && _currentScene.buildIndex != 0)
-		{
-			ShowPauseUI(!_pauseShown);
-			// if(!_pauseShown)
-			// 	showPaused();
-			// else
-			// 	hidePaused();
 
-			// if (Time.timeScale == 1 && playerController.alive == true) //&& !_playerHealth.Dead
-			// if (Time.timeScale == 1f && !_playerHealth.Dead)
-			// {
-			// 	Time.timeScale = 0f;
-			// 	showPaused();
-			// }
-			//else if (Time.timeScale == 0 && playerController.alive == true) //&& !_playerHealth.Dead
-			// else if (Time.timeScale == 0f && !_playerHealth.Dead)
-			// {
-			// 	Time.timeScale = 1f;
-			// 	hidePaused();
-			// }
-		}
+		//uses the p button to pause and unpause the game
+		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !HasBuildIndex(_currentScene, 0))
+			ShowPauseUI(!_pauseShown);
 
 		//shows finish gameobjects if player is dead and timescale = 0 (DO NOT REMOVE THIS LINE)
 		//if (Time.timeScale == 0 && playerController.alive == false)
@@ -108,15 +86,7 @@ public class UIManager : MonoBehaviour
 		// 	showFinished();
 		// }
 		ShowFinishedUI(_playerHealth.Dead);
-		
-		if (_currentScene.buildIndex == 0)
-		{
-			hideHealth();
-		}
-		else if (_currentScene.buildIndex != 0)
-		{
-			showHealth();
-		}
+		ShowHealthUI(!HasBuildIndex(_currentScene, 0));
 	}
 
 
@@ -127,11 +97,13 @@ public class UIManager : MonoBehaviour
 		{
 			Time.timeScale = 0f;
 			ShowPauseUI(true);
+			_paused = true;
 		}
 		else if (Time.timeScale == 0f)
 		{
 			Time.timeScale = 1f;
 			ShowPauseUI(false);
+			_paused = false;
 		}
 	}
 
@@ -141,7 +113,7 @@ public class UIManager : MonoBehaviour
 	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowMainMenuUI(bool show)
 	{
-		_mainMenuObject.SetActive(show);
+		mainMenuCanvas.gameObject.SetActive(show);
 	}
 
 	/// <summary>
@@ -154,6 +126,7 @@ public class UIManager : MonoBehaviour
 			return;
 		
 		Time.timeScale = show ? 0f : 1f;
+		_paused = show;
 
 		foreach (GameObject g in _pauseObjects)
 			g.SetActive(show);
@@ -167,7 +140,7 @@ public class UIManager : MonoBehaviour
 	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowSettingsUI(bool show)
 	{
-		_settingsObject.SetActive(show);
+		settingsCanvas.gameObject.SetActive(show);
 	}
 
 	/// <summary>
@@ -201,12 +174,12 @@ public class UIManager : MonoBehaviour
 			
 			_hasAppliedSoundSettings = false;
 			
-			Button applyBtn = _soundSettingsObject.transform.Find("btn_apply").GetComponent<Button>();
+			Button applyBtn = soundSettingsCanvas.transform.Find("btn_apply").GetComponent<Button>();
 			if (applyBtn && applyBtn.interactable)
 				applyBtn.interactable = false;
 		}
 		
-		_soundSettingsObject.SetActive(show);
+		soundSettingsCanvas.gameObject.SetActive(show);
 	}
 
 	/// <summary>
@@ -247,7 +220,7 @@ public class UIManager : MonoBehaviour
 
 		_slidersChanged.Clear();
 		
-		Button applyBtn = _soundSettingsObject.transform.Find("btn_apply").GetComponent<Button>();
+		Button applyBtn = soundSettingsCanvas.transform.Find("btn_apply").GetComponent<Button>();
 		if (applyBtn && applyBtn.interactable)
 			applyBtn.interactable = false;
 	}
@@ -280,22 +253,17 @@ public class UIManager : MonoBehaviour
 		if (volumeParam != string.Empty && !_slidersChanged.ContainsKey(volumeParam))
 			_slidersChanged.Add(volumeParam, slider);
 		
-		Button applyBtn = _soundSettingsObject.transform.Find("btn_apply").GetComponent<Button>();
+		Button applyBtn = soundSettingsCanvas.transform.Find("btn_apply").GetComponent<Button>();
 		
 		if (applyBtn && !applyBtn.interactable)
 			applyBtn.interactable = true;
 	}
 
-	public void showHealth()
+	public void ShowHealthUI(bool show)
 	{
-		healthCanvas.gameObject.SetActive(true);
+		healthCanvas.gameObject.SetActive(show);
 	}
 
-	public void hideHealth()
-	{
-		healthCanvas.gameObject.SetActive(false);
-	}
-	
 	public void ShowScrollUI(bool show)
 	{
 		//foreach (GameObject g in scrollCanvas)
@@ -307,7 +275,8 @@ public class UIManager : MonoBehaviour
 
 	public void ShowFinishedUI(bool show)
 	{
-		Time.timeScale = show ? 0f : 1f;
+		if (!_paused)
+			Time.timeScale = show ? 0f : 1f;
 		
 		foreach (GameObject g in _finishObjects)
 		{

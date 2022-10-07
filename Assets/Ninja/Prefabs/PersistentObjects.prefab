@@ -115,9 +115,6 @@ Transform:
   - {fileID: 8648996422473002184}
   - {fileID: 5886084090209186440}
   - {fileID: 4617106280094461207}
-  - {fileID: 5886084090209186440}
-  - {fileID: 2659863567186613653}
-  - {fileID: 7982941852203533417}
   - {fileID: 8006392984519969465}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -166,6 +163,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb0c91370bc29b4f85d6b7b5ad15dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMenuCanvas: {fileID: 1762236982882485254}
+  settingsCanvas: {fileID: 2659863567186613650}
+  soundSettingsCanvas: {fileID: 7982941852203533422}
   scrollCanvas: {fileID: 5886084090209186447}
   healthCanvas: {fileID: 8006392984519969470}
 --- !u!1 &5468699101508548925
@@ -989,6 +989,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7129739286581065804, guid: b89d95a0fb78dc541a9039a903acef77, type: 3}
   m_PrefabInstance: {fileID: 880725627018116133}
   m_PrefabAsset: {fileID: 0}
+--- !u!223 &7982941852203533422 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 7129739286581065803, guid: b89d95a0fb78dc541a9039a903acef77, type: 3}
+  m_PrefabInstance: {fileID: 880725627018116133}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1942885936646788228
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1570,6 +1575,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: a896a0ef11ebca640b71a89a78a76e53, type: 3}
+--- !u!223 &2659863567186613650 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 7129739286581065803, guid: a896a0ef11ebca640b71a89a78a76e53, type: 3}
+  m_PrefabInstance: {fileID: 5050883504186256857}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2659863567186613653 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7129739286581065804, guid: a896a0ef11ebca640b71a89a78a76e53, type: 3}
@@ -2049,5 +2059,10 @@ PrefabInstance:
 --- !u!224 &1762236982882485249 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7129739286581065804, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
+  m_PrefabInstance: {fileID: 8828556282652523597}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &1762236982882485254 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 7129739286581065803, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
   m_PrefabInstance: {fileID: 8828556282652523597}
   m_PrefabAsset: {fileID: 0}
