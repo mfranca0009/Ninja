@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +13,10 @@ public class UIManager : MonoBehaviour
 	public Canvas scrollCanvas;
 
 	// sound setting changes
+	private Dictionary<string, Slider> _slidersChanged;
 	private float[] _currSoundSettings;
 	private float[] _soundSettingChanges;
+	private bool _hasAppliedSoundSettings;
 	
 	// Scripts
 	private Health _playerHealth;
@@ -22,8 +26,13 @@ public class UIManager : MonoBehaviour
 	private void Awake()
 	{
 		_soundManager = FindObjectOfType<SoundManager>();
-		_currSoundSettings = new float[3];
-		_soundSettingChanges = new float[3];
+		_currSoundSettings = new float[(int)AudioMixerGroup.Max];
+
+		// default to max volume for current sound settings.
+		Array.Fill(_currSoundSettings, 1f);
+
+		_soundSettingChanges = new float[(int)AudioMixerGroup.Max];
+		_slidersChanged = new Dictionary<string, Slider>();
 		
 		// gets all objects with tag ShowOnSettings
 		settingsObjects = GameObject.FindGameObjectsWithTag("ShowOnSettings");
@@ -120,7 +129,8 @@ public class UIManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Used during main menu button press for the `Settings` button on the `OnClick` hook.
+	/// Show settings menu<br></br><br></br>
+	/// Used during main menu button press and pause menu button press for the `Settings` button on the `OnClick` hook.
 	/// </summary>
 	public void showSettings()
 	{
@@ -129,7 +139,8 @@ public class UIManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Hide settings menu
+	/// Hide settings menu<br></br><br></br>
+	/// Used during settings menu button press for `Sound` and `Back` on the `OnClick` hook.
 	/// </summary>
 	public void hideSettings()
 	{
@@ -138,6 +149,7 @@ public class UIManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// Show sound settings menu<br></br><br></br>
 	/// Used during the settings menu button press for the `Sound` button on the `OnClick` hook.
 	/// </summary>
 	public void showSoundSettings()
@@ -149,21 +161,34 @@ public class UIManager : MonoBehaviour
 			g.SetActive(true);
 	}
 
+	/// <summary>
+	/// Triggered when a sound slider is changed within the sound settings menu<br></br><br></br>
+	/// Invoked through the `OnSliderChanged` hook.
+	/// </summary>
+	/// <param name="slider">The slider that has invoked this method</param>
 	public void OnSoundSliderChanged(Slider slider)
 	{
+		string volumeParam = string.Empty;
+		
 		switch (slider.name)
 		{
 			case "MasterVolumeSlider":
-				_soundSettingChanges[0] = Mathf.Log(slider.value) * 20;
+				_soundSettingChanges[(int)AudioMixerGroup.Master] = slider.value;
+				volumeParam = "MasterVol";
 				break;
-			case "MasterSFXVolumeSlider":
-				_soundSettingChanges[2] = Mathf.Log(slider.value) * 20;
+			case "SFXVolumeSlider":
+				_soundSettingChanges[(int)AudioMixerGroup.SoundEffects] = slider.value;
+				volumeParam = "SFXVol";
 				break;
 			case "BGMusicVolumeSlider":
-				_soundSettingChanges[1] = Mathf.Log(slider.value) * 20;
+				_soundSettingChanges[(int)AudioMixerGroup.BgMusic] = slider.value;
+				volumeParam = "BGMusicVol";
 				break;
 		}
 
+		if (volumeParam != string.Empty && !_slidersChanged.ContainsKey(volumeParam))
+			_slidersChanged.Add(volumeParam, slider);
+		
 		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
 		
 		if (applyBtn && !applyBtn.interactable)
@@ -171,57 +196,76 @@ public class UIManager : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Used during the sound setings menu button press for the `Apply` button on the `OnClick` hook.
+	/// Apply sound settings that were changed<br></br><br></br>
+	/// Used during the sound settings menu button press for the `Apply` button on the `OnClick` hook.
 	/// </summary>
 	public void applySoundSettings()
 	{
-		GameObject[] soundSliders = GameObject.FindGameObjectsWithTag("SoundSliders");
-
-		foreach (GameObject gSlider in soundSliders)
+		_hasAppliedSoundSettings = true;
+		
+		foreach (KeyValuePair<string, Slider> pair in _slidersChanged)
 		{
-			Slider slider = gSlider.GetComponent<Slider>();
-
-			Debug.Log(slider.value);
-			switch (slider.name)
+			switch (pair.Key)
 			{
-				case "MasterVolumeSlider":
-					if (_currSoundSettings[0] != _soundSettingChanges[0])
-					{
-						_soundManager.MainAudioMixer.SetFloat("MasterVol", _soundSettingChanges[0]);
-						_currSoundSettings[0] = _soundSettingChanges[0];
-					}
+				case "MasterVol":
+					_soundManager.MainAudioMixer.SetFloat("MasterVol",
+						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.Master]) * 20);
+
+					_currSoundSettings[(int)AudioMixerGroup.Master] = 
+						_soundSettingChanges[(int)AudioMixerGroup.Master];
 					break;
-				case "MasterSFXVolumeSlider":
-					if (_currSoundSettings[2] != _soundSettingChanges[2])
-					{
-						_soundManager.MainAudioMixer.SetFloat("MasterSFXVol", _soundSettingChanges[2]);
-						_currSoundSettings[2] = _soundSettingChanges[2];
-					}
+				case "SFXVol":
+					_soundManager.MainAudioMixer.SetFloat("SFXVol",
+						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.SoundEffects]) * 20);
+
+					_currSoundSettings[(int)AudioMixerGroup.SoundEffects] =
+						_soundSettingChanges[(int)AudioMixerGroup.SoundEffects];
 					break;
-				case "BGMusicVolumeSlider":
-					if (_currSoundSettings[1] != _soundSettingChanges[1])
-					{
-						_soundManager.MainAudioMixer.SetFloat("BGMusicVol", _soundSettingChanges[1]);
-						_currSoundSettings[1] = _soundSettingChanges[1];
-					}
+				case "BGMusicVol":
+					_soundManager.MainAudioMixer.SetFloat("BGMusicVol",
+						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.BgMusic]) * 20);
+
+					_currSoundSettings[(int)AudioMixerGroup.BgMusic] =
+						_soundSettingChanges[(int)AudioMixerGroup.BgMusic];
 					break;
 			}
 		}
 
+		_slidersChanged.Clear();
+		
 		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
 		if (applyBtn && applyBtn.interactable)
 			applyBtn.interactable = false;
 	}
 	
 	/// <summary>
-	/// Hide sound settings menu
+	/// Hide sound settings menu<br></br><br></br>
+	/// Note: used during sound settings menu button press for `back` on the `OnClick` hook.
 	/// </summary>
 	/// <param name="sceneStart">Whether this method is being called on start of first frame</param>
 	public void hideSoundSettings(bool sceneStart)
 	{
-		for (int i = 0; i < _soundSettingChanges.Length; i++)
-			_soundSettingChanges[i] = 0f;
-		
+		if (!_hasAppliedSoundSettings && _slidersChanged.Count > 0 && !sceneStart)
+		{
+			// reset changes that were never applied
+			for (int i = 0; i < (int)AudioMixerGroup.Max; i++)
+				_soundSettingChanges[i] = _currSoundSettings[i];
+
+			// Reset sliders to show appropriate volume levels
+			if (_slidersChanged.TryGetValue("MasterVol", out Slider slider))
+				slider.value = _currSoundSettings[(int)AudioMixerGroup.Master];
+
+			if(_slidersChanged.TryGetValue("SFXVol", out slider))
+				slider.value = _currSoundSettings[(int)AudioMixerGroup.SoundEffects];
+
+			if (_slidersChanged.TryGetValue("BGMusicVol", out slider))
+				slider.value = _currSoundSettings[(int)AudioMixerGroup.BgMusic];
+			
+			_slidersChanged.Clear();
+		}
+
+		_hasAppliedSoundSettings = false;
+
 		Button applyBtn = soundSettingsObjects[0].transform.Find("btn_apply").GetComponent<Button>();
 		if (applyBtn && applyBtn.interactable)
 			applyBtn.interactable = false;

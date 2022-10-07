@@ -162,7 +162,10 @@ public class EnemyMovement : MonoBehaviour
     private void Update()
     {
         if (_health.Dead)
+        {
+            movementAudioSource.Stop();
             return;
+        }
 
         GroundCheckUpdate();
 
@@ -425,11 +428,9 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void UpdateWalkRunSfx()
     {
-        if (ShouldPlayWalkRunSFX && _rigidBody.velocity.x != 0f && _isGrounded && !_health.Dead &&
-            !movementAudioSource.isPlaying)
+        if (ShouldPlayWalkRunSFX && _rigidBody.velocity.x != 0f && _isGrounded && !movementAudioSource.isPlaying)
             movementAudioSource.Play();
-        else if (!ShouldPlayWalkRunSFX || _rigidBody.velocity.x == 0f || !_isGrounded ||
-                 _health.Dead && movementAudioSource.isPlaying)
+        else if (!ShouldPlayWalkRunSFX || _rigidBody.velocity.x == 0f || !_isGrounded && movementAudioSource.isPlaying)
             movementAudioSource.Pause();
     }
     
