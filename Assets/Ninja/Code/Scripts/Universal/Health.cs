@@ -32,6 +32,14 @@ public class Health : MonoBehaviour
 
     #region Serialized Fields
 
+    [Header("Death Settings")] 
+    
+    [Tooltip("Enable destroy of gameobject after death and item drop")] 
+    [SerializeField] private bool shouldDestroyAfterDeath = true;
+
+    [Tooltip("Delay before destroying gameobject")] 
+    [SerializeField] private float destroyDelay = 2.0f;
+    
     [Header("Player Sound Effect Settings")] 
     
     [Tooltip("Death sound effect to play when player dies")] 
@@ -64,6 +72,7 @@ public class Health : MonoBehaviour
     // Death
     private BoxCollider2D _boxCollider2D;
     private bool _playedDeathAnimation;
+    private ItemDrop _enemyItemDrop;
     
     #endregion
 
@@ -81,7 +90,13 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (!Dead || _playedDeathAnimation)
+        if (!Dead)
+            return;
+
+        if (_enemyItemDrop && _enemyItemDrop.HasDroppedItems && shouldDestroyAfterDeath)
+            Destroy(gameObject, destroyDelay);
+
+        if (_playedDeathAnimation)
             return;
         
         _animator.SetTrigger("Dead");
@@ -113,7 +128,9 @@ public class Health : MonoBehaviour
 
             if (invoker)
                 Killer = invoker;
-            
+
+            _enemyItemDrop = GetComponent<ItemDrop>();
+
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}. {gameObjectName} has been killed!");
         }
         else
