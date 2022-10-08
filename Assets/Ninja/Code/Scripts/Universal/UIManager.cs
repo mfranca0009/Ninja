@@ -77,7 +77,24 @@ public class UIManager : MonoBehaviour
 
 		//uses the p button to pause and unpause the game
 		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !HasBuildIndex(_currentScene, 0))
+		{
 			ShowPauseUI(!_pauseShown);
+
+			// If the game is no longer paused, but the settings or sound settings menu was active as well,
+			// hide the sound or sound settings menus at the same time.
+			if (!_paused)
+			{
+				switch (settingsCanvas.gameObject.activeInHierarchy)
+				{
+					case true:
+						ShowSettingsUI(false);
+						break;
+					case false when soundSettingsCanvas.gameObject.activeInHierarchy:
+						ShowSoundSettingsUI(false);
+						break;
+				}
+			}
+		}
 
 		//shows finish gameobjects if player is dead and timescale = 0 (DO NOT REMOVE THIS LINE)
 		//if (Time.timeScale == 0 && playerController.alive == false)
@@ -130,7 +147,7 @@ public class UIManager : MonoBehaviour
 
 		foreach (GameObject g in _pauseObjects)
 			g.SetActive(show);
-
+		
 		_pauseShown = show;
 	}
 
