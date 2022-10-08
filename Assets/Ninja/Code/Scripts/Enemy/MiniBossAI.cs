@@ -19,16 +19,19 @@ public class MiniBossAI : MonoBehaviour
 
     [Tooltip("The particle effect used in a burst when the Enemy is hit and teleports")]
     public ParticleSystem smokeBombParticle;
-    
+
     private Health _healthComponent;
     private float previousHealth;
-    
+
+    private Vector3 curLocalScale;
+
 
     // Start is called before the first frame update
     void Start()
     {
         _healthComponent = GetComponent<Health>();
         previousHealth = _healthComponent.HealthPoints;
+        curLocalScale = transform.localScale;
         Teleport(0);
     }
 
@@ -41,7 +44,7 @@ public class MiniBossAI : MonoBehaviour
     private void DamageCheck()
     {
         //If the char is dead, or their hp hasn't lowered, return
-        if (_healthComponent.Dead || _healthComponent.HealthPoints >= previousHealth)
+        if (waypoints.Length <= 1 || _healthComponent.Dead || _healthComponent.HealthPoints >= previousHealth)
         {
             return;
         }
@@ -61,13 +64,17 @@ public class MiniBossAI : MonoBehaviour
     {
         //Play Particles
         smokeBombParticle.Play();
-
+        if (waypoints.Length <= 1)
+        {
+            return;
+        }
         try
         {
             //Change Location based on sent number
             transform.position = waypoints[num].teleportPosition;
             teleportLocation = num;
-        }catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Debug.LogError(ex.Message);
         }
@@ -81,7 +88,6 @@ public class MiniBossAI : MonoBehaviour
     /// </summary>
     private void FaceRight(bool faceRight)
     {
-        Vector3 curLocalScale = transform.localScale;
         transform.localScale =
             new Vector3(faceRight ? curLocalScale.x : -curLocalScale.x, curLocalScale.y, curLocalScale.z);
     }
