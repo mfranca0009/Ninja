@@ -1189,11 +1189,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: waypoints.Array.data[0].teleportPosition.y
-      value: -1.783544
+      value: -1.847
       objectReference: {fileID: 0}
     - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
       propertyPath: waypoints.Array.data[1].teleportPosition.y
-      value: -1.783544
+      value: -1.847
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

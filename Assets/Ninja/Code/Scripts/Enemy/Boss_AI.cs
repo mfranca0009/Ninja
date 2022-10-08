@@ -41,6 +41,7 @@ public class Boss_AI : MonoBehaviour
         previousHealth = _healthComponent.HealthPoints;
         curLocalScale = transform.localScale;
         Teleport(0);
+        gameObject.GetComponent<EnemyCombat>().enabled = true;
     }
 
     // Update is called once per frame

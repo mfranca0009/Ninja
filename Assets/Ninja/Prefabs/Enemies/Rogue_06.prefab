@@ -65,7 +65,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2760686329527456855}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.5910614, y: -1.4520496, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
   throwKnifeSprite: {fileID: 21300000, guid: c2f0536a0535f2d48842f8525beb4bb6, type: 3}
   throwKnifeSpawnTransform: {fileID: 2756860391300353305}
   throwKnifeSpawnOffset: {x: 1, y: 0}
-  meleeWeaponLeft: {fileID: 2760686331925443255}
+  meleeWeaponLeft: {fileID: 2760686333500484485}
   meleeWeaponRight: {fileID: 2760686329772529277}
   meleeWeaponLeftSprite: {fileID: 21300000, guid: 37e05d8dcd5e386498e75d924efbc7c1, type: 3}
   meleeWeaponRightSprite: {fileID: 21300000, guid: 37e05d8dcd5e386498e75d924efbc7c1, type: 3}
