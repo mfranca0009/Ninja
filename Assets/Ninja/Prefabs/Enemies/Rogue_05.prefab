@@ -1670,6 +1670,7 @@ MonoBehaviour:
   meleeWeaponLeftSprite: {fileID: 21300000, guid: 97ad91e8b9bc5f94f941f06a70776c26, type: 3}
   meleeWeaponRightSprite: {fileID: 21300000, guid: 97ad91e8b9bc5f94f941f06a70776c26, type: 3}
   attackSoundClips:
+  - {fileID: 0}
   - {fileID: 8300000, guid: 7deebc1ad61cffd41b394cd1370f8e1a, type: 3}
   - {fileID: 8300000, guid: eefd85379bc8aa749b418f430767da26, type: 3}
 --- !u!114 &7674412284704653532
@@ -1685,6 +1686,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  shouldDestroyAfterDeath: 1
+  destroyDelay: 2
   playerDeathSoundClip: {fileID: 0}
   shouldRandomizePitch: 0
   isOneShot: 1

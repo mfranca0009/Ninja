@@ -201,6 +201,7 @@ MonoBehaviour:
   meleeWeaponLeftSprite: {fileID: 21300000, guid: 37e05d8dcd5e386498e75d924efbc7c1, type: 3}
   meleeWeaponRightSprite: {fileID: 21300000, guid: 37e05d8dcd5e386498e75d924efbc7c1, type: 3}
   attackSoundClips:
+  - {fileID: 0}
   - {fileID: 8300000, guid: 7deebc1ad61cffd41b394cd1370f8e1a, type: 3}
   - {fileID: 8300000, guid: eefd85379bc8aa749b418f430767da26, type: 3}
 --- !u!114 &4603946036839470887
