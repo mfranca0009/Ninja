@@ -32,3 +32,22 @@ public enum ItemType
     StrengthPotion = 1,
     ThrowingKnife  = 2
 }
+
+public enum AudioSourceType
+{
+    None = 0,
+    Music = 1,
+    MovementEffects = 2,
+    AttackEffects = 3,
+    DamageEffects = 4,
+    ItemEffects = 5
+}
+
+public enum AudioMixerGroup
+{
+    Master = 0,
+    SoundEffects = 1,
+    BgMusic = 2,
+    
+    Max = 3
+}

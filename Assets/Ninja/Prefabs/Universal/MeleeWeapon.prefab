@@ -71,6 +71,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae0c73ce7bd90f4cb8b31c379dabb38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lightAttackHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
+  slowAttackHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
+  knifeHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
 --- !u!1 &8474151331642021897
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,7 +106,7 @@ Transform:
   m_Children:
   - {fileID: 3220547751852370522}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &-7395175950519429249
 SpriteRenderer:
@@ -169,5 +172,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02db218f9bfb6448bec7787fd8f0adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightAttackDmg: 6.25
-  heavyAttackDmg: 12.5
+  baseLightAttackDmg: 12.5
+  baseHeavyAttackDmg: 25

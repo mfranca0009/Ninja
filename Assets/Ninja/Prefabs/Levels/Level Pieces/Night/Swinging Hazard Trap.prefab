@@ -328,7 +328,7 @@ Transform:
   - {fileID: 1981374691745054556}
   - {fileID: 1981374690810215377}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1981374691745054557
 GameObject:
@@ -397,6 +397,7 @@ MonoBehaviour:
   damage: 20
   knockback: {x: -10, y: 10}
   frameDelay: 10
+  trapHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
 --- !u!1 &1981374691961847433
 GameObject:
   m_ObjectHideFlags: 0

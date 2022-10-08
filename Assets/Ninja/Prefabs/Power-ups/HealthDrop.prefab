@@ -169,6 +169,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e77127b72d1d844e955a5beec3858c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthAmount: 25
+  pickupSoundClip: {fileID: 8300000, guid: c364ec6a816c4124fbd75abeffb99439, type: 3}
+  hitGroundSoundClip: {fileID: 8300000, guid: e3917f7fadd633b4ba0d7e38e314f103, type: 3}
 --- !u!114 &4452667887727809845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -182,7 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotate: 1
-  rocketDistance: 2
-  rocketSpeed: 4
+  verticalDistance: 2
+  verticalSpeed: 4
   horizontalSpeed: 4
   rotationSpeed: 0.5

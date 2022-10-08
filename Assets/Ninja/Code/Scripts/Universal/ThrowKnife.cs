@@ -57,12 +57,22 @@ public class ThrowKnife : MonoBehaviour
     [Tooltip("The speed of rotation/torque")]
     [SerializeField] private float rotationSpeed = 150f;
 
+    [Header("Sound Effect Settings")] 
+    
+    [Tooltip("Throwing knife spin sound effect")] 
+    [SerializeField] private AudioClip knifeSpinSoundClip;
+    
     #endregion
     
     #region Private Fields
     
+    // Rigidbody / Physics
     private Rigidbody2D _rigidbody2D;
 
+    // Sound Effects / Music
+    private SoundManager _soundManager;
+    private bool _spinSfxPlayed;
+    
     #endregion
     
     #region Unity Events
@@ -70,6 +80,7 @@ public class ThrowKnife : MonoBehaviour
     private void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _soundManager = FindObjectOfType<SoundManager>();
     }
 
     private void FixedUpdate()
@@ -77,6 +88,12 @@ public class ThrowKnife : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             return;
 
+        if (!_spinSfxPlayed)
+        {
+            _spinSfxPlayed = true;
+            _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, knifeSpinSoundClip);
+        }
+        
         HorizontalMoveFixedUpdate();
         VerticalMoveFixedUpdate();
         RotateFixedUpdate();
@@ -142,7 +159,7 @@ public class ThrowKnife : MonoBehaviour
     /// </summary>
     public void UpdateActiveKnives()
     {
-        if (Owner.layer != LayerMask.NameToLayer("Player"))
+        if (Owner && Owner.layer != LayerMask.NameToLayer("Player"))
             return;
 
         PlayerCombat playerCombat = Owner.GetComponent<PlayerCombat>();

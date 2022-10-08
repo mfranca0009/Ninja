@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 7129739286581065801}
   m_Layer: 5
   m_Name: MainMenuCanvas
-  m_TagString: Untagged
+  m_TagString: ShowOnMain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -235,7 +235,7 @@ RectTransform:
   - {fileID: 7129739286924162061}
   - {fileID: 7129739285868533734}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1055,7 +1055,7 @@ GameObject:
   - component: {fileID: 7129739287955746181}
   - component: {fileID: 7129739287955746180}
   m_Layer: 5
-  m_Name: btn_Start
+  m_Name: btn_start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -25,6 +25,12 @@ public class WaypointInfo
 
 public class EnemyMovement : MonoBehaviour
 {
+    #region Public Properties
+
+    public bool ShouldPlayWalkRunSFX { get; set; }
+
+    #endregion
+    
     #region Serialized Fields
     
     [Header("Movement Speeds")]
@@ -80,6 +86,25 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("The maximum delay to stop the AI for when reaching a destination position")]
     [SerializeField] private float maxDelay = 3f;
 
+    [Header("Audio Source Settings")]
+    
+    [Tooltip("Dedicated movement audio source for walk/run loop")]
+    [SerializeField] private AudioSource movementAudioSource;
+
+    [Tooltip("Normal pitch amount during walk speed for walk/run sound effect")] 
+    [SerializeField] private float normalWalkPitch = 1f;
+
+    [Tooltip("Fast pitch amount during run speed for walk/run sound effect")] 
+    [SerializeField] private float fastRunPitch = 1.25f;
+    
+    [Tooltip("Dedicated movement audio source for simultaneous one shot sound effects")] 
+    [SerializeField] private AudioSource movementOneShotAudioSource;
+    
+    [Header("Sound Effect Settings")]
+
+    [Tooltip("Walk/Run sound effect to play")]
+    [SerializeField] private AudioClip walkRunSoundClip;
+    
     #endregion
     
     #region Private Fields
@@ -126,6 +151,10 @@ public class EnemyMovement : MonoBehaviour
         if (applyWaypointMovement && applyRandomMovement)
             applyWaypointMovement = false;
 
+        // Override default walk/run sound effect clip if one is present
+        if (walkRunSoundClip)
+            movementAudioSource.clip = walkRunSoundClip;
+        
         _currentWpId = 0;
     }
 
@@ -133,16 +162,21 @@ public class EnemyMovement : MonoBehaviour
     private void Update()
     {
         if (_health.Dead)
+        {
+            movementAudioSource.Stop();
             return;
-        
+        }
+
         GroundCheckUpdate();
 
         if (_isGrounded && _homePos == Vector2.zero)
             _homePos = _rigidBody.position;
-        
+
         _animator.SetFloat("VelocityX", _rigidBody.velocity.x);
         _animator.SetFloat("VelocityY", _rigidBody.velocity.y);
         _animator.SetBool("HasVelocityX", _rigidBody.velocity.x != 0);
+        
+        UpdateWalkRunSfx();
 
         // Delay timer updates
         WaypointDelayUpdate();
@@ -200,6 +234,8 @@ public class EnemyMovement : MonoBehaviour
                 _ => walkSpeed
             };
 
+            UpdateWalkRunSfxPitch(currentSpeed);
+            
             _rigidBody.velocity = new Vector2((_destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                                               * currentSpeed, 0f) * Time.deltaTime;
         }
@@ -215,8 +251,8 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!AllowWaypointMovement())
             return;
-        
-        // Looping waypoint from reverse or beginning, this will initially correct the direction
+
+            // Looping waypoint from reverse or beginning, this will initially correct the direction
         // and reset all waypoints that were previously reached.
         switch (_currentWpId == waypoints.Length)
         {
@@ -258,6 +294,8 @@ public class EnemyMovement : MonoBehaviour
             FlipSprite();
             float currentSpeed = waypoint.shouldRun ? runSpeed : walkSpeed;
 
+            UpdateWalkRunSfxPitch(currentSpeed);
+            
             _rigidBody.velocity =
                 new Vector2((waypoint.waypointPosition.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                             * currentSpeed, 0f) * Time.deltaTime;
@@ -280,11 +318,13 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!_enemyCombat.ChaseTarget || _enemyCombat.InCombat)
             return;
-        
+
         FlipSprite();
         
         Vector2 currentPos = _rigidBody.position;
 
+        UpdateWalkRunSfxPitch(runSpeed);
+        
         _rigidBody.velocity =
             new Vector2((_enemyCombat.Target.transform.position.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                         * runSpeed, 0f) * Time.deltaTime;
@@ -300,12 +340,14 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!_enemyCombat.AdvanceTarget)
             return;
-        
+
         FlipSprite();
         
         Vector2 currentPos = _rigidBody.position;
         Vector2 destPos = GetMidPoint(_enemyCombat.Target);
 
+        UpdateWalkRunSfxPitch(walkSpeed);
+        
         _rigidBody.velocity =
             new Vector2((destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                         * walkSpeed, 0f) * Time.deltaTime;
@@ -320,12 +362,14 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!_enemyCombat.InvestigateEngagement || _enemyCombat.Target)
             return;
-        
+
         FlipSprite();
         
         Vector2 currentPos = _rigidBody.position;
         Vector2 destPos = _enemyCombat.InvestigateDestPos;
 
+        UpdateWalkRunSfxPitch(walkSpeed);
+        
         _rigidBody.velocity =
             new Vector2((destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                         * walkSpeed, 0f) * Time.deltaTime;
@@ -379,9 +423,20 @@ public class EnemyMovement : MonoBehaviour
         _animator.SetBool("IsGrounded", _isGrounded);
     }
 
+    /// <summary>
+    /// Update walk/run sound effect to either play or pause depending on conditions.
+    /// </summary>
+    private void UpdateWalkRunSfx()
+    {
+        if (ShouldPlayWalkRunSFX && _rigidBody.velocity.x != 0f && _isGrounded && !movementAudioSource.isPlaying)
+            movementAudioSource.Play();
+        else if (!ShouldPlayWalkRunSFX || _rigidBody.velocity.x == 0f || !_isGrounded && movementAudioSource.isPlaying)
+            movementAudioSource.Pause();
+    }
+    
     #endregion
     
-    #region Helper Methods
+    #region Private Helper Methods
     
     /// <summary>
     /// Flip sprite based on current facing direction compared to the rigidbody's velocity if needed.
@@ -397,6 +452,18 @@ public class EnemyMovement : MonoBehaviour
         transform.localScale = new Vector3(-currentScale.x, currentScale.y, currentScale.z);
     }
 
+    /// <summary>
+    /// Determine pitch of movement sound effect based on current speed.
+    /// <param name="currentSpeed">The gameobject's current speed</param>
+    /// </summary>
+    private void UpdateWalkRunSfxPitch(float currentSpeed)
+    {
+        if (movementAudioSource.pitch != normalWalkPitch && currentSpeed == walkSpeed)
+            movementAudioSource.pitch = normalWalkPitch;
+        else if (movementAudioSource.pitch != fastRunPitch && currentSpeed == runSpeed)
+            movementAudioSource.pitch = fastRunPitch;
+    }
+    
     /// <summary>
     /// Checks whether the AI can proceed with waypoint movement or not.
     /// </summary>
@@ -417,7 +484,6 @@ public class EnemyMovement : MonoBehaviour
         return applyRandomMovement && _isGrounded && !_randomMoveDelayed &&
                !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat && !_enemyCombat.InvestigateEngagement;
     }
-
 
     /// <summary>
     /// Reset all waypoints to be marked as not reached, used primarily when looping the waypoint path

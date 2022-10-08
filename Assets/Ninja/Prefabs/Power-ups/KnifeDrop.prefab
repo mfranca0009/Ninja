@@ -86,6 +86,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   knifeAmount: 1
+  pickupSoundClip: {fileID: 8300000, guid: 23e197d22f3fe9149bbaf3a7c27f2bac, type: 3}
+  hitGroundSoundClip: {fileID: 8300000, guid: 5e834bd862ebc8546b6a93aeb661ed61, type: 3}
 --- !u!114 &2716998906824794190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,8 +101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotate: 1
-  rocketDistance: 2
-  rocketSpeed: 4
+  verticalDistance: 2
+  verticalSpeed: 4
   horizontalSpeed: 4
   rotationSpeed: 1
 --- !u!1 &6399942730091287114

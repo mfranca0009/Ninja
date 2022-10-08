@@ -29,10 +29,26 @@ public class NoLand : MonoBehaviour
 
     [Tooltip("Damage amount that will applied to the owning gameobject")] 
     [SerializeField] private float landingDamage = 10f;
+
+    [Header("Sound Effect Settings")] 
     
+    [Tooltip("Land hit sound effect")] 
+    [SerializeField] private AudioClip landHitSoundClip;
+    
+    #endregion
+
+    #region Private Fields
+
+    private SoundManager _soundManager;
+
     #endregion
     
     #region Unity Events
+
+    private void Awake()
+    {
+        _soundManager = FindObjectOfType<SoundManager>();
+    }
     
     private void OnCollisionEnter2D(Collision2D col)
     {
@@ -60,8 +76,13 @@ public class NoLand : MonoBehaviour
             ShouldUseProvidedForce(collidingGoVelocity) ? force : new Vector2(collidingGoVelocity.x, force.y),
             forceMode2D);
 
-        if (shouldDamage)
-            gameObject.GetComponent<Health>().DealDamage(landingDamage, col.gameObject);
+        // If no damage should occur, then leave the method body now.
+        if (!shouldDamage)
+            return;
+        
+        // Play hit sound effect and damage victim
+        _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, landHitSoundClip);
+        gameObject.GetComponent<Health>().DealDamage(landingDamage, col.gameObject);
     }
     
     #endregion
