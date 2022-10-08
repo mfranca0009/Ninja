@@ -49,12 +49,14 @@ public class HealthPickup : MonoBehaviour
             if (!health)
                 return;
 
-            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            if (_soundManager)
+                _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            
             health.DealHeal(healthAmount);
 
             Destroy(gameObject);
         }
-        else if (collidingObjectLayer == groundMask)
+        else if (collidingObjectLayer == groundMask && _soundManager)
             _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
     }
     

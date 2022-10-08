@@ -12,6 +12,10 @@ public class MenuSounds : MonoBehaviour
     void Start()
     {
         _soundManager = FindObjectOfType<SoundManager>();
+
+        if (!_soundManager)
+            return;
+        
         _soundManager.PlayMusic(bg_music);
     }
 

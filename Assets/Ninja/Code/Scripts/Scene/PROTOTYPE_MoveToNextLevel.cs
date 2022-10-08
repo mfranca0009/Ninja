@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
 {
-    [SerializeField]
-    private SceneManagement _sceneManager;
-
-    [SerializeField]
-    private UIManager _UIManager;
-
     public string levelToLoad = "";
 
     //Scroll Motion
@@ -17,6 +11,9 @@ public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
     [SerializeField] private float frequency = 3f;
 
     private Vector2 _homePos;
+
+    private SceneManagement _sceneManager;
+    private UIManager _UIManager;
     
     void Start()
     {

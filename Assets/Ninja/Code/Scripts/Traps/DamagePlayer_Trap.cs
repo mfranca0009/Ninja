@@ -79,7 +79,8 @@ public class DamagePlayer_Trap : MonoBehaviour
             {
                 
                 // Trap hit sound effect
-                _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, trapHitSoundClip);
+                if (_soundManager)
+                    _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, trapHitSoundClip);
                 
                 //then set the foreignEntity to whichever was hit, damge them, and knock them back.
                 foreignEntity = collision.gameObject;

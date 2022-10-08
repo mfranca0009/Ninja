@@ -185,7 +185,7 @@ public class Health : MonoBehaviour
     /// </summary>
     public void ExecuteDeathSoundEffect()
     {
-        if (!Dead)
+        if (!Dead || !_soundManager)
             return;
         
         if(gameObject.layer == LayerMask.NameToLayer("Enemy"))

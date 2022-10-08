@@ -80,8 +80,11 @@ public class NoLand : MonoBehaviour
         if (!shouldDamage)
             return;
         
-        // Play hit sound effect and damage victim
-        _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, landHitSoundClip);
+        // Play hit sound effect
+        if (_soundManager)
+            _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, landHitSoundClip);
+        
+        // Damage victim
         gameObject.GetComponent<Health>().DealDamage(landingDamage, col.gameObject);
     }
     
