@@ -333,6 +333,9 @@ public class PlayerCombat : MonoBehaviour
     /// </summary>
     public void PlayLightAttackSfx()
     {
+        if (!_soundManager)
+            return;
+        
         _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, attackSoundClips[(int)AttackState.LightAttack]);
     }
     
@@ -342,6 +345,9 @@ public class PlayerCombat : MonoBehaviour
     /// </summary>
     public void PlaySlowAttackSfx()
     {
+        if (!_soundManager)
+            return;
+        
         _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, attackSoundClips[(int)AttackState.SlowAttack]);
     }
     
@@ -351,6 +357,9 @@ public class PlayerCombat : MonoBehaviour
     /// </summary>
     public void PlayThrowKnifeSfx()
     {
+        if (!_soundManager)
+            return;
+        
         _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, attackSoundClips[(int)AttackState.ThrowKnife]);
     }
     

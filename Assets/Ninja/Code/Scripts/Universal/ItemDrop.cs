@@ -14,6 +14,15 @@ public class ItemEntry
 
 public class ItemDrop : MonoBehaviour
 {
+    #region Public Properties
+
+    /// <summary>
+    /// State to notify when items were dropped
+    /// </summary>
+    public bool HasDroppedItems { get; private set; }
+
+    #endregion
+    
     #region Serialized Fields
 
     [Header("Item Drop Mechanic Settings")]
@@ -56,7 +65,6 @@ public class ItemDrop : MonoBehaviour
     #region Private Fields
     
     // Item drop
-    private bool _hasDroppedItems;
     private int _droppedItemsCount;
     
     // Health script
@@ -102,7 +110,7 @@ public class ItemDrop : MonoBehaviour
         if (!CanDropOnDeath())
             return;
 
-        _hasDroppedItems = true;
+        HasDroppedItems = true;
         
         SpawnRandomItemDrops();
     }
@@ -177,7 +185,7 @@ public class ItemDrop : MonoBehaviour
     /// <returns>Returns true if item(s) can be dropped on death, otherwise false.</returns>
     private bool CanDropOnDeath()
     {
-        return dropOnDeath && _health.Dead && !_hasDroppedItems;
+        return dropOnDeath && _health.Dead && !HasDroppedItems;
     }
 
     /// <summary>

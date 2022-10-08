@@ -116,7 +116,8 @@ public class SwingingTrap_MiniBoss : MonoBehaviour
         }
         
         // Trap hit sound effect
-        _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, trapHitSoundClip);
+        if (_soundManager)
+            _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, trapHitSoundClip);
         
         //then set the foreignEntity to who got hit, deal them damage, and prep them for knockback.
         foreignEntity = collision.gameObject;

@@ -77,8 +77,9 @@ public class HitBoxDetection : MonoBehaviour
                 ? enemyCombat.LightAttackPerformed == 1
                 : playerCombat.LightAttackPerformed == 1;
 
-            _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects,
-                lightAttackPerformed ? lightAttackHitSoundClip : slowAttackHitSoundClip);
+            if (_soundManager)
+                _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects,
+                    lightAttackPerformed ? lightAttackHitSoundClip : slowAttackHitSoundClip);
         }
         else if (throwKnife)
         {
@@ -88,7 +89,8 @@ public class HitBoxDetection : MonoBehaviour
             Destroy(throwKnife.gameObject);
 
             // Hit sound effect (throw knife)
-            _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, knifeHitSoundClip);
+            if (_soundManager)
+                _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, knifeHitSoundClip);
         }
         
         // Deal damage to victim

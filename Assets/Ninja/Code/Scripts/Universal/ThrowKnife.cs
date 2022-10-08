@@ -88,7 +88,7 @@ public class ThrowKnife : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             return;
 
-        if (!_spinSfxPlayed)
+        if (!_spinSfxPlayed && _soundManager)
         {
             _spinSfxPlayed = true;
             _soundManager.PlaySoundEffect(AudioSourceType.AttackEffects, knifeSpinSoundClip);

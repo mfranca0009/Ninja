@@ -51,10 +51,12 @@ public class KnifePickup : MonoBehaviour
 
             playerCombat.MaxKnives += knifeAmount;
 
-            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            if (_soundManager)
+                _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            
             Destroy(gameObject);   
         }
-        else if (collidingObjectLayer == groundMask)
+        else if (collidingObjectLayer == groundMask && _soundManager)
             _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
     }
     
