@@ -1723,7 +1723,7 @@ MonoBehaviour:
   forceMode2D: 1
   positionXTolerance: 0.001
   velocityXTolerance: 0.5
-  shouldDamage: 0
+  shouldDamage: 1
   landingDamage: 10
   landHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
 --- !u!114 &-2570845326224222700
