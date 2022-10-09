@@ -4225,7 +4225,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followCameraAccuracy: 100
   xLead: 0
-  Camera: {fileID: 1940300149}
+  _camera: {fileID: 1940300151}
+  backupCamera: {fileID: 1385605976}
 --- !u!212 &1076058497
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6447,7 +6448,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followCameraAccuracy: 96
   xLead: 5
-  Camera: {fileID: 1940300149}
+  _camera: {fileID: 1940300151}
+  backupCamera: {fileID: 1385605976}
 --- !u!212 &1639295729
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6625,7 +6627,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followCameraAccuracy: 100
   xLead: 0
-  Camera: {fileID: 1940300149}
+  _camera: {fileID: 1940300151}
+  backupCamera: {fileID: 1385605976}
 --- !u!212 &1738608465
 SpriteRenderer:
   m_ObjectHideFlags: 0

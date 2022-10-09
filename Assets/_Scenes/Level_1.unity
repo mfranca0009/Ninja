@@ -281,7 +281,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followCameraAccuracy: 100
   xLead: 0
-  Camera: {fileID: 2075302197}
+  _camera: {fileID: 2075302199}
+  backupCamera: {fileID: 302522456}
 --- !u!1 &47455374
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +520,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followCameraAccuracy: 100
   xLead: 0
-  Camera: {fileID: 2075302197}
+  _camera: {fileID: 2075302199}
+  backupCamera: {fileID: 302522456}
 --- !u!1 &71703646
 GameObject:
   m_ObjectHideFlags: 0
@@ -6078,7 +6080,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followCameraAccuracy: 90
   xLead: 5
-  Camera: {fileID: 2075302197}
+  _camera: {fileID: 2075302199}
+  backupCamera: {fileID: 302522456}
 --- !u!212 &1986251579
 SpriteRenderer:
   m_ObjectHideFlags: 0
