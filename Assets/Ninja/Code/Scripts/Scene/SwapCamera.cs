@@ -8,6 +8,7 @@ public class SwapCamera : MonoBehaviour
     public GameObject secCamera;
     public GameObject player;
     public float yLevel = 0.0f;
+    public float xLevel = 150.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,7 @@ public class SwapCamera : MonoBehaviour
     {
         if (mainCamera.activeInHierarchy == false)
         {
-            if (player.transform.position.y >= yLevel)
+            if (player.transform.position.y >= yLevel && player.transform.position.x <= xLevel)
             {
                 mainCamera.SetActive(true);
                 secCamera.SetActive(false);
