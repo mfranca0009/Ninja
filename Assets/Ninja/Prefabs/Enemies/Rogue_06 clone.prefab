@@ -226,10 +226,10 @@ MonoBehaviour:
   sightCollider2DOffset: {x: 0, y: 0}
   throwKnifePrefab: {fileID: 4566541791185861260, guid: 5c9a2cd76d14e42499b833af047b4938, type: 3}
   throwKnifeSprite: {fileID: 21300000, guid: c2f0536a0535f2d48842f8525beb4bb6, type: 3}
-  throwKnifeSpawnTransform: {fileID: 0}
+  throwKnifeSpawnTransform: {fileID: 2756860391300353305}
   throwKnifeSpawnOffset: {x: 1, y: 0}
-  meleeWeaponLeft: {fileID: 0}
-  meleeWeaponRight: {fileID: 0}
+  meleeWeaponLeft: {fileID: 4396585072392047860}
+  meleeWeaponRight: {fileID: 108983635666752096}
   meleeWeaponLeftSprite: {fileID: 21300000, guid: 37e05d8dcd5e386498e75d924efbc7c1, type: 3}
   meleeWeaponRightSprite: {fileID: 21300000, guid: 37e05d8dcd5e386498e75d924efbc7c1, type: 3}
   attackSoundClips:
@@ -2460,6 +2460,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
+--- !u!1 &4396585072392047860 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8474151331642021897, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
+  m_PrefabInstance: {fileID: 5231482272411784445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5534122213185510545 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 312107079867222124, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
@@ -2604,6 +2609,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
+--- !u!1 &108983635666752096 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8474151331642021897, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
+  m_PrefabInstance: {fileID: 8365730663379389033}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8092361645970194949 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 312107079867222124, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
