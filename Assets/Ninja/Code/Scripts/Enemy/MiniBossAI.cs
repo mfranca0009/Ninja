@@ -106,7 +106,7 @@ public class MiniBossAI : MonoBehaviour
     /// <param name="smokeBomb"></param>
     private void PlayParticles(ParticleSystem smokeBomb)
     {
-        if (smokeBombParticle == null)
+        if (!smokeBomb)
             return;
 
         smokeBomb.transform.position = transform.position;
