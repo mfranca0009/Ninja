@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,6 +27,15 @@ public class SceneManagement : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public bool HasBuildIndex(Scene scene, params int[] buildIndices)
+    {
+        foreach (int buildIndex in buildIndices)
+            if (scene.buildIndex == buildIndex)
+                return true;
+
+        return false;
+    }
+    
     public void QuitGame()
     {
         Application.Quit();

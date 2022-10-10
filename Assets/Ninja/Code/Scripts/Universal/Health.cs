@@ -27,12 +27,15 @@ public class Health : MonoBehaviour
     
     [Tooltip("Maximum health points to start with on spawn")]
     public float maxHealth = 100f;
-    
+
+    [Tooltip("Is this the player gameobject?")]
+    public bool isPlayer;
+
     #endregion
 
     #region Serialized Fields
 
-    [Header("Death Settings")] 
+    [Header("Enemy Death Settings")] 
     
     [Tooltip("Enable destroy of gameobject after death and item drop")] 
     [SerializeField] private bool shouldDestroyAfterDeath = true;
@@ -74,6 +77,15 @@ public class Health : MonoBehaviour
     private bool _playedDeathAnimation;
     private ItemDrop _enemyItemDrop;
     
+    // Game Manager
+    private GameManager _gameManager;
+    
+    // UI Manager
+    private UIManager _uiManager;
+    
+    // Player Scripts
+    private PlayerMovement _playerMovement;
+    
     #endregion
 
     #region Unity Events
@@ -84,25 +96,38 @@ public class Health : MonoBehaviour
         _boxCollider2D = GetComponent<BoxCollider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _soundManager = FindObjectOfType<SoundManager>();
+        _gameManager = FindObjectOfType<GameManager>();
+        _uiManager = FindObjectOfType<UIManager>();
         HealthPoints = maxHealth;
     }
-
+    
     // Update is called once per frame
     private void Update()
     {
+        // Call this in Update to retrieve once, cannot call from Awake/Start because the game manager retrieves
+        // the player// through the Update loop due to it being a persistent object.
+        if (!_playerMovement && _gameManager && _gameManager.Player && isPlayer)
+            _playerMovement = _gameManager.Player.GetComponent<PlayerMovement>();
+        
         if (!Dead)
             return;
-
+        
         if (_enemyItemDrop && _enemyItemDrop.HasDroppedItems && shouldDestroyAfterDeath)
             Destroy(gameObject, destroyDelay);
+
+        if (_playerMovement && _playerMovement.IsFalling())
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX;
+        else
+        {
+            _boxCollider2D.enabled = false;
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
 
         if (_playedDeathAnimation)
             return;
         
         _animator.SetTrigger("Dead");
-        _playedDeathAnimation = true;
-        _boxCollider2D.enabled = false;
-        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        _playedDeathAnimation = true;   
     }
     
     #endregion
@@ -129,7 +154,17 @@ public class Health : MonoBehaviour
             if (invoker)
                 Killer = invoker;
 
-            _enemyItemDrop = GetComponent<ItemDrop>();
+            switch (isPlayer)
+            {
+                case false:
+                    _enemyItemDrop = GetComponent<ItemDrop>();
+                    break;
+                // Verify if the player is dying and reduce the lives count if not 0.
+                case true when _gameManager.Lives > 0 && _gameManager && _uiManager:
+                    _gameManager.Lives--;
+                    _uiManager.UpdateLivesUI(_gameManager.Lives);
+                    break;
+            }
 
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}. {gameObjectName} has been killed!");
         }
@@ -172,13 +207,38 @@ public class Health : MonoBehaviour
     /// Instantly kill the gameobject that has this health script attached.
     /// </summary>
     /// <param name="skipDeathAnimation">Whether the death animation should be skipped or not.</param>
-    public void InstaKill(bool skipDeathAnimation)
+    /// <param name="isPlayer">Whether this gameobject that is invoking this method is a player or not.</param>
+    public void InstaKill(bool skipDeathAnimation, bool isPlayer = false)
     {
         HealthPoints = 0f;
         Dead = true;
         _playedDeathAnimation = skipDeathAnimation;
+
+        if (!_gameManager || !isPlayer)
+            return;
+        
+        _gameManager.Lives--;
+        _uiManager.UpdateLivesUI(_gameManager.Lives);
     }
 
+    /// <summary>
+    /// Reset necessary attributes to bring the health component back to its clean state<br></br><br></br>
+    /// Note: only used for the player currently.
+    /// </summary>
+    public void Reset()
+    {
+        HealthPoints = maxHealth;
+        
+        if (!Dead) 
+            return;
+        
+        Dead = !Dead;
+        _playedDeathAnimation = false;
+        _boxCollider2D.enabled = true;
+        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+        _animator.SetTrigger("ResetDeath");
+    }
+    
     /// <summary>
     /// Play death sound effect.<br></br><br></br>
     /// Note: This is currently executed on its own by an Animation Event through the `Rogue_death_01` animation.

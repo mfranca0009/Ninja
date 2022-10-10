@@ -1103,7 +1103,6 @@ GameObject:
   - component: {fileID: 2466898825072249287}
   - component: {fileID: 8862957453690271467}
   - component: {fileID: 6367404513073764285}
-  - component: {fileID: 351400722}
   - component: {fileID: 2345012281786925401}
   - component: {fileID: 4303413003194082149}
   - component: {fileID: 837365432229299698}
@@ -1278,23 +1277,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  isPlayer: 1
+  shouldDestroyAfterDeath: 1
+  destroyDelay: 2
   playerDeathSoundClip: {fileID: 8300000, guid: ca4d61fb3eef03a40818f4e9c97f80f1, type: 3}
   shouldRandomizePitch: 0
   isOneShot: 1
   enemyDeathSoundClips: []
---- !u!114 &351400722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1860446570756328647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 594aa9eb5e4019548ac18a4039e1afa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  respawnTimer: 3
 --- !u!114 &2345012281786925401
 MonoBehaviour:
   m_ObjectHideFlags: 0

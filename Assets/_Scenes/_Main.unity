@@ -135,6 +135,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1860446570756328647, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -257,7 +261,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb0c91370bc29b4f85d6b7b5ad15dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMenuCanvas: {fileID: 0}
+  settingsCanvas: {fileID: 0}
+  soundSettingsCanvas: {fileID: 0}
   scrollCanvas: {fileID: 0}
+  healthCanvas: {fileID: 0}
+  livesSprites: []
+  playerHealth: {fileID: 0}
 --- !u!1 &1944154757
 GameObject:
   m_ObjectHideFlags: 0
