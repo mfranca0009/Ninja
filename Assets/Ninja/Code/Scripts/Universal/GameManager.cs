@@ -94,15 +94,6 @@ public class GameManager : MonoBehaviour
         _resetDelayTimer = resetDelay;
         _gameOverDelayTimer = gameOverDelay;
     }
-    
-    // // Start is called before the first frame update
-    // private void Start()
-    // {
-    //     _sceneManagement = FindObjectOfType<SceneManagement>();
-    //     _uiManager = FindObjectOfType<UIManager>();
-    //     _resetDelayTimer = resetDelay;
-    //     _gameOverDelayTimer = gameOverDelay;
-    // }
 
     // Update is called once per frame
     // Note: order of execution is important here! Be wary if you attempt to add/change something within the Update loop.
