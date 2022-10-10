@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trap: {fileID: 1981374691745054557}
   blade: {fileID: 1981374690932121859}
-  rotationSpeed: 170
+  rotationSpeed: 22.5
 --- !u!61 &1981374690810215378
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -396,7 +396,7 @@ MonoBehaviour:
   presurePlate: {fileID: 1981374690810215390}
   damage: 20
   knockback: {x: -10, y: 10}
-  frameDelay: 10
+  frameDelay: 15
   trapHitSoundClip: {fileID: 8300000, guid: b175e69a414b2004ebb085209486b7b6, type: 3}
 --- !u!1 &1981374691961847433
 GameObject:

@@ -2071,6 +2071,14 @@ PrefabInstance:
       propertyPath: waypoints.Array.data[1].teleportPosition.y
       value: -1.847
       objectReference: {fileID: 0}
+    - target: {fileID: 6169659395082176973, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: m_Mass
+      value: 2.3659167
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169659395082176973, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
