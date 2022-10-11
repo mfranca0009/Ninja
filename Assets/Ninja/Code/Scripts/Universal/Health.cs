@@ -171,11 +171,17 @@ public class Health : MonoBehaviour
         else
         {
             HealthPoints -= damage;
-            
+
             EnemyCombat enemyCombat = GetComponent<EnemyCombat>();
-            if (enemyCombat && invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
-                enemyCombat.NotifyEngagement(invoker);
-            
+            if (enemyCombat)
+            {
+                if(invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
+                    enemyCombat.NotifyEngagement(invoker);
+
+                if (!_gameManager.TappedEnemiesHealth.Contains(this))
+                    _gameManager.TappedEnemiesHealth.Add(this);
+            }
+
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}; {HealthPoints} remaining.");
         }
     }
@@ -223,7 +229,6 @@ public class Health : MonoBehaviour
 
     /// <summary>
     /// Reset necessary attributes to bring the health component back to its clean state<br></br><br></br>
-    /// Note: only used for the player currently.
     /// </summary>
     public void Reset()
     {

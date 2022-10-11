@@ -43,6 +43,11 @@ public class GameManager : MonoBehaviour
     /// Active item drops within current level
     /// </summary>
     public List<GameObject> ActiveItemDrops { get; private set; }
+
+    /// <summary>
+    /// Enemies health that have been "tapped" by the player but not yet killed.
+    /// </summary>
+    public List<Health> TappedEnemiesHealth { get; private set; }
     
     #endregion
     
@@ -99,6 +104,7 @@ public class GameManager : MonoBehaviour
         _resetDelayTimer = resetDelay;
         _gameOverDelayTimer = gameOverDelay;
         ActiveItemDrops = new List<GameObject>();
+        TappedEnemiesHealth = new List<Health>();
     }
 
     // Update is called once per frame
@@ -108,13 +114,12 @@ public class GameManager : MonoBehaviour
         // Retrieve current scene.
         _currScene = SceneManager.GetActiveScene();
 
-        // If the scene is changed, update appropriate states.
+        // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
             LevelMidpointReached = false;
-            
-            if (ActiveItemDrops.Count > 0)
-                ActiveItemDrops.Clear();
+            ActiveItemDrops.Clear();
+            TappedEnemiesHealth.Clear();
         }
 
         // If the player does not exist or is invalid for this scene, then retrieve the player again.
@@ -129,6 +134,7 @@ public class GameManager : MonoBehaviour
         {
             UpdateDeathResetTimer();
             WipeActiveItemDrops();
+            RestoreEnemiesHealth();
             UpdateGameOverTimer();
         }
 
@@ -248,6 +254,19 @@ public class GameManager : MonoBehaviour
 
         ActiveItemDrops.FindAll(activeObj => activeObj).ForEach(Destroy);
         ActiveItemDrops.Clear();
+    }
+
+    /// <summary>
+    /// Restore health of enemies that were tapped by player and have not died as long as they
+    /// are still valid references in the current level.
+    /// </summary>
+    private void RestoreEnemiesHealth()
+    {
+        if (!_playerHealth.Dead || Lives == 0 || TappedEnemiesHealth.Count == 0)
+            return;
+
+        TappedEnemiesHealth.FindAll(health => health && !health.Dead).ForEach(health => health.Reset());
+        TappedEnemiesHealth.Clear();
     }
     
     /// <summary>
