@@ -16,6 +16,9 @@ public class StrengthPickup : MonoBehaviour
     [Tooltip("The extend duration, in seconds, to increase the melee strength boost timer")] 
     [SerializeField] private float extendDuration = 15f;
     
+    [Tooltip("The amount of time the pickup will last while untouched by player")] 
+    [SerializeField] private float lifetimeTimer = 10f;
+    
     [Header("Sound Effect Settings")] 
     
     [Tooltip("The sound effect when picking up this item")]
@@ -39,6 +42,11 @@ public class StrengthPickup : MonoBehaviour
         _soundManager = FindObjectOfType<SoundManager>();
     }
 
+    private void Update()
+    {
+        UpdateLifetime();
+    }
+    
     private void OnCollisionEnter2D(Collision2D col)
     {
         LayerMask playerMask = LayerMask.NameToLayer("Player");
@@ -95,5 +103,23 @@ public class StrengthPickup : MonoBehaviour
             _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
     }
     
+    #endregion
+    
+    #region Update Methods
+
+    /// <summary>
+    /// Update lifetime timer, when it expires the pickup will be destroyed.
+    /// </summary>
+    private void UpdateLifetime()
+    {
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (lifetimeTimer <= 0)
+            Destroy(gameObject);
+        else
+            lifetimeTimer -= Time.deltaTime;
+    }
+
     #endregion
 }

@@ -9,6 +9,9 @@ public class KnifePickup : MonoBehaviour
     
     [Tooltip("The amount that will be used to increase the max amount of knives allowed on screen")]
     [SerializeField] private int knifeAmount = 1;
+    
+    [Tooltip("The amount of time the pickup will last while untouched by player")] 
+    [SerializeField] private float lifetimeTimer = 10f;
 
     [Header("Sound Effect Settings")] 
     
@@ -33,6 +36,11 @@ public class KnifePickup : MonoBehaviour
         _soundManager = FindObjectOfType<SoundManager>();
     }
 
+    private void Update()
+    {
+        UpdateLifetime();
+    }
+    
     private void OnCollisionEnter2D(Collision2D col)
     {
         LayerMask playerMask = LayerMask.NameToLayer("Player");
@@ -60,5 +68,23 @@ public class KnifePickup : MonoBehaviour
             _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
     }
     
+    #endregion
+    
+    #region Update Methods
+
+    /// <summary>
+    /// Update lifetime timer, when it expires the pickup will be destroyed.
+    /// </summary>
+    private void UpdateLifetime()
+    {
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (lifetimeTimer <= 0)
+            Destroy(gameObject);
+        else
+            lifetimeTimer -= Time.deltaTime;
+    }
+
     #endregion
 }

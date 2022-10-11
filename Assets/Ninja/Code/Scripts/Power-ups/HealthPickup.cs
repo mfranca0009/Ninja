@@ -10,6 +10,9 @@ public class HealthPickup : MonoBehaviour
     [Tooltip("The amount of health the pickup will give the player")]
     [SerializeField] private float healthAmount = 25f;
 
+    [Tooltip("The amount of time the pickup will last while untouched by player")] 
+    [SerializeField] private float lifetimeTimer = 10f;
+
     [Header("Sound Effect Settings")] 
     
     [Tooltip("The sound effect when picking up this item")]
@@ -33,6 +36,11 @@ public class HealthPickup : MonoBehaviour
         _soundManager = FindObjectOfType<SoundManager>();
     }
 
+    private void Update()
+    {
+        UpdateLifetime();
+    }
+    
     private void OnCollisionEnter2D(Collision2D col)
     {
         LayerMask playerMask = LayerMask.NameToLayer("Player");
@@ -60,5 +68,23 @@ public class HealthPickup : MonoBehaviour
             _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
     }
     
+    #endregion
+
+    #region Update Methods
+
+    /// <summary>
+    /// Update lifetime timer, when it expires the pickup will be destroyed.
+    /// </summary>
+    private void UpdateLifetime()
+    {
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (lifetimeTimer <= 0)
+            Destroy(gameObject);
+        else
+            lifetimeTimer -= Time.deltaTime;
+    }
+
     #endregion
 }
