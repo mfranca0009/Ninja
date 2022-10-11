@@ -74,7 +74,7 @@ public class Health : MonoBehaviour
 
     // Death
     private BoxCollider2D _boxCollider2D;
-    private bool _playedDeathAnimation;
+    private bool _skipDeathAnimation;
     private ItemDrop _enemyItemDrop;
     
     // Game Manager
@@ -108,26 +108,29 @@ public class Health : MonoBehaviour
         // the player// through the Update loop due to it being a persistent object.
         if (!_playerMovement && _gameManager && _gameManager.Player && isPlayer)
             _playerMovement = _gameManager.Player.GetComponent<PlayerMovement>();
-        
-        if (!Dead)
-            return;
-        
+
+        switch (Dead)
+        {
+            case true when !_skipDeathAnimation:
+                _animator.SetBool("IsDead", Dead);
+                break;
+            case false:
+                _animator.SetBool("IsDead", Dead);
+                return;
+        }
+
         if (_enemyItemDrop && _enemyItemDrop.HasDroppedItems && shouldDestroyAfterDeath)
             Destroy(gameObject, destroyDelay);
-
-        if (_playerMovement && _playerMovement.IsFalling())
+        
+        // FIXME: this should be checking if player is grounded, but death animation triggers
+        // not being grounded due to fall back. Player falls through floor in this case even when he was on ground.
+        if (_playerMovement &&  (_playerMovement.IsJumping() || _playerMovement.IsFalling()))
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX;
         else
         {
             _boxCollider2D.enabled = false;
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         }
-
-        if (_playedDeathAnimation)
-            return;
-        
-        _animator.SetTrigger("Dead");
-        _playedDeathAnimation = true;   
     }
     
     #endregion
@@ -214,11 +217,11 @@ public class Health : MonoBehaviour
     /// </summary>
     /// <param name="skipDeathAnimation">Whether the death animation should be skipped or not.</param>
     /// <param name="isPlayer">Whether this gameobject that is invoking this method is a player or not.</param>
-    public void InstaKill(bool skipDeathAnimation, bool isPlayer = false)
+    public void InstaKill(bool skipDeathAnimation)
     {
         HealthPoints = 0f;
         Dead = true;
-        _playedDeathAnimation = skipDeathAnimation;
+        _skipDeathAnimation = skipDeathAnimation;
 
         if (!_gameManager || !isPlayer)
             return;
@@ -233,15 +236,9 @@ public class Health : MonoBehaviour
     public void Reset()
     {
         HealthPoints = maxHealth;
-        
-        if (!Dead) 
-            return;
-        
-        Dead = !Dead;
-        _playedDeathAnimation = false;
+        Dead = false;
         _boxCollider2D.enabled = true;
         _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
-        _animator.SetTrigger("ResetDeath");
     }
     
     /// <summary>
@@ -253,7 +250,7 @@ public class Health : MonoBehaviour
         if (!Dead || !_soundManager)
             return;
         
-        if(gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if(gameObject.CompareTag("Enemy"))
             _soundManager.RandomSoundEffect(AudioSourceType.DamageEffects, isOneShot, shouldRandomizePitch,
                 enemyDeathSoundClips);
         else
