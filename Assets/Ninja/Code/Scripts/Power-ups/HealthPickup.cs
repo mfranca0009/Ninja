@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class HealthPickup : MonoBehaviour
@@ -9,6 +8,9 @@ public class HealthPickup : MonoBehaviour
     
     [Tooltip("The amount of health the pickup will give the player")]
     [SerializeField] private float healthAmount = 25f;
+
+    [Tooltip("The amount of time the pickup will last while untouched by player")] 
+    [SerializeField] private float lifetimeTimer = 10f;
 
     [Header("Sound Effect Settings")] 
     
@@ -33,32 +35,60 @@ public class HealthPickup : MonoBehaviour
         _soundManager = FindObjectOfType<SoundManager>();
     }
 
+    private void Update()
+    {
+        UpdateLifetime();
+    }
+
     private void OnCollisionEnter2D(Collision2D col)
     {
-        LayerMask playerMask = LayerMask.NameToLayer("Player");
         LayerMask groundMask = LayerMask.NameToLayer("Ground");
         LayerMask collidingObjectLayer = col.gameObject.layer;
 
-        if (collidingObjectLayer != playerMask && collidingObjectLayer != groundMask)
+        if (collidingObjectLayer != groundMask || !_soundManager)
             return;
 
-        if (collidingObjectLayer == playerMask)
-        {
-            Health health = col.gameObject.GetComponent<Health>();
+        _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+    }
 
-            if (!health)
-                return;
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        LayerMask playerMask = LayerMask.NameToLayer("Player");
+        LayerMask triggerObjectLayer = col.gameObject.layer;
 
-            if (_soundManager)
-                _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+        if (triggerObjectLayer != playerMask)
+            return;
+
+        Health health = col.gameObject.GetComponent<Health>();
+
+        if (!health)
+            return;
+
+        if (_soundManager)
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
             
-            health.DealHeal(healthAmount);
+        health.DealHeal(healthAmount);
 
-            Destroy(gameObject);
-        }
-        else if (collidingObjectLayer == groundMask && _soundManager)
-            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+        Destroy(gameObject);
     }
     
+    #endregion
+
+    #region Update Methods
+
+    /// <summary>
+    /// Update lifetime timer, when it expires the pickup will be destroyed.
+    /// </summary>
+    private void UpdateLifetime()
+    {
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (lifetimeTimer <= 0f)
+            Destroy(gameObject);
+        else
+            lifetimeTimer -= Time.deltaTime;
+    }
+
     #endregion
 }

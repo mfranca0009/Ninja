@@ -328,7 +328,7 @@ public class EnemyCombat : MonoBehaviour
     /// </summary>
     private void ExecuteRandomMeleeAttack()
     {
-        if (_meleeAttackTimer <= 0)
+        if (_meleeAttackTimer <= 0f)
         {
             AttackType = AttackType.Melee;
             
@@ -356,7 +356,7 @@ public class EnemyCombat : MonoBehaviour
     /// </summary>
     private void ExecuteRangeAttack()
     {
-        if (_rangeAttackTimer <= 0)
+        if (_rangeAttackTimer <= 0f)
         {
             AttackType = AttackType.Ranged;
             AttackState = AttackState.ThrowKnife;
@@ -384,7 +384,7 @@ public class EnemyCombat : MonoBehaviour
         if (!shouldAdvanceToTarget && AdvanceTarget)
             return;
 
-        if (_advanceTargetTimer <= 0)
+        if (_advanceTargetTimer <= 0f)
         {
             AdvanceTarget = true;
             _advanceTargetTimer = advanceTargetTime;
@@ -398,7 +398,7 @@ public class EnemyCombat : MonoBehaviour
         if (!shouldAdvanceToTarget && !AdvanceTarget)
             return;
 
-        if (_stopAdvanceTargetTimer <= 0)
+        if (_stopAdvanceTargetTimer <= 0f)
         {
             AdvanceTarget = false;
             _stopAdvanceTargetTimer = stopAdvanceTargetTime;
@@ -459,6 +459,7 @@ public class EnemyCombat : MonoBehaviour
         throwKnife.Owner = gameObject;
         throwKnife.ThrowLeft = transform.localScale.x < 0;
         knifeSpriteRenderer.sprite = throwKnifeSprite;
+        knifeSpriteRenderer.sortingLayerID = SortingLayer.NameToID("EnemyEffects");
         knifeToCreate.transform.Find("Hitbox").gameObject.layer = LayerMask.NameToLayer("EnemyRangeAttack");
 
         knifeToCreate.transform.position +=

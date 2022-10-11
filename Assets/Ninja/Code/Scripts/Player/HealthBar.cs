@@ -1,25 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    private const float MAX_HEALTH = 100f;
+    // UI
+    public Image healthBar;
 
-    public float health = MAX_HEALTH;
-
-    private Image healthBar;
+    // States
+    private bool _healthSet;
+    
+    // Health
+    private Health _health;
+    
+    // Game Manager
+    private GameManager _gameManager;
+    
+    // Scene Manager
+    private SceneManagement _sceneManagement;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        healthBar = GetComponent<Image>();
+        _gameManager = FindObjectOfType<GameManager>();
+        _sceneManagement = FindObjectOfType<SceneManagement>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        healthBar.fillAmount = health / MAX_HEALTH;
+        if (!_gameManager)
+            return;
+        
+        if (!_health || !_sceneManagement.HasBuildIndex(SceneManager.GetActiveScene(), 0))
+            _health = _gameManager.Player.GetComponent<Health>();
+        
+        if (!_health)
+            return;
+        
+        healthBar.fillAmount = _health.HealthPoints / _health.maxHealth;
     }
 }

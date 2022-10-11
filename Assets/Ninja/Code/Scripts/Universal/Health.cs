@@ -27,12 +27,15 @@ public class Health : MonoBehaviour
     
     [Tooltip("Maximum health points to start with on spawn")]
     public float maxHealth = 100f;
-    
+
+    [Tooltip("Is this the player gameobject?")]
+    public bool isPlayer;
+
     #endregion
 
     #region Serialized Fields
 
-    [Header("Death Settings")] 
+    [Header("Enemy Death Settings")] 
     
     [Tooltip("Enable destroy of gameobject after death and item drop")] 
     [SerializeField] private bool shouldDestroyAfterDeath = true;
@@ -71,8 +74,17 @@ public class Health : MonoBehaviour
 
     // Death
     private BoxCollider2D _boxCollider2D;
-    private bool _playedDeathAnimation;
+    private bool _skipDeathAnimation;
     private ItemDrop _enemyItemDrop;
+    
+    // Game Manager
+    private GameManager _gameManager;
+    
+    // UI Manager
+    private UIManager _uiManager;
+    
+    // Player Scripts
+    private PlayerMovement _playerMovement;
     
     #endregion
 
@@ -84,25 +96,41 @@ public class Health : MonoBehaviour
         _boxCollider2D = GetComponent<BoxCollider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _soundManager = FindObjectOfType<SoundManager>();
+        _gameManager = FindObjectOfType<GameManager>();
+        _uiManager = FindObjectOfType<UIManager>();
         HealthPoints = maxHealth;
     }
-
+    
     // Update is called once per frame
     private void Update()
     {
-        if (!Dead)
-            return;
+        // Call this in Update to retrieve once, cannot call from Awake/Start because the game manager retrieves
+        // the player// through the Update loop due to it being a persistent object.
+        if (!_playerMovement && _gameManager && _gameManager.Player && isPlayer)
+            _playerMovement = _gameManager.Player.GetComponent<PlayerMovement>();
+
+        switch (Dead)
+        {
+            case true when !_skipDeathAnimation:
+                _animator.SetBool("IsDead", Dead);
+                break;
+            case false:
+                _animator.SetBool("IsDead", Dead);
+                return;
+        }
 
         if (_enemyItemDrop && _enemyItemDrop.HasDroppedItems && shouldDestroyAfterDeath)
             Destroy(gameObject, destroyDelay);
-
-        if (_playedDeathAnimation)
-            return;
         
-        _animator.SetTrigger("Dead");
-        _playedDeathAnimation = true;
-        _boxCollider2D.enabled = false;
-        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        // FIXME: this should be checking if player is grounded, but death animation triggers
+        // not being grounded due to fall back. Player falls through floor in this case even when he was on ground.
+        if (_playerMovement &&  (_playerMovement.IsJumping() || _playerMovement.IsFalling()))
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX;
+        else
+        {
+            _boxCollider2D.enabled = false;
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
     }
     
     #endregion
@@ -129,18 +157,34 @@ public class Health : MonoBehaviour
             if (invoker)
                 Killer = invoker;
 
-            _enemyItemDrop = GetComponent<ItemDrop>();
+            switch (isPlayer)
+            {
+                case false:
+                    _enemyItemDrop = GetComponent<ItemDrop>();
+                    break;
+                // Verify if the player is dying and reduce the lives count if not 0.
+                case true when _gameManager.Lives > 0 && _gameManager && _uiManager:
+                    _gameManager.Lives--;
+                    _uiManager.UpdateLivesUI(_gameManager.Lives);
+                    break;
+            }
 
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}. {gameObjectName} has been killed!");
         }
         else
         {
             HealthPoints -= damage;
-            
+
             EnemyCombat enemyCombat = GetComponent<EnemyCombat>();
-            if (enemyCombat && invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
-                enemyCombat.NotifyEngagement(invoker);
-            
+            if (enemyCombat)
+            {
+                if(invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
+                    enemyCombat.NotifyEngagement(invoker);
+
+                if (!_gameManager.TappedEnemiesHealth.Contains(this))
+                    _gameManager.TappedEnemiesHealth.Add(this);
+            }
+
             Debug.Log($"[Health/DealDamage] {gameObjectName} damaged for {damage}; {HealthPoints} remaining.");
         }
     }
@@ -172,13 +216,31 @@ public class Health : MonoBehaviour
     /// Instantly kill the gameobject that has this health script attached.
     /// </summary>
     /// <param name="skipDeathAnimation">Whether the death animation should be skipped or not.</param>
+    /// <param name="isPlayer">Whether this gameobject that is invoking this method is a player or not.</param>
     public void InstaKill(bool skipDeathAnimation)
     {
         HealthPoints = 0f;
         Dead = true;
-        _playedDeathAnimation = skipDeathAnimation;
+        _skipDeathAnimation = skipDeathAnimation;
+
+        if (!_gameManager || !isPlayer)
+            return;
+        
+        _gameManager.Lives--;
+        _uiManager.UpdateLivesUI(_gameManager.Lives);
     }
 
+    /// <summary>
+    /// Reset necessary attributes to bring the health component back to its clean state<br></br><br></br>
+    /// </summary>
+    public void Reset()
+    {
+        HealthPoints = maxHealth;
+        Dead = false;
+        _boxCollider2D.enabled = true;
+        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+    
     /// <summary>
     /// Play death sound effect.<br></br><br></br>
     /// Note: This is currently executed on its own by an Animation Event through the `Rogue_death_01` animation.
@@ -188,7 +250,7 @@ public class Health : MonoBehaviour
         if (!Dead || !_soundManager)
             return;
         
-        if(gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if(gameObject.CompareTag("Enemy"))
             _soundManager.RandomSoundEffect(AudioSourceType.DamageEffects, isOneShot, shouldRandomizePitch,
                 enemyDeathSoundClips);
         else

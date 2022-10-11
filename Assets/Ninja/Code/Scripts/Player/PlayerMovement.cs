@@ -128,7 +128,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void OnEnable()
-    { _movement = _playerInputActions.Player.Movement;
+    { 
+        _movement = _playerInputActions.Player.Movement;
         _movement.performed += OnMove;
         _movement.canceled += OnMoveCancel;
         _movement.Enable();
@@ -154,9 +155,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (_health.Dead)
-            return;
-        
         GroundCheckUpdate();
         MovementInputUpdate();
         AnimatorSpeedUpUpdate();
@@ -165,6 +163,7 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetFloat("VelocityX", _rigidBody2D.velocity.x);
         _animator.SetFloat("VelocityY", _rigidBody2D.velocity.y);
         _animator.SetBool("HasVelocityX", _rigidBody2D.velocity.x != 0);
+        _animator.SetBool("HasVelocityY", _rigidBody2D.velocity.y != 0);
 
         // Update sprint every update.
         _animator.SetBool("IsSprinting", _sprint.inProgress);
@@ -308,7 +307,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
     }
-    
+
     /// <summary>
     /// Update animator speed to better sync certain movement/combat animations
     /// </summary>
@@ -381,7 +380,7 @@ public class PlayerMovement : MonoBehaviour
         // Play one shot jump sound effect
         movementOneShotAudioSource.PlayOneShot(jumpSoundClip, movementOneShotAudioSource.volume);
     }
-    
+
     #endregion
     
     #region Public Helper Methods
@@ -434,7 +433,7 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isFacingLeft = transform.localScale.x < 0;
         
-        if (_movement.ReadValue<Vector2>() == Vector2.zero ||
+        if (_health.Dead || _movement.ReadValue<Vector2>() == Vector2.zero ||
             (_movement.ReadValue<Vector2>() == Vector2.left && isFacingLeft) ||
             (_movement.ReadValue<Vector2>() == Vector2.right && !isFacingLeft) ||
             _playerCombat.GetAttackState() == AttackState.SlowAttack)
@@ -462,7 +461,7 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to move, otherwise false.</returns>
     private bool CanMove()
     {
-        return _playerCombat.GetAttackState() != AttackState.SlowAttack && !IncomingKnockback;
+        return !_health.Dead && _playerCombat.GetAttackState() != AttackState.SlowAttack && !IncomingKnockback;
     }
 
     /// <summary>
@@ -471,7 +470,8 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to walk, otherwise false.</returns>
     private bool CanWalk()
     {
-        return _playerCombat.GetAttackState() != AttackState.SlowAttack && IsGrounded() && !IncomingKnockback;
+        return !_health.Dead && _playerCombat.GetAttackState() != AttackState.SlowAttack && IsGrounded() &&
+               !IncomingKnockback;
     }
     
     /// <summary>
@@ -480,7 +480,8 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>Returns true if player is allowed to jump, otherwise false.</returns>
     private bool CanJump()
     {
-        return _playerCombat.GetAttackState() != AttackState.SlowAttack && _jumpCount < maxJumps && !IncomingKnockback;
+        return !_health.Dead && _playerCombat.GetAttackState() != AttackState.SlowAttack && _jumpCount < maxJumps &&
+               !IncomingKnockback;
     }
 
     #endregion

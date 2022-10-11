@@ -65,8 +65,14 @@ TagManager:
   - name: EnemyEffects
     uniqueID: 857245073
     locked: 0
+  - name: EnemyParticles
+    uniqueID: 2436243361
+    locked: 0
   - name: Player
     uniqueID: 4127648755
+    locked: 0
+  - name: PlayerEffects
+    uniqueID: 961294865
     locked: 0
   - name: PlayerParticles
     uniqueID: 2022659

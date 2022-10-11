@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
 {
-    public string levelToLoad = "";
+    public string levelToLoad;
 
     //Scroll Motion
     [SerializeField] private float amplifier = 0.3f;
@@ -19,17 +17,19 @@ public class PROTOTYPE_MoveToNextLevel : MonoBehaviour
     {
         _sceneManager = FindObjectOfType<SceneManagement>();
         _UIManager = FindObjectOfType<UIManager>();
-        _UIManager.ShowScrollUI(false);
+        
+        if (_UIManager)
+            _UIManager.ShowScrollUI(false);
 
         _homePos = transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            _UIManager.ShowScrollUI(true);
-        }
+        if (!collision.gameObject.CompareTag("Player") || !_UIManager)
+            return;
+        
+        _UIManager.ShowScrollUI(true);
     }
 
     void Update()

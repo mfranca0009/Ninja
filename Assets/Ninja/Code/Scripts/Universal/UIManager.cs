@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-// TODO: pausing the game via Time.timeScale not working anymore.
+// TODO: Move keybind related input to the `PlayerInputAction` asset.
 
 public class UIManager : MonoBehaviour
 {
@@ -16,6 +16,10 @@ public class UIManager : MonoBehaviour
 	public Canvas soundSettingsCanvas;
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
+	public Image[] livesImages; 
+
+	// Sprite prefabs
+	public Sprite[] livesSprites;
 
 	// Sound Settings 
 	private Dictionary<string, Slider> _slidersChanged;
@@ -23,20 +27,23 @@ public class UIManager : MonoBehaviour
 	private float[] _soundSettingChanges;
 	private bool _hasAppliedSoundSettings;
 
-	// Scene
+	// Scene Management
+	private SceneManagement _sceneManagement;
 	private Scene _currentScene;
 	private bool _paused;
-	
+
 	// UI States
 	private bool _pauseShown;
-	
+
 	// Scripts
 	private Health _playerHealth;
 	private SoundManager _soundManager;
 
 	private void Start()
 	{
+		_sceneManagement = FindObjectOfType<SceneManagement>();
 		_soundManager = FindObjectOfType<SoundManager>();
+
 		_currSoundSettings = new float[(int)AudioMixerGroup.Max];
 
 		// default to max volume for current sound settings.
@@ -58,30 +65,24 @@ public class UIManager : MonoBehaviour
 		ShowPauseUI(false);
 		ShowFinishedUI(false);
 		ShowScrollUI(false);
-
-		//Checks to make sure MainLevel is the loaded level
-		Scene currentScene = SceneManager.GetActiveScene();
-		if (currentScene.name == "_Main") {
-			// TODO turn on once we determine the bool for when the player is dead/alive
-			_playerHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
-			//playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-		}
 	}
 
 	// Update is called once per frame
 	private void Update()
 	{
 		_currentScene = SceneManager.GetActiveScene();
+		
+		ShowMainMenuUI(_sceneManagement.HasBuildIndex(_currentScene, 0));
+		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
 
-		ShowMainMenuUI(HasBuildIndex(_currentScene, 0));
-
-		//uses the p button to pause and unpause the game
-		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !HasBuildIndex(_currentScene, 0))
+		//uses the p or escape button to pause and unpause the game
+		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) &&
+		    !_sceneManagement.HasBuildIndex(_currentScene, 0))
 		{
 			ShowPauseUI(!_pauseShown);
 
 			// If the game is no longer paused, but the settings or sound settings menu was active as well,
-			// hide the sound or sound settings menus at the same time.
+			// hide the settings or sound settings menus at the same time.
 			if (!_paused)
 			{
 				switch (settingsCanvas.gameObject.activeInHierarchy)
@@ -95,15 +96,6 @@ public class UIManager : MonoBehaviour
 				}
 			}
 		}
-
-		//shows finish gameobjects if player is dead and timescale = 0 (DO NOT REMOVE THIS LINE)
-		//if (Time.timeScale == 0 && playerController.alive == false)
-		// if (Time.timeScale == 0f && _playerHealth.Dead)
-		// {
-		// 	showFinished();
-		// }
-		ShowFinishedUI(_playerHealth.Dead);
-		ShowHealthUI(!HasBuildIndex(_currentScene, 0));
 	}
 
 
@@ -281,6 +273,20 @@ public class UIManager : MonoBehaviour
 		healthCanvas.gameObject.SetActive(show);
 	}
 
+	public void UpdateLivesUI(int livesLeft)
+	{
+		foreach (Image lifeImage in livesImages)
+		{
+			lifeImage.sprite = lifeImage.gameObject.name switch
+			{
+				"Live_3" => livesLeft < 3 ? livesSprites[0] : livesSprites[2],
+				"Live_2" => livesLeft < 2 ? livesSprites[0] : livesSprites[2],
+				"Live_1" => livesLeft < 1 ? livesSprites[0] : livesSprites[2],
+				_ => lifeImage.sprite
+			};
+		}
+	}
+	
 	public void ShowScrollUI(bool show)
 	{
 		//foreach (GameObject g in scrollCanvas)
@@ -294,11 +300,9 @@ public class UIManager : MonoBehaviour
 	{
 		if (!_paused)
 			Time.timeScale = show ? 0f : 1f;
-		
+
 		foreach (GameObject g in _finishObjects)
-		{
 			g.SetActive(show);
-		}
 	}
 
 	///
@@ -330,19 +334,9 @@ public class UIManager : MonoBehaviour
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	}
-
-	public bool HasBuildIndex(Scene scene, params int[] buildIndices)
-	{
-		foreach (int buildIndex in buildIndices)
-			if (scene.buildIndex == buildIndex)
-				return true;
-
-		return false;
-	}
 	
 	public void QuitGame()
 	{
 		Application.Quit();
 	}
-
 }

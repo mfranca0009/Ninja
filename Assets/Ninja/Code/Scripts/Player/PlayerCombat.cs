@@ -209,7 +209,7 @@ public class PlayerCombat : MonoBehaviour
         if (!HasMeleeStrengthBoost)
             return;
 
-        if (StrengthBoostTimer <= 0)
+        if (StrengthBoostTimer <= 0f)
         {
             HasMeleeStrengthBoost = false;
             MeleeWeapon meleeWeapon;
@@ -316,6 +316,7 @@ public class PlayerCombat : MonoBehaviour
         throwKnife.Owner = gameObject;
         throwKnife.ThrowLeft = transform.localScale.x < 0;
         knifeSpriteRenderer.sprite = throwKnifeSprite;
+        knifeSpriteRenderer.sortingLayerID = SortingLayer.NameToID("PlayerEffects");
         knifeToCreate.transform.Find("Hitbox").gameObject.layer = LayerMask.NameToLayer("PlayerRangeAttack");
 
         knifeToCreate.transform.position +=

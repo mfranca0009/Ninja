@@ -67,6 +67,9 @@ public class ItemDrop : MonoBehaviour
     // Item drop
     private int _droppedItemsCount;
     
+    // Game Manager
+    private GameManager _gameManager;
+    
     // Health script
     private Health _health;
     
@@ -79,6 +82,7 @@ public class ItemDrop : MonoBehaviour
     
     private void Awake()
     {
+        _gameManager = FindObjectOfType<GameManager>();
         _health = GetComponent<Health>();
 
         // RNG seed setup
@@ -165,6 +169,9 @@ public class ItemDrop : MonoBehaviour
                 _ => 0f
             };
 
+            if(_gameManager)
+                _gameManager.ActiveItemDrops.Add(itemToDrop);
+            
             itemToDrop.SetActive(true);
             _droppedItemsCount++;
         }

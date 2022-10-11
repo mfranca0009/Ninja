@@ -16,6 +16,9 @@ public class StrengthPickup : MonoBehaviour
     [Tooltip("The extend duration, in seconds, to increase the melee strength boost timer")] 
     [SerializeField] private float extendDuration = 15f;
     
+    [Tooltip("The amount of time the pickup will last while untouched by player")] 
+    [SerializeField] private float lifetimeTimer = 10f;
+    
     [Header("Sound Effect Settings")] 
     
     [Tooltip("The sound effect when picking up this item")]
@@ -39,61 +42,89 @@ public class StrengthPickup : MonoBehaviour
         _soundManager = FindObjectOfType<SoundManager>();
     }
 
+    private void Update()
+    {
+        UpdateLifetime();
+    }
+
     private void OnCollisionEnter2D(Collision2D col)
     {
-        LayerMask playerMask = LayerMask.NameToLayer("Player");
         LayerMask groundMask = LayerMask.NameToLayer("Ground");
         LayerMask collidingObjectLayer = col.gameObject.layer;
 
-        if (collidingObjectLayer != playerMask && collidingObjectLayer != groundMask)
+        if (collidingObjectLayer != groundMask || !_soundManager)
             return;
 
-        if (collidingObjectLayer == playerMask)
-        {
-            PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
+        _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        LayerMask playerMask = LayerMask.NameToLayer("Player");
+        LayerMask collidingObjectLayer = col.gameObject.layer;
+
+        if (collidingObjectLayer != playerMask)
+            return;
+
+        PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
         
-            if (!playerCombat)
-                return;
+        if (!playerCombat)
+            return;
 
-            if (!playerCombat.HasMeleeStrengthBoost)
+        if (!playerCombat.HasMeleeStrengthBoost)
+        {
+            playerCombat.HasMeleeStrengthBoost = true;
+            playerCombat.StrengthBoostTimer = baseDuration;
+            MeleeWeapon meleeWeapon;
+
+            if (playerCombat.meleeWeaponLeft)
             {
-                playerCombat.HasMeleeStrengthBoost = true;
-                playerCombat.StrengthBoostTimer = baseDuration;
-                MeleeWeapon meleeWeapon;
+                meleeWeapon = playerCombat.meleeWeaponLeft.GetComponent<MeleeWeapon>();
 
-                if (playerCombat.meleeWeaponLeft)
-                {
-                    meleeWeapon = playerCombat.meleeWeaponLeft.GetComponent<MeleeWeapon>();
+                if (!meleeWeapon)
+                    return;
 
-                    if (!meleeWeapon)
-                        return;
-
-                    meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
-                    meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
-                }
-
-                if (playerCombat.meleeWeaponRight)
-                {
-                    meleeWeapon = playerCombat.meleeWeaponRight.GetComponent<MeleeWeapon>();
-
-                    if (!meleeWeapon)
-                        return;
-
-                    meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
-                    meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
-                }
+                meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
+                meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
             }
-            else
-                playerCombat.StrengthBoostTimer += extendDuration;
 
-            if (_soundManager)
-                _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
-            
-            Destroy(gameObject);   
+            if (playerCombat.meleeWeaponRight)
+            {
+                meleeWeapon = playerCombat.meleeWeaponRight.GetComponent<MeleeWeapon>();
+
+                if (!meleeWeapon)
+                    return;
+
+                meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
+                meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
+            }
         }
-        else if (collidingObjectLayer == groundMask && _soundManager)
-            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+        else
+            playerCombat.StrengthBoostTimer += extendDuration;
+
+        if (_soundManager)
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            
+        Destroy(gameObject);   
     }
     
+    #endregion
+    
+    #region Update Methods
+
+    /// <summary>
+    /// Update lifetime timer, when it expires the pickup will be destroyed.
+    /// </summary>
+    private void UpdateLifetime()
+    {
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        if (lifetimeTimer <= 0f)
+            Destroy(gameObject);
+        else
+            lifetimeTimer -= Time.deltaTime;
+    }
+
     #endregion
 }

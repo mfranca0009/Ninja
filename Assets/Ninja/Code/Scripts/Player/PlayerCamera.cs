@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour
 {
     #region Serialized Fields
+    
     [Tooltip("The camera that will follow the target")]
     [SerializeField] private new Camera camera;
 
@@ -23,18 +24,25 @@ public class PlayerCamera : MonoBehaviour
     
     [Tooltip("Max speed the camera is allowed to accelerate up to during smoothing")]
     [SerializeField] private float maxSmoothSpeed = 50f;
+    
     #endregion
     
     #region Private Fields
+    
+    // Rigidbody / Physics
     private Rigidbody2D _rigidbody;
+    
+    // Camera
     private UpdateMode _updateMode;
     private Vector3 _currentPlayerPosition;
     private Vector3 _currentCameraPosition;
     private Vector3 _smoothVelocity;
     private bool _positionChanged;
+    
     #endregion
     
     #region Unity Events
+    
     private void Start()
     {
         _smoothVelocity = Vector2.zero;
@@ -58,9 +66,11 @@ public class PlayerCamera : MonoBehaviour
         if (_updateMode == UpdateMode.FixedUpdate)
             CameraUpdate();
     }
+    
     #endregion
 
     #region Update Methods
+    
     /// <summary>
     /// Update target position and determine if camera position is off.
     /// </summary>
@@ -73,9 +83,11 @@ public class PlayerCamera : MonoBehaviour
 
         _positionChanged = true;
     }
+    
     #endregion
 
     #region Variable Update Methods
+    
     /// <summary>
     /// Update camera position to follow target.
     /// </summary>
@@ -83,7 +95,7 @@ public class PlayerCamera : MonoBehaviour
     {
         if (!_positionChanged)
             return;
-        
+
         // Default target position to be used before assessing features enabled.
         Vector3 targetPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset,
             _currentPlayerPosition.y + verticalOffset,
@@ -119,5 +131,23 @@ public class PlayerCamera : MonoBehaviour
 
         _positionChanged = false;
     }
+    
+    #endregion
+
+    #region Public Helper Methods
+
+    /// <summary>
+    /// Set the camera position instantly without any special effects.
+    /// </summary>
+    /// <param name="position">The position to relocate the camera.</param>
+    public void SetCameraPosition(Vector2 position)
+    {
+        Vector3 newPos = new Vector3(position.x + horizontalOffset, position.y + verticalOffset,
+            camera.transform.position.z);
+        
+        camera.transform.position = newPos;
+        _currentCameraPosition = newPos;
+    }
+
     #endregion
 }
