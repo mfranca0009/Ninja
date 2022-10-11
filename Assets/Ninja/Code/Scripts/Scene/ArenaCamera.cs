@@ -46,12 +46,13 @@ public class ArenaCamera : MonoBehaviour
     {
         _miniBossHealth = miniBoss.GetComponent<Health>();
         arenaCameraLockPosition = arenaCamera.transform.position;
-        cameraMoveSpeed = 6 * Time.deltaTime;
     }
 
     // Update is called once per frame
     void Update()
     {
+        cameraMoveSpeed = 8 * Time.deltaTime;
+
         //If arena cam is active, move it to be centered in the arena. 
         if (arenaCamera.isActiveAndEnabled && !_miniBossHealth.Dead)
         {

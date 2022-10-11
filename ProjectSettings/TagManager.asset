@@ -53,9 +53,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Foreground
+  - name: Terrain
     uniqueID: 3370871555
     locked: 0
-  - name: Foremost
+  - name: TerrainEffects
+    uniqueID: 1876539389
+    locked: 0
+  - name: Enemies
     uniqueID: 2721488067
+    locked: 0
+  - name: EnemyEffects
+    uniqueID: 857245073
+    locked: 0
+  - name: Player
+    uniqueID: 4127648755
+    locked: 0
+  - name: PlayerParticles
+    uniqueID: 2022659
+    locked: 0
+  - name: Foreground
+    uniqueID: 3135010605
     locked: 0
