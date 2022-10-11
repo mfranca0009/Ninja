@@ -459,6 +459,7 @@ public class EnemyCombat : MonoBehaviour
         throwKnife.Owner = gameObject;
         throwKnife.ThrowLeft = transform.localScale.x < 0;
         knifeSpriteRenderer.sprite = throwKnifeSprite;
+        knifeSpriteRenderer.sortingLayerID = SortingLayer.NameToID("EnemyEffects");
         knifeToCreate.transform.Find("Hitbox").gameObject.layer = LayerMask.NameToLayer("EnemyRangeAttack");
 
         knifeToCreate.transform.position +=
