@@ -1527,6 +1527,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8046720978344592385, guid: d8222b54f00dead468106de937b294d8, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8046720978344592385, guid: d8222b54f00dead468106de937b294d8, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: d8222b54f00dead468106de937b294d8, type: 3}
@@ -1737,6 +1745,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: platform-detail-03
       objectReference: {fileID: 0}
+    - target: {fileID: 3043887842111933677, guid: ae68236ed9ab8c441bf1fe4b8e3b4e12, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3043887842111933677, guid: ae68236ed9ab8c441bf1fe4b8e3b4e12, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: ae68236ed9ab8c441bf1fe4b8e3b4e12, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -1916,8 +1932,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8415096822302649607, guid: 9a3f50417e4cf3345bf58d8ad383a30a, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: 9a3f50417e4cf3345bf58d8ad383a30a, type: 3}
       propertyPath: m_SortingOrder
       value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: 9a3f50417e4cf3345bf58d8ad383a30a, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -2051,34 +2075,6 @@ PrefabInstance:
       propertyPath: scroll
       value: 
       objectReference: {fileID: 731935193}
-    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: timesHitBeforeTeleporting
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: waypoints.Array.data[0].teleportPosition.x
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: waypoints.Array.data[0].teleportPosition.y
-      value: -1.847
-      objectReference: {fileID: 0}
-    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: waypoints.Array.data[1].teleportPosition.x
-      value: -6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6169659395082176971, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: waypoints.Array.data[1].teleportPosition.y
-      value: -1.847
-      objectReference: {fileID: 0}
-    - target: {fileID: 6169659395082176973, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: m_Mass
-      value: 2.3659167
-      objectReference: {fileID: 0}
-    - target: {fileID: 6169659395082176973, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}
-      propertyPath: m_Constraints
-      value: 4
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: a52e52ad70b808b4ba88474b77e23d33, type: 3}

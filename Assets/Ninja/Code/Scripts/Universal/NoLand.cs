@@ -77,9 +77,9 @@ public class NoLand : MonoBehaviour
             forceMode2D);
 
         // If no damage should occur, then leave the method body now.
-        if (!shouldDamage)
+        if (!shouldDamage || col.gameObject.layer != LayerMask.NameToLayer("Player"))
             return;
-        
+
         // Play hit sound effect
         if (_soundManager)
             _soundManager.PlaySoundEffect(AudioSourceType.DamageEffects, landHitSoundClip);

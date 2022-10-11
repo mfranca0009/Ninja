@@ -171,6 +171,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_health.Dead)
+        {
+            movementAudioSource.Pause();
+            return;
+        }
+
         MovementFixedUpdate();
         JumpFixedUpdate();
     }
