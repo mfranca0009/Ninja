@@ -6,24 +6,28 @@ public class CloudScroller : MonoBehaviour
 {
 
     [Tooltip("This value deternmines how fast the object scrolls accross the screen. Negitive values moves it right.")]
-    public float Speed = 0.0f;
+    public float Speed = 1.0f;
 
     [Tooltip("Player is the object the clouds should be \"orbiting\"")]
     public GameObject player;
 
     private float step = 0.0f;
-    private Vector3 targetPoint; 
+    private Vector3 targetPoint;
 
     // Start is called before the first frame update
     void Start()
     {
-        step = Speed * Time.deltaTime;
         targetPoint = new Vector3(-99, transform.position.y, transform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale == 0)
+            return;
+
+        step = Speed * Time.deltaTime;
+
         transform.position = Vector3.MoveTowards(transform.position, targetPoint, step);
 
         //If off the left side of the screen, move cloud to off the right side of the screen. 
@@ -41,5 +45,6 @@ public class CloudScroller : MonoBehaviour
                 transform.position.y,
                 transform.position.z);
         }
+        
     }
 }

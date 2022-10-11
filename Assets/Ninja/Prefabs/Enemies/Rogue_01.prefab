@@ -194,7 +194,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1.6032361
+  m_Mass: 10
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -247,13 +247,13 @@ MonoBehaviour:
   applyRandomMovement: 1
   loopWaypointPath: 0
   waypoints: []
-  waypointReachedTolerance: 0.03
+  waypointReachedTolerance: 0.3
   randomizeRunWalk: 0
   alwaysRun: 0
   alwaysWalk: 1
   noRandomDelay: 0
   maxTravelDistance: 3
-  randomPointReachedTolerance: 0.03
+  randomPointReachedTolerance: 0.3
   minDelay: 1.5
   maxDelay: 3
   movementAudioSource: {fileID: -8043743118150900717}
@@ -327,6 +327,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
+  shouldDestroyAfterDeath: 1
+  destroyDelay: 2
   playerDeathSoundClip: {fileID: 0}
   shouldRandomizePitch: 0
   isOneShot: 1

@@ -12,7 +12,8 @@ public class BackgroundScroller : MonoBehaviour
     [Tooltip("How far ahead of the Camera you want the object to start")]
     public float xLead = 0;
    
-    public GameObject Camera;
+    public Camera _camera;
+    public Camera backupCamera;
 
     private GameObject asset;
     
@@ -24,6 +25,14 @@ public class BackgroundScroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        asset.transform.position = new Vector3((Camera.transform.position.x * (followCameraAccuracy/100)) + xLead, 0, 0);
+        if (_camera.isActiveAndEnabled)
+        {
+            asset.transform.position = new Vector3((_camera.transform.position.x * (followCameraAccuracy / 100)) + xLead, 0, 0);
+        }
+        else
+        {
+            asset.transform.position = new Vector3((backupCamera.transform.position.x * (followCameraAccuracy / 100)) + xLead, 0, 0);
+        }
     }
 }
+
