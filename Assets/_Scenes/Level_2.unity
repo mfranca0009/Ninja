@@ -616,8 +616,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
       propertyPath: m_SortingOrder
       value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1499,17 +1507,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: platform-detail-03 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3043887842111933677, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
+      propertyPath: m_SortingLayer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3043887842111933677, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1159956691
+      objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_RootOrder
       value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 88.29576
+      value: 88.4
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6796331
+      value: 1.46
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2959,7 +2975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5801749
+      value: 1.29
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4186,8 +4202,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
       propertyPath: m_SortingOrder
       value: -11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -5536,8 +5560,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
       propertyPath: m_SortingOrder
       value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -5673,6 +5705,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2088129700, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
+      propertyPath: shouldDamage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1000013304306144, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: m_Name
       value: Renu(Miniboss)
@@ -5683,7 +5719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011914616612, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 173.67
+      value: 189.08
       objectReference: {fileID: 0}
     - target: {fileID: 4000011914616612, guid: 88cd3627f059be742bec4b1d6ef9dc2f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5993,8 +6029,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
       propertyPath: m_SortingOrder
       value: -12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415096822302649607, guid: a84934719a7769f4796bf2dc0349d996, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -6720,7 +6764,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6001702134869625854, guid: 4d0cdf59c00c6f94aa1ab95de2d93be1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5801749
+      value: 1.38
       objectReference: {fileID: 0}
     - target: {fileID: 6001702134869625854, guid: 4d0cdf59c00c6f94aa1ab95de2d93be1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8085,7 +8129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6902323
+      value: 1.465
       objectReference: {fileID: 0}
     - target: {fileID: 7072122071907360956, guid: db46af9ed5c4f464d884e71db41ed224, type: 3}
       propertyPath: m_LocalPosition.z
