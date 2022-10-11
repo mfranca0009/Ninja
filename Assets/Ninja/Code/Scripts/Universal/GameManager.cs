@@ -81,8 +81,9 @@ public class GameManager : MonoBehaviour
     // UI Manager
     private UIManager _uiManager;
     
-    // Player
+    // Player Scripts
     private Health _playerHealth;
+    private PlayerCombat _playerCombat;
     private PlayerCamera _playerCamera;
     
     // Timers
@@ -134,6 +135,7 @@ public class GameManager : MonoBehaviour
         {
             UpdateDeathResetTimer();
             WipeActiveItemDrops();
+            WipePlayerBuffs();
             RestoreEnemiesHealth();
             UpdateGameOverTimer();
         }
@@ -210,7 +212,7 @@ public class GameManager : MonoBehaviour
         if (!_playerHealth.Dead || Lives == 0)
             return;
         
-        if (_resetDelayTimer <= 0)
+        if (_resetDelayTimer <= 0f)
         {
             Vector2 relocatePos = GetRespawnPositionForLevel(_currScene, LevelMidpointReached);
             _playerHealth.Reset();
@@ -230,7 +232,7 @@ public class GameManager : MonoBehaviour
         if (!_uiManager || !_playerHealth.Dead || Lives > 0 || _gameOver)
             return;
         
-        if (_gameOverDelayTimer <= 0)
+        if (_gameOverDelayTimer <= 0f)
         {
             _uiManager.ShowFinishedUI(true);
             _gameOverDelayTimer = gameOverDelay;
@@ -257,6 +259,20 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Wipe all active buffs from item pickups from player.
+    /// </summary>
+    private void WipePlayerBuffs()
+    {
+        if (!_playerHealth.Dead || Lives == 0 || (_playerCombat.MaxKnives == 1 && _playerCombat.HasMeleeStrengthBoost ==
+                false && _playerCombat.StrengthBoostTimer <= 0f))
+            return;
+
+        _playerCombat.MaxKnives = 1;
+        _playerCombat.HasMeleeStrengthBoost = false;
+        _playerCombat.StrengthBoostTimer = 0f;
+    }
+    
+    /// <summary>
     /// Restore health of enemies that were tapped by player and have not died as long as they
     /// are still valid references in the current level.
     /// </summary>
@@ -274,10 +290,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void RetrievePlayerScripts()
     {
-        if (_sceneManagement.HasBuildIndex(_currScene, 0) || !Player || (Player && _playerHealth && _playerCamera))
+        if (_sceneManagement.HasBuildIndex(_currScene, 0) || !Player ||
+            (Player && _playerHealth && _playerCombat && _playerCamera))
             return;
 
         _playerHealth = Player.GetComponent<Health>();
+        _playerCombat = Player.GetComponent<PlayerCombat>();
         _playerCamera = Player.GetComponent<PlayerCamera>();
     }
     

@@ -34,7 +34,7 @@ public class RestartLevel : MonoBehaviour
         if (!_health.Dead)
             return;
 
-        if (_respawnTimer <= 0)
+        if (_respawnTimer <= 0f)
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         else
             _respawnTimer -= Time.deltaTime;

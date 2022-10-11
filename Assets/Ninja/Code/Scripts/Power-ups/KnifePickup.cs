@@ -80,7 +80,7 @@ public class KnifePickup : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             return;
 
-        if (lifetimeTimer <= 0)
+        if (lifetimeTimer <= 0f)
             Destroy(gameObject);
         else
             lifetimeTimer -= Time.deltaTime;

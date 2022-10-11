@@ -209,7 +209,7 @@ public class PlayerCombat : MonoBehaviour
         if (!HasMeleeStrengthBoost)
             return;
 
-        if (StrengthBoostTimer <= 0)
+        if (StrengthBoostTimer <= 0f)
         {
             HasMeleeStrengthBoost = false;
             MeleeWeapon meleeWeapon;

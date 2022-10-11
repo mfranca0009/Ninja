@@ -27,7 +27,7 @@ public class SwingingTrap : MonoBehaviour
             if (trapParent.transform.localScale.x >= 0.00f)
             {
                 blade.transform.Rotate(0.0f, 0.0f, rotationSpeed);
-                if (trap.transform.rotation.z <= -.92f) //Bassed on the z value of the rotation Quaterion
+                if (trap.transform.rotation.z <= -.92f) // Based on the z value of the rotation Quaternion
                 {
                     shouldRotate = false;
                 }
@@ -36,7 +36,7 @@ public class SwingingTrap : MonoBehaviour
             {
                 blade.transform.Rotate(0.0f, 0.0f, -rotationSpeed);
 
-                if (trap.transform.rotation.z >= .92f) //Bassed on the z value of the rotation Quaterion
+                if (trap.transform.rotation.z >= .92f) //Based on the z value of the rotation Quaternion
                 {
                     shouldRotate = false;
                 }
@@ -52,10 +52,10 @@ public class SwingingTrap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && hasActivated == false)
-        {
-            shouldRotate = true;
-            hasActivated = true;
-        }
+        if (!collision.gameObject.CompareTag("Player") || hasActivated)
+            return;
+        
+        shouldRotate = true;
+        hasActivated = true;
     }
 }
