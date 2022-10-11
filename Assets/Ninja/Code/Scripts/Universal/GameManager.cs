@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public bool Restarted { get; set; }
 
+    /// <summary>
+    /// Active item drops within current level
+    /// </summary>
+    public List<GameObject> ActiveItemDrops { get; private set; }
+    
     #endregion
     
     #region Serialized Fields
@@ -93,6 +98,7 @@ public class GameManager : MonoBehaviour
         _uiManager = FindObjectOfType<UIManager>();
         _resetDelayTimer = resetDelay;
         _gameOverDelayTimer = gameOverDelay;
+        ActiveItemDrops = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -104,8 +110,13 @@ public class GameManager : MonoBehaviour
 
         // If the scene is changed, update appropriate states.
         if (_currScene.buildIndex != _currSceneBuildIndex)
+        {
             LevelMidpointReached = false;
-        
+            
+            if (ActiveItemDrops.Count > 0)
+                ActiveItemDrops.Clear();
+        }
+
         // If the player does not exist or is invalid for this scene, then retrieve the player again.
         if (!Player || !Player.scene.IsValid())
             Player = GameObject.FindWithTag("Player");
@@ -113,10 +124,11 @@ public class GameManager : MonoBehaviour
         // Retrieve the required player scripts for the game manager if necessary.
         RetrievePlayerScripts();
         
-        // If the scene is not the menu, then we should be updating these timers when necessary.
+        // If the scene is not the menu, then we should be updating these timers and clean-ups when necessary.
         if (!_sceneManagement.HasBuildIndex(_currScene, 0))
         {
             UpdateDeathResetTimer();
+            WipeActiveItemDrops();
             UpdateGameOverTimer();
         }
 
@@ -138,7 +150,7 @@ public class GameManager : MonoBehaviour
         // Update the scene's build index
         _currSceneBuildIndex = _currScene.buildIndex;
     }
-    
+
     #endregion
 
     #region Update Methods
@@ -225,6 +237,18 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Private Helper Methods
+    
+    /// <summary>
+    /// Wipe all active item drops as long as they are still valid references in the current level.
+    /// </summary>
+    private void WipeActiveItemDrops()
+    {
+        if (!_playerHealth.Dead || Lives == 0 || ActiveItemDrops.Count == 0)
+            return;
+
+        ActiveItemDrops.FindAll(activeObj => activeObj).ForEach(Destroy);
+        ActiveItemDrops.Clear();
+    }
     
     /// <summary>
     /// Retrieve player scripts required for the game manager
