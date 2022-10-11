@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7579357130351951067}
   - component: {fileID: 6683146191807833571}
   - component: {fileID: 7728455838472081780}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: SmokeBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4840,7 +4840,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 857245073
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 5
   m_RenderMode: 0
   m_MeshDistribution: 0

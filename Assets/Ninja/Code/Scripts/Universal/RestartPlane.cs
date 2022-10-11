@@ -15,6 +15,7 @@ public class RestartPlane : MonoBehaviour
 
         if (collision.gameObject.tag == "Enemy")
         {
+            //Add Trigger for Being a Bully Achievement
             collision.gameObject.GetComponent<Health>().InstaKill(true);
             collision.gameObject.SetActive(false);
         }
