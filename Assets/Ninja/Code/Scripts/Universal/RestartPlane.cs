@@ -19,12 +19,12 @@ public class RestartPlane : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        bool isPlayer = collision.gameObject.CompareTag("Player");
 
-        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
+        if (!isPlayer && !collision.gameObject.CompareTag("Enemy"))
             return;
 
-        bool isPlayer = collision.gameObject.CompareTag("Player");
-        
+        //Add Trigger for Being a Bully Achievement
         collision.gameObject.GetComponent<Health>().InstaKill(true, isPlayer);
 
         if (isPlayer)
