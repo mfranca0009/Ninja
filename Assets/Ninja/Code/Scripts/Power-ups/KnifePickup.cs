@@ -40,32 +40,37 @@ public class KnifePickup : MonoBehaviour
     {
         UpdateLifetime();
     }
-    
+
     private void OnCollisionEnter2D(Collision2D col)
     {
-        LayerMask playerMask = LayerMask.NameToLayer("Player");
         LayerMask groundMask = LayerMask.NameToLayer("Ground");
         LayerMask collidingObjectLayer = col.gameObject.layer;
 
-        if (collidingObjectLayer != playerMask && collidingObjectLayer != groundMask)
+        if (collidingObjectLayer != groundMask || !_soundManager)
             return;
 
-        if (collidingObjectLayer == playerMask)
-        {
-            PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
+        _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+    }
+    
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        LayerMask playerMask = LayerMask.NameToLayer("Player");
+        LayerMask collidingObjectLayer = col.gameObject.layer;
+
+        if (collidingObjectLayer != playerMask)
+            return;
+
+        PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
         
-            if (!playerCombat)
-                return;
+        if (!playerCombat)
+            return;
 
-            playerCombat.MaxKnives += knifeAmount;
+        playerCombat.MaxKnives += knifeAmount;
 
-            if (_soundManager)
-                _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+        if (_soundManager)
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
             
-            Destroy(gameObject);   
-        }
-        else if (collidingObjectLayer == groundMask && _soundManager)
-            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+        Destroy(gameObject);
     }
     
     #endregion

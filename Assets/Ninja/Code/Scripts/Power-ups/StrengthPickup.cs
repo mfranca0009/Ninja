@@ -46,61 +46,66 @@ public class StrengthPickup : MonoBehaviour
     {
         UpdateLifetime();
     }
-    
+
     private void OnCollisionEnter2D(Collision2D col)
     {
-        LayerMask playerMask = LayerMask.NameToLayer("Player");
         LayerMask groundMask = LayerMask.NameToLayer("Ground");
         LayerMask collidingObjectLayer = col.gameObject.layer;
 
-        if (collidingObjectLayer != playerMask && collidingObjectLayer != groundMask)
+        if (collidingObjectLayer != groundMask || !_soundManager)
             return;
 
-        if (collidingObjectLayer == playerMask)
-        {
-            PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
+        _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        LayerMask playerMask = LayerMask.NameToLayer("Player");
+        LayerMask collidingObjectLayer = col.gameObject.layer;
+
+        if (collidingObjectLayer != playerMask)
+            return;
+
+        PlayerCombat playerCombat = col.gameObject.GetComponent<PlayerCombat>();
         
-            if (!playerCombat)
-                return;
+        if (!playerCombat)
+            return;
 
-            if (!playerCombat.HasMeleeStrengthBoost)
+        if (!playerCombat.HasMeleeStrengthBoost)
+        {
+            playerCombat.HasMeleeStrengthBoost = true;
+            playerCombat.StrengthBoostTimer = baseDuration;
+            MeleeWeapon meleeWeapon;
+
+            if (playerCombat.meleeWeaponLeft)
             {
-                playerCombat.HasMeleeStrengthBoost = true;
-                playerCombat.StrengthBoostTimer = baseDuration;
-                MeleeWeapon meleeWeapon;
+                meleeWeapon = playerCombat.meleeWeaponLeft.GetComponent<MeleeWeapon>();
 
-                if (playerCombat.meleeWeaponLeft)
-                {
-                    meleeWeapon = playerCombat.meleeWeaponLeft.GetComponent<MeleeWeapon>();
+                if (!meleeWeapon)
+                    return;
 
-                    if (!meleeWeapon)
-                        return;
-
-                    meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
-                    meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
-                }
-
-                if (playerCombat.meleeWeaponRight)
-                {
-                    meleeWeapon = playerCombat.meleeWeaponRight.GetComponent<MeleeWeapon>();
-
-                    if (!meleeWeapon)
-                        return;
-
-                    meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
-                    meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
-                }
+                meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
+                meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
             }
-            else
-                playerCombat.StrengthBoostTimer += extendDuration;
 
-            if (_soundManager)
-                _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
-            
-            Destroy(gameObject);   
+            if (playerCombat.meleeWeaponRight)
+            {
+                meleeWeapon = playerCombat.meleeWeaponRight.GetComponent<MeleeWeapon>();
+
+                if (!meleeWeapon)
+                    return;
+
+                meleeWeapon.LightAttackDmg *= meleeDamageMultiplier;
+                meleeWeapon.HeavyAttackDmg *= meleeDamageMultiplier;
+            }
         }
-        else if (collidingObjectLayer == groundMask && _soundManager)
-            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+        else
+            playerCombat.StrengthBoostTimer += extendDuration;
+
+        if (_soundManager)
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+            
+        Destroy(gameObject);   
     }
     
     #endregion

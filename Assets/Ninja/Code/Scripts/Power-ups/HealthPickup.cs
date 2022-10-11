@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class HealthPickup : MonoBehaviour
@@ -40,32 +39,37 @@ public class HealthPickup : MonoBehaviour
     {
         UpdateLifetime();
     }
-    
+
     private void OnCollisionEnter2D(Collision2D col)
     {
-        LayerMask playerMask = LayerMask.NameToLayer("Player");
         LayerMask groundMask = LayerMask.NameToLayer("Ground");
         LayerMask collidingObjectLayer = col.gameObject.layer;
 
-        if (collidingObjectLayer != playerMask && collidingObjectLayer != groundMask)
+        if (collidingObjectLayer != groundMask || !_soundManager)
             return;
 
-        if (collidingObjectLayer == playerMask)
-        {
-            Health health = col.gameObject.GetComponent<Health>();
+        _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+    }
 
-            if (!health)
-                return;
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        LayerMask playerMask = LayerMask.NameToLayer("Player");
+        LayerMask triggerObjectLayer = col.gameObject.layer;
 
-            if (_soundManager)
-                _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
+        if (triggerObjectLayer != playerMask)
+            return;
+
+        Health health = col.gameObject.GetComponent<Health>();
+
+        if (!health)
+            return;
+
+        if (_soundManager)
+            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, pickupSoundClip);
             
-            health.DealHeal(healthAmount);
+        health.DealHeal(healthAmount);
 
-            Destroy(gameObject);
-        }
-        else if (collidingObjectLayer == groundMask && _soundManager)
-            _soundManager.PlaySoundEffect(AudioSourceType.ItemEffects, hitGroundSoundClip);
+        Destroy(gameObject);
     }
     
     #endregion
