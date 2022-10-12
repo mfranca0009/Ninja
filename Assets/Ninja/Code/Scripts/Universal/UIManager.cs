@@ -66,12 +66,14 @@ public class UIManager : MonoBehaviour
 		ShowPauseUI(false);
 		ShowFinishedUI(false);
 		ShowScrollUI(false);
-		//settings
+		
+		// Settings
 		ShowSettingsUI(false);
 		ShowSoundSettingsUI(false);
-		//achivements
-		ShowAchievmentsUI(false);
-		ShowAchievmentsPopUI(false);	
+		
+		// Achievements
+		ShowAchievementsUI(false);
+		ShowAchievementsPopUI(false);	
 	}
 
 	// Update is called once per frame
@@ -154,12 +156,12 @@ public class UIManager : MonoBehaviour
 	/// Show/hide achievements UI.
 	/// </summary>
 	/// <param name="show">Whether to show the UI or not.</param>
-	public void ShowAchievmentsUI(bool show)
+	public void ShowAchievementsUI(bool show)
 	{
 		achievementsCanvas.gameObject.SetActive(show);
 	}
 
-	public void ShowAchievmentsPopUI(bool show)
+	public void ShowAchievementsPopUI(bool show)
 	{
 		achievementsPopCanvas.gameObject.SetActive(show);
 	}
