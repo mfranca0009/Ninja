@@ -2191,6 +2191,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4674054606402662000, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
+      propertyPath: m_Size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4674054606402662000, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4781597629779522217, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2297,7 +2305,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6571852352678944262, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Size
-      value: 0.9998196
+      value: 0.9999928
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133021, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -2309,7 +2317,7 @@ PrefabInstance:
       objectReference: {fileID: 7904796107514995926}
     - target: {fileID: 7129739286121133021, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ShowAchievmentsUI
+      value: ShowAchievementsUI
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065800, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Name
@@ -2445,7 +2453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7798362890267173191, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00009011993
+      value: 0.00004969817
       objectReference: {fileID: 0}
     - target: {fileID: 7998837320686348751, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2609,6 +2617,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 2765794265885450643}
     m_Modifications:
+    - target: {fileID: 4639938173568539566, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5792703175664304079, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2919,7 +2931,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9216861288356347256, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ShowAchievmentsUI
+      value: ShowAchievementsUI
       objectReference: {fileID: 0}
     - target: {fileID: 9216861288356347256, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
