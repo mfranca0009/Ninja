@@ -28,6 +28,8 @@ public class UIManager : MonoBehaviour
 	public Canvas mainMenuCanvas;
 	public Canvas settingsCanvas;
 	public Canvas soundSettingsCanvas;
+	public Canvas achievementsCanvas;
+	public Canvas achievementsPopCanvas;
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
 	public Image[] livesImages; 
@@ -79,11 +81,21 @@ public class UIManager : MonoBehaviour
 		
 		Time.timeScale = 1f;
 		
+
 		ShowSettingsUI(false);
 		ShowSoundSettingsUI(false);
+
 		ShowPauseUI(false);
 		ShowFinishedUI(false);
 		ShowScrollUI(false);
+		
+		// Settings
+		ShowSettingsUI(false);
+		ShowSoundSettingsUI(false);
+		
+		// Achievements
+		ShowAchievementsUI(false);
+		ShowAchievementsPopUI(false);	
 	}
 
 	// Update is called once per frame
@@ -143,6 +155,24 @@ public class UIManager : MonoBehaviour
 		_paused = show;
 		pauseCanvas.gameObject.SetActive(show);
 		_pauseShown = show;
+	}
+
+	/// <summary>
+	/// Show/hide achievements UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowAchievementsUI(bool show)
+	{
+		achievementsCanvas.gameObject.SetActive(show);
+	}
+
+	/// <summary>
+	/// Show/hide achievements pop-up UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowAchievementsPopUI(bool show)
+	{
+		achievementsPopCanvas.gameObject.SetActive(show);
 	}
 
 	/// <summary>
