@@ -171,7 +171,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_health.Dead)
+        if (_health.Dead || Time.timeScale == 0f)
         {
             movementAudioSource.Pause();
             return;

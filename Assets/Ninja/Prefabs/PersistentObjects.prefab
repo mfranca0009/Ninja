@@ -226,6 +226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb0c91370bc29b4f85d6b7b5ad15dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseCanvas: {fileID: 499419289098736910}
+  gameOverCanvas: {fileID: 8648996422473002191}
   mainMenuCanvas: {fileID: 1762236982882485254}
   settingsCanvas: {fileID: 2659863567186613650}
   soundSettingsCanvas: {fileID: 7982941852203533422}
@@ -241,6 +243,28 @@ MonoBehaviour:
   - {fileID: 21300000, guid: de6734417d4970c44acda0d7ceed5443, type: 3}
   - {fileID: 21300000, guid: 16e5899681caaaf4e9c51217237485b2, type: 3}
   - {fileID: 21300000, guid: 394a777d5abbcab4493e4c07c64a09fb, type: 3}
+  scrollEntries:
+  - levelName: Level_1
+    scrollMessage: Unknown Sender\n\n Daichi, The plan continues as intended, the
+      only one who may stand a threat is the boy shrouded in green. Whatever you
+      do, you must prevent his travels to the center of the forest until the ritual
+      is complete. Do whatever it takes!
+  - levelName: Level_2
+    scrollMessage: Unknown Sender\n\nRinu, Rumor has it that Daichi has already been
+      defeated. If that boy Kevin shows up, do not hold back! This corruption just
+      needs till dawn to become permanent. If you cannot kill him, stall him.
+  - levelName: Level_3
+    scrollMessage: White Face\n\n Bill, I will be honest, I do not have much hope
+      for you. If you can withstand the boy's attacks, we have a chance to learn
+      his weakness; it is vital to our cause! If you do not succeed, I will deal
+      with him myself...
+  - levelName: Level_Boss
+    scrollMessage: "By the night\u2019s end, Kevin had successfully put an end to
+      the one known as White Face. He returned to the village from whence he came
+      and celebrated his victory!\\n\\n However, within the weeks that followed,
+      rumors of the corruption started springing forth once more. Kevin swore he
+      would guard the forest and put an end to the plague as many times as it would
+      take to eliminate it for good."
 --- !u!1 &5468699101508548925
 GameObject:
   m_ObjectHideFlags: 0
@@ -966,10 +990,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoundSettingsCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: b89d95a0fb78dc541a9039a903acef77, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065804, guid: b89d95a0fb78dc541a9039a903acef77, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1147,10 +1167,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameOverCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: e806810b76c533841a27976b790dd443, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065804, guid: e806810b76c533841a27976b790dd443, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1321,6 +1337,11 @@ PrefabInstance:
 --- !u!224 &8648996422473002184 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7129739286581065804, guid: e806810b76c533841a27976b790dd443, type: 3}
+  m_PrefabInstance: {fileID: 1942885936646788228}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &8648996422473002191 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 7129739286581065803, guid: e806810b76c533841a27976b790dd443, type: 3}
   m_PrefabInstance: {fileID: 1942885936646788228}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1974071846775682428
@@ -1506,35 +1527,55 @@ PrefabInstance:
     m_TransformParent: {fileID: 2765794265885450643}
     m_Modifications:
     - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 24574112080618975}
     - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 7904796107514995926}
+    - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: LoadSceneByString
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShowScrollUI
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: SceneManagement, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: _Main
       objectReference: {fileID: 0}
+    - target: {fileID: 7129739286121133021, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065800, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_Name
-      value: ScrollCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
-      propertyPath: m_TagString
       value: ScrollCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065804, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
@@ -1626,24 +1667,52 @@ PrefabInstance:
       value: Next Level
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 24574112080618975}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 7904796107514995926}
+    - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: LoadNextScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShowScrollUI
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: SceneManagement, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: Level_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7129739287955746180, guid: 7d86fbb72fa61294c9edf857211dbeb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1681,10 +1750,6 @@ PrefabInstance:
     - target: {fileID: 7129739286581065800, guid: a896a0ef11ebca640b71a89a78a76e53, type: 3}
       propertyPath: m_Name
       value: SettingsCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: a896a0ef11ebca640b71a89a78a76e53, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065804, guid: a896a0ef11ebca640b71a89a78a76e53, type: 3}
       propertyPath: m_Pivot.x
@@ -2067,6 +2132,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7129739286581065804, guid: 13a8f1e77f433504ba1dcf762aee53bd, type: 3}
   m_PrefabInstance: {fileID: 7214668925382618437}
   m_PrefabAsset: {fileID: 0}
+--- !u!223 &499419289098736910 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 7129739286581065803, guid: 13a8f1e77f433504ba1dcf762aee53bd, type: 3}
+  m_PrefabInstance: {fileID: 7214668925382618437}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7928657402980865620
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2197,7 +2267,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4674054606402662000, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4781597629779522217, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2305,7 +2375,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6571852352678944262, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Size
-      value: 0.9999928
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6571852352678944262, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
+      propertyPath: m_Value
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286121133021, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -2322,10 +2396,6 @@ PrefabInstance:
     - target: {fileID: 7129739286581065800, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Name
       value: AchievementsCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
-      propertyPath: m_TagString
-      value: ShowOnAchievement
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065804, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Pivot.x
@@ -2453,7 +2523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7798362890267173191, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00004969817
+      value: 128.92513
       objectReference: {fileID: 0}
     - target: {fileID: 7998837320686348751, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2680,14 +2750,6 @@ PrefabInstance:
     - target: {fileID: 7129739286581065800, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
       propertyPath: m_Name
       value: MainMenuCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7129739286581065800, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
-      propertyPath: m_TagString
-      value: ShowOnMain
       objectReference: {fileID: 0}
     - target: {fileID: 7129739286581065804, guid: 596d89946f53ff84d90aefe0abb2ffc0, type: 3}
       propertyPath: m_Pivot.x

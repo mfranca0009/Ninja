@@ -5,17 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
-  - ShowOnPause
-  - ShowOnFinish
   - Cloud
-  - ScrollCanvas
   - HealthPickup
   - StrengthPickup
   - KnifePickup
-  - ShowOnSettings
-  - ShowOnSoundSettings
   - SoundSliders
-  - ShowOnMain
+  - ScrollCanvas
+  - PauseCanvas
   layers:
   - Default
   - TransparentFX

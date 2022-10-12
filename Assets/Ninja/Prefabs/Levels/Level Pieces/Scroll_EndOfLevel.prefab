@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 8560803086453092640}
   - component: {fileID: 8560803086453092643}
   - component: {fileID: 4731336740663516498}
+  - component: {fileID: 4606492050693351949}
   m_Layer: 0
-  m_Name: Scroll_Placeholder
+  m_Name: Scroll_EndOfLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,6 +125,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394738a75ad347c4d820af922ddae6e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sceneManager: {fileID: 0}
-  _UIManager: {fileID: 0}
-  levelToLoad: Level_
+--- !u!114 &4606492050693351949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560803086453092642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804095e6d7ab8fa46a31df8f6504c00f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amplifier: 0.3
+  frequency: 3

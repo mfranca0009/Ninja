@@ -1,16 +1,30 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
 // TODO: Move keybind related input to the `PlayerInputAction` asset.
 
+#region Helper Classes
+
+[Serializable]
+public class ScrollEntry
+{
+	public string levelName;
+	public string scrollMessage;
+}
+
+#endregion
+
 public class UIManager : MonoBehaviour
 {
+	#region Public Fields
+	
 	// UI Gameobjects / Canvases
-	private GameObject[] _pauseObjects;
-	private GameObject[] _finishObjects;
+	public Canvas pauseCanvas;
+	public Canvas gameOverCanvas;
 	public Canvas mainMenuCanvas;
 	public Canvas settingsCanvas;
 	public Canvas soundSettingsCanvas;
@@ -22,7 +36,14 @@ public class UIManager : MonoBehaviour
 
 	// Sprite prefabs
 	public Sprite[] livesSprites;
+	
+	// End-of-level scroll messages
+	public List<ScrollEntry> scrollEntries;
+	
+	#endregion
 
+	#region Private Fields
+	
 	// Sound Settings 
 	private Dictionary<string, Slider> _slidersChanged;
 	private float[] _currSoundSettings;
@@ -40,6 +61,10 @@ public class UIManager : MonoBehaviour
 	// Scripts
 	private Health _playerHealth;
 	private SoundManager _soundManager;
+	
+	#endregion
+
+	#region Unity Events
 
 	private void Start()
 	{
@@ -56,12 +81,9 @@ public class UIManager : MonoBehaviour
 		
 		Time.timeScale = 1f;
 		
-		// gets all objects with tag ShowOnPause
-		_pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
-		// gets all objects with tag ShowOnFinish
-		_finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
-		//scrollCanvas = GameObject.FindGameObjectWithTag("ScrollCanvas");
 
+		ShowSettingsUI(false);
+		ShowSoundSettingsUI(false);
 
 		ShowPauseUI(false);
 		ShowFinishedUI(false);
@@ -107,24 +129,10 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
+	#endregion
 
-	//controls the pausing of the scene
-	public void PauseControl()
-	{
-		if (Time.timeScale == 1f)
-		{
-			Time.timeScale = 0f;
-			ShowPauseUI(true);
-			_paused = true;
-		}
-		else if (Time.timeScale == 0f)
-		{
-			Time.timeScale = 1f;
-			ShowPauseUI(false);
-			_paused = false;
-		}
-	}
-
+	#region Public UI Methods
+	
 	/// <summary>
 	/// Show/hide main menu UI.
 	/// </summary>
@@ -145,10 +153,7 @@ public class UIManager : MonoBehaviour
 		
 		Time.timeScale = show ? 0f : 1f;
 		_paused = show;
-
-		foreach (GameObject g in _pauseObjects)
-			g.SetActive(show);
-		
+		pauseCanvas.gameObject.SetActive(show);
 		_pauseShown = show;
 	}
 
@@ -161,12 +166,14 @@ public class UIManager : MonoBehaviour
 		achievementsCanvas.gameObject.SetActive(show);
 	}
 
+	/// <summary>
+	/// Show/hide achievements pop-up UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowAchievementsPopUI(bool show)
 	{
 		achievementsPopCanvas.gameObject.SetActive(show);
 	}
-
-
 
 	/// <summary>
 	/// Show/hide settings menu UI.
@@ -293,11 +300,19 @@ public class UIManager : MonoBehaviour
 			applyBtn.interactable = true;
 	}
 
+	/// <summary>
+	/// Show/hide the player's health UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowHealthUI(bool show)
 	{
 		healthCanvas.gameObject.SetActive(show);
 	}
 
+	/// <summary>
+	/// Update the player's lives UI
+	/// </summary>
+	/// <param name="livesLeft">The remaining amount of lives the player has.</param>
 	public void UpdateLivesUI(int livesLeft)
 	{
 		foreach (Image lifeImage in livesImages)
@@ -312,48 +327,98 @@ public class UIManager : MonoBehaviour
 		}
 	}
 	
+	/// <summary>
+	/// Show/hide the end-of-level scroll UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowScrollUI(bool show)
-	{
-		//foreach (GameObject g in scrollCanvas)
-		//{
-			//scrollCanvas.SetActive(true);
-			scrollCanvas.gameObject.SetActive(show);
-		//}
-	}
-
-	public void ShowFinishedUI(bool show)
 	{
 		if (!_paused)
 			Time.timeScale = show ? 0f : 1f;
 
-		foreach (GameObject g in _finishObjects)
-			g.SetActive(show);
+		scrollCanvas.gameObject.SetActive(show);
+
+		if (!show)
+			return;
+		
+		TextMeshProUGUI scrollText = scrollCanvas.transform.Find("scroll_text").GetComponent<TextMeshProUGUI>();
+		
+		if (!scrollText)
+			return;
+
+		scrollText.text = SelectScrollMessage(_currentScene);
+		
+		if (_currentScene.buildIndex != 4)
+			return;
+		
+		// Update boss level button, so it does not say "Next Level".
+
+		TextMeshProUGUI nextLevelBtnText =
+			scrollCanvas.transform.Find("btn_next_level").GetComponentInChildren<TextMeshProUGUI>();
+
+		if (!nextLevelBtnText)
+			return;
+		
+		nextLevelBtnText.text = "Continue";
 	}
 
-	///
-	/// SCENE MANAGEMENT CODE
-	///
+	/// <summary>
+	/// Show/hide the game over UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowFinishedUI(bool show)
+	{
+		if (!_paused)
+			Time.timeScale = show ? 0f : 1f;
+		
+		gameOverCanvas.gameObject.SetActive(show);
+	}
+	
+	#endregion
 
+	#region Private Helper Methods
+
+	/// <summary>
+	/// Select the appropriate scroll message based on the current scene.
+	/// </summary>
+	/// <param name="scene">The scene to be used to select the paired scroll message.</param>
+	/// <returns>The scroll message selected.</returns>
+	private string SelectScrollMessage(Scene scene)
+	{
+		if (scrollEntries.Count == 0)
+			return "No scroll entries available!";
+		
+		ScrollEntry scrollEntry = scrollEntries.Find(sEntry => sEntry.levelName == scene.name);
+
+		if (string.IsNullOrEmpty(scrollEntry.scrollMessage) || string.IsNullOrWhiteSpace(scrollEntry.scrollMessage))
+			return "No message to show!";
+		
+		return scrollEntry.scrollMessage.Replace("\\n", "\n");
+	}
+
+	#endregion
+
+	#region Scene Management [REMOVE] - use `SceneManagement` class.
 
 	public void LoadSceneByString(string sceneString)
 	{
 		Debug.Log($"sceneName to load: {sceneString}");
 		SceneManager.LoadScene(sceneString, LoadSceneMode.Single);
 	}
-
+	
 	public void LoadSceneByIndex(int sceneNumber)
 	{
 		Debug.Log($"sceneBuildIndex to load: {sceneNumber}");
 		SceneManager.LoadScene(sceneNumber, LoadSceneMode.Single);
 	}
-
+	
 	public void GetActiveScene()
 	{
 		Scene currentScene = SceneManager.GetActiveScene();
 		Debug.Log(currentScene.name);
 		Debug.Log(currentScene.buildIndex);
 	}
-
+	
 	//Reloads the Level
 	public void ReloadCurrentScene()
 	{
@@ -364,4 +429,6 @@ public class UIManager : MonoBehaviour
 	{
 		Application.Quit();
 	}
+
+	#endregion
 }

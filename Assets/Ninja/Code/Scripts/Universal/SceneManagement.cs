@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagement : MonoBehaviour
 {
+    #region Public Helper Methods
+    
     public void LoadSceneByString(string sceneString)
     {
         SceneManager.LoadScene(sceneString);
@@ -40,4 +42,6 @@ public class SceneManagement : MonoBehaviour
     {
         Application.Quit();
     }
+    
+    #endregion
 }
