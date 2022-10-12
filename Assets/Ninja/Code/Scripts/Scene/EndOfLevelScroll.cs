@@ -8,23 +8,8 @@ public class EndOfLevelScroll : MonoBehaviour
     // public string levelToLoad;
 
     #endregion
-    
-    #region Serialized Fields
-
-    [Header("Scroll Motion Settings")]
-    
-    [Tooltip("The amplitude of the sin wave, how fast it will travel up/down.")]
-    [SerializeField] private float amplifier = 0.3f;
-    
-    [Tooltip("The frequency of the sin wave, how far it will travel up/down.")]
-    [SerializeField] private float frequency = 3f;
-
-    #endregion
 
     #region Private Fields
-    
-    // Scroll
-    private Vector2 _homePos;
 
     // UI Manager
     private UIManager _uiManager;
@@ -36,11 +21,11 @@ public class EndOfLevelScroll : MonoBehaviour
     private void Start()
     {
         _uiManager = FindObjectOfType<UIManager>();
-        
-        if (_uiManager)
-            _uiManager.ShowScrollUI(false);
 
-        _homePos = transform.position;
+        if (!_uiManager)
+            return;
+        
+        _uiManager.ShowScrollUI(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -51,19 +36,5 @@ public class EndOfLevelScroll : MonoBehaviour
         _uiManager.ShowScrollUI(true);
     }
 
-    private void Update()
-    {
-        LoopScrollMotion();
-    }
-
-    #endregion
-    
-    #region Update Methods
-    
-    private void LoopScrollMotion()
-    {
-        transform.position = new Vector3(_homePos.x, Mathf.Sin(Time.time * frequency) * amplifier + _homePos.y, 0);
-    }
-    
     #endregion
 }
