@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
 	public Canvas settingsCanvas;
 	public Canvas soundSettingsCanvas;
 	public Canvas achievementsCanvas;
+	public Canvas achievementsPopCanvas;
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
 	public Image[] livesImages; 
@@ -61,12 +62,16 @@ public class UIManager : MonoBehaviour
 		_finishObjects = GameObject.FindGameObjectsWithTag("ShowOnFinish");
 		//scrollCanvas = GameObject.FindGameObjectWithTag("ScrollCanvas");
 
-		ShowSettingsUI(false);
-		ShowSoundSettingsUI(false);
+
 		ShowPauseUI(false);
 		ShowFinishedUI(false);
 		ShowScrollUI(false);
+		//settings
+		ShowSettingsUI(false);
+		ShowSoundSettingsUI(false);
+		//achivements
 		ShowAchievmentsUI(false);
+		ShowAchievmentsPopUI(false);	
 	}
 
 	// Update is called once per frame
@@ -152,6 +157,11 @@ public class UIManager : MonoBehaviour
 	public void ShowAchievmentsUI(bool show)
 	{
 		achievementsCanvas.gameObject.SetActive(show);
+	}
+
+	public void ShowAchievmentsPopUI(bool show)
+	{
+		achievementsPopCanvas.gameObject.SetActive(show);
 	}
 
 
