@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8560803086453092643}
   - component: {fileID: 4731336740663516498}
   m_Layer: 0
-  m_Name: Scroll_Placeholder
+  m_Name: Scroll_EndOfLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

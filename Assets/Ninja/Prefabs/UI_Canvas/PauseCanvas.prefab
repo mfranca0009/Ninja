@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 3338200059645539409}
   m_Layer: 5
   m_Name: Level_N
-  m_TagString: ShowOnPause
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -631,7 +631,7 @@ GameObject:
   - component: {fileID: 1339459015472516998}
   m_Layer: 5
   m_Name: PauseCanvas
-  m_TagString: ShowOnPause
+  m_TagString: PauseCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -653,7 +653,7 @@ RectTransform:
   - {fileID: 281298937614320508}
   - {fileID: 7129739285868533734}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

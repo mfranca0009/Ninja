@@ -217,7 +217,11 @@ public class GameManager : MonoBehaviour
             Vector2 relocatePos = GetRespawnPositionForLevel(_currScene, LevelMidpointReached);
             _playerHealth.Reset();
             _playerHealth.gameObject.transform.position = relocatePos;
-            _playerCamera.SetCameraPosition(relocatePos);
+            
+            // Camera is deactivated on boss level, add a null check to prevent runtime error.
+            if (_playerCamera && _playerCamera.isActiveAndEnabled)
+                _playerCamera.SetCameraPosition(relocatePos);
+            
             _resetDelayTimer = resetDelay;
         }
         else

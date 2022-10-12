@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 9147910551697666287}
   - component: {fileID: 8531982387747382992}
   m_Layer: 5
-  m_Name: scroll text
-  m_TagString: ShowOnPause
+  m_Name: scroll_text
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -66,10 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Daichi,\r\n            The plan continues as intended, the only one who
-    may stand a threat at this point is the boy shrouded in green. Whatever you do,
-    you must prevent him from drawing near the center of the forest until the ritual
-    is complete. Do whatever it takes.\r\n"
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
@@ -103,7 +100,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 32
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -227,7 +224,7 @@ GameObject:
   - component: {fileID: 3338200059645539409}
   m_Layer: 5
   m_Name: Level_N
-  m_TagString: ShowOnPause
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -558,6 +555,7 @@ GameObject:
   - component: {fileID: 7129739286581065803}
   - component: {fileID: 7129739286581065802}
   - component: {fileID: 7129739286581065801}
+  - component: {fileID: 5968182887733277697}
   m_Layer: 5
   m_Name: ScrollCanvas
   m_TagString: ScrollCanvas
@@ -654,6 +652,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5968182887733277697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7129739286581065800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59db43cb614fa754c93c46d6a38751e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textDisplay: {fileID: 3338200059645539409}
 --- !u!1 &7129739286876285051
 GameObject:
   m_ObjectHideFlags: 0
