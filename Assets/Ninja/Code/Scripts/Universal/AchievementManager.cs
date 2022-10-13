@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 #region Achievement Classes
 
@@ -108,6 +110,7 @@ public class AchievementManager : MonoBehaviour
     #region Public Properties
 
     public List<Achievement> Achievements { get; private set; }
+    public GameObject AchiList;
 
     #endregion
 
@@ -115,6 +118,9 @@ public class AchievementManager : MonoBehaviour
     {
         Achievements = new List<Achievement>();
         InitAchievements();
+        FillAchievementUIList();
+
+
     }
 
 
@@ -210,5 +216,55 @@ public class AchievementManager : MonoBehaviour
         /*SpeedBasedAchievement achi =
             Achievements.Find(possibleAchievement =>
                 possibleAchievement.Title == "Enter the Jungle") as SpeedBasedAchievement;*/
+    }
+    private void FillAchievementUIList()
+    {
+        foreach (var achievement in Achievements)
+        {
+            GameObject gameObject = new GameObject();
+            GameObject title = new GameObject();
+            GameObject description = new GameObject();
+
+            title.name = "Name";
+            description.name = "Description";
+            gameObject.name = "Achievement";
+
+            gameObject.AddComponent<RectTransform>();
+            gameObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
+            gameObject.AddComponent<VerticalLayoutGroup>();
+            gameObject.GetComponent<VerticalLayoutGroup>().childControlHeight = false;
+            gameObject.GetComponent<VerticalLayoutGroup>().childControlWidth = false;
+            gameObject.layer = LayerMask.NameToLayer("UI");
+
+            title.AddComponent<TextMeshProUGUI>();
+            title.AddComponent<RectTransform>();
+            title.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            title.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
+
+            description.AddComponent<TextMeshProUGUI>();
+            description.GetComponent<TextMeshProUGUI>().text = achievement.Description;
+            description.AddComponent<RectTransform>();
+            description.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            description.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
+
+            if (achievement.Obtained)
+            {
+                title.GetComponent<TextMeshProUGUI>().text = achievement.Title;
+                title.GetComponent<TextMeshProUGUI>().color = Color.black;
+                description.GetComponent<TextMeshProUGUI>().color = Color.black;
+            }
+            else
+            {
+                title.GetComponent<TextMeshProUGUI>().text = "???";
+                title.GetComponent<TextMeshProUGUI>().color = Color.grey;
+                description.GetComponent<TextMeshProUGUI>().color = Color.grey;
+            }
+
+
+            title.transform.SetParent(gameObject.transform, false);
+            description.transform.SetParent(gameObject.transform, false);
+            gameObject.transform.SetParent(AchiList.transform, false);
+        }
     }
 }
