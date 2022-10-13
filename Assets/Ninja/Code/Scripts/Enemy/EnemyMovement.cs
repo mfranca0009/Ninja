@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -448,8 +449,22 @@ public class EnemyMovement : MonoBehaviour
             _rigidBody.velocity.x == 0)
             return;
 
-        Vector3 currentScale = transform.localScale;
-        transform.localScale = new Vector3(-currentScale.x, currentScale.y, currentScale.z);
+        Vector3 enemyScale = transform.localScale;
+        transform.localScale = new Vector3(-enemyScale.x, enemyScale.y, enemyScale.z);
+
+        if (!_health)
+            return;
+
+        // Update the enemy's health UI scale to make it opposite of the enemy's facing direction.
+        // This makes it so the enemy health bar UI is always facing its static direction where the
+        // fill is facing to the left.
+        
+        _health.enemyHealthImage.fillOrigin = transform.localScale.x switch
+        {
+            > 0  => (int)Image.OriginHorizontal.Left,
+            < 0  => (int)Image.OriginHorizontal.Right,
+            _ => (int)Image.OriginHorizontal.Left
+        };
     }
 
     /// <summary>

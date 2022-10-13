@@ -108,7 +108,7 @@ public class UIManager : MonoBehaviour
 
 		//uses the p or escape button to pause and unpause the game
 		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) &&
-		    !_sceneManagement.HasBuildIndex(_currentScene, 0))
+		    !_sceneManagement.HasBuildIndex(_currentScene, 0) && !scrollCanvas.isActiveAndEnabled)
 		{
 			ShowPauseUI(!_pauseShown);
 
@@ -373,7 +373,22 @@ public class UIManager : MonoBehaviour
 		
 		gameOverCanvas.gameObject.SetActive(show);
 	}
-	
+
+	/// <summary>
+	/// Show/hide enemy health UI.
+	/// </summary>
+	/// <param name="enemyHealthUICanvas">The enemy health UI canvas.</param>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public static void ShowEnemyHealthUI(Canvas enemyHealthUICanvas, bool show)
+	{
+		if (!enemyHealthUICanvas)
+			return;
+		
+		// This method is here because if we were to ever have settings options to hide enemy health UI,
+		// then we can easily prevent showing the enemy health UI from the UI manager.
+		enemyHealthUICanvas.gameObject.SetActive(show);
+	}
+
 	#endregion
 
 	#region Private Helper Methods

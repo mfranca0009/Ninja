@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Boss_AI : MonoBehaviour
 {
@@ -131,5 +132,19 @@ public class Boss_AI : MonoBehaviour
     {
         transform.localScale =
             new Vector3(faceRight ? curLocalScale.x : -curLocalScale.x, curLocalScale.y, curLocalScale.z);
+        
+        if (!_healthComponent)
+            return;
+
+        // Update the enemy's health UI scale to make it opposite of the enemy's facing direction.
+        // This makes it so the enemy health bar UI is always facing its static direction where the
+        // fill is facing to the left.
+        
+        _healthComponent.enemyHealthImage.fillOrigin = transform.localScale.x switch
+        {
+            > 0  => (int)Image.OriginHorizontal.Left,
+            < 0  => (int)Image.OriginHorizontal.Right,
+            _ => (int)Image.OriginHorizontal.Left
+        };
     }
 }
