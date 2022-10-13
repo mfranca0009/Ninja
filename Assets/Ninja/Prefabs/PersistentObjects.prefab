@@ -166,6 +166,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8287053860213343196}
+  - {fileID: 2863028770412219542}
   - {fileID: 500216747656012201}
   - {fileID: 8108077364468793335}
   - {fileID: 8631398529673201477}
@@ -846,6 +847,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e719be190be06346a53253403fbc69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5982624706816896743
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2863028770412219542}
+  - component: {fileID: 4417882689538701120}
+  m_Layer: 0
+  m_Name: AchievementManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2863028770412219542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5982624706816896743}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2765794265885450643}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4417882689538701120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5982624706816896743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5005b04447415540b05726306a2d92c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  achievements: []
+  clearLevel1: {fileID: 0}
+  clearLevel2: {fileID: 0}
+  clearLevel3: {fileID: 0}
+  speedClear1: {fileID: 0}
+  speedClear2: {fileID: 0}
+  speedClear3: {fileID: 0}
+  speedClearBoss: {fileID: 0}
+  badEnding: {fileID: 0}
+  goodEnding: {fileID: 0}
+  genecide1: {fileID: 0}
+  genecide2: {fileID: 0}
+  genecide3: {fileID: 0}
+  pacifist1: {fileID: 0}
+  pacifist2: {fileID: 0}
+  pacifist3: {fileID: 0}
+  mario: {fileID: 0}
+  bully: {fileID: 0}
+  trapless: {fileID: 0}
+  noLifeLoss: {fileID: 0}
+  noPickups: {fileID: 0}
+  yesPickups: {fileID: 0}
+  martialNinja: {fileID: 0}
+  distanceNinja: {fileID: 0}
+  allClear: {fileID: 0}
 --- !u!1001 &880725627018116133
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2267,11 +2337,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 799318856190009159, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Size
-      value: 0.3051465
+      value: 0.30514643
       objectReference: {fileID: 0}
     - target: {fileID: 799318856190009159, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_Value
-      value: 0.9874122
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1321649928697475829, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3371,7 +3441,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8794693135992064058, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -739
+      value: 0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 8797873363107292684, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
       propertyPath: m_AnchorMax.y
