@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // TODO: Move keybind related input to the `PlayerInputAction` asset.
@@ -384,8 +384,6 @@ public class UIManager : MonoBehaviour
 		if (!enemyHealthUICanvas)
 			return;
 		
-		// This method is here because if we were to ever have settings options to hide enemy health UI,
-		// then we can easily prevent showing the enemy health UI from the UI manager.
 		enemyHealthUICanvas.gameObject.SetActive(show);
 	}
 

@@ -5,14 +5,23 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
 
+    #region Public Fields
+    
+    [Header("Health Bar Settings")]
+    
+    [Tooltip("Is this health bar owned by the player?")]
     public bool isPlayer;
     
-    // Enemy health component
+    [Tooltip("Enemy health component, if this health bar is owned by an enemy")]
     public Health enemyHealth;
     
-    // UI
+    [Tooltip("The health bar fill image")]
     public Image healthBar;
+    
+    #endregion
 
+    #region Private Fields
+    
     // States
     private bool _healthSet;
 
@@ -24,7 +33,11 @@ public class HealthBar : MonoBehaviour
     
     // Scene Manager
     private SceneManagement _sceneManagement;
+    
+    #endregion
 
+    #region Unity Events
+    
     // Start is called before the first frame update
     private void Start()
     {
@@ -50,4 +63,6 @@ public class HealthBar : MonoBehaviour
             false => enemyHealth.HealthPoints / enemyHealth.maxHealth
         };
     }
+    
+    #endregion
 }

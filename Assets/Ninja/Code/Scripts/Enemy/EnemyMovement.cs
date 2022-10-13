@@ -226,7 +226,8 @@ public class EnemyMovement : MonoBehaviour
         else
         {
             FlipSprite();
-            
+            FlipHealthUI();
+
             float currentSpeed = alwaysWalk switch
             {
                 true => walkSpeed,
@@ -293,6 +294,8 @@ public class EnemyMovement : MonoBehaviour
         if (!waypoint.WaypointReached)
         {
             FlipSprite();
+            FlipHealthUI();
+
             float currentSpeed = waypoint.shouldRun ? runSpeed : walkSpeed;
 
             UpdateWalkRunSfxPitch(currentSpeed);
@@ -321,6 +324,7 @@ public class EnemyMovement : MonoBehaviour
             return;
 
         FlipSprite();
+        FlipHealthUI();
         
         Vector2 currentPos = _rigidBody.position;
 
@@ -343,6 +347,7 @@ public class EnemyMovement : MonoBehaviour
             return;
 
         FlipSprite();
+        FlipHealthUI();
         
         Vector2 currentPos = _rigidBody.position;
         Vector2 destPos = GetMidPoint(_enemyCombat.Target);
@@ -365,6 +370,7 @@ public class EnemyMovement : MonoBehaviour
             return;
 
         FlipSprite();
+        FlipHealthUI();
         
         Vector2 currentPos = _rigidBody.position;
         Vector2 destPos = _enemyCombat.InvestigateDestPos;
@@ -451,13 +457,15 @@ public class EnemyMovement : MonoBehaviour
 
         Vector3 enemyScale = transform.localScale;
         transform.localScale = new Vector3(-enemyScale.x, enemyScale.y, enemyScale.z);
+    }
 
+    /// <summary>
+    /// Flip enemy health bar UI in relation to the enemy's current X-axis value of its local scale.
+    /// </summary>
+    private void FlipHealthUI()
+    {
         if (!_health)
             return;
-
-        // Update the enemy's health UI scale to make it opposite of the enemy's facing direction.
-        // This makes it so the enemy health bar UI is always facing its static direction where the
-        // fill is facing to the left.
         
         _health.enemyHealthImage.fillOrigin = transform.localScale.x switch
         {
@@ -466,7 +474,7 @@ public class EnemyMovement : MonoBehaviour
             _ => (int)Image.OriginHorizontal.Left
         };
     }
-
+    
     /// <summary>
     /// Determine pitch of movement sound effect based on current speed.
     /// <param name="currentSpeed">The gameobject's current speed</param>
