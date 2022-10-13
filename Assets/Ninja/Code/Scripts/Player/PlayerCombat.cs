@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -141,9 +142,10 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
+        _animator.SetBool("CanThrowKnife", CanThrowKnife());
         StrengthBoostUpdate();
     }
-    
+
     #endregion
     
     #region Input Callbacks
@@ -153,18 +155,20 @@ public class PlayerCombat : MonoBehaviour
     // it has been thrown.
     private void OnThrowKnife(InputAction.CallbackContext obj)
     {
+        Debug.Log("[PlayerCombat/OnThrowKnife] Received knife throw input!");
+        
         if (!CanThrowKnife())
             return;
-
-        Debug.Log("[PlayerCombat/OnThrowKnife] Knife throw performed!");
-        ActiveKnives++;
         
-        _animator.SetTrigger("ThrowKnife");
+        Debug.Log("[PlayerCombat/OnThrowKnife] Execute knife throw input!");
+        _animator.SetBool("ExecuteThrowKnife", true);
     }
 
     private void OnThrowKnifeCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("[PlayerCombat/OnThrowKnifeCancel] Knife throw ended!");
+        
+        _animator.SetBool("ExecuteThrowKnife", false);
     }
     
     private void OnSlowAttack(InputAction.CallbackContext obj)
@@ -174,12 +178,13 @@ public class PlayerCombat : MonoBehaviour
 
         Debug.Log("[PlayerCombat/OnSlowAttack] Slow attack performed!");
         
-        _animator.SetTrigger("SlowAttack");
+        _animator.SetBool("ExecuteSlowAttack", true);
     }
 
     private void OnSlowAttackCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("[PlayerCombat/OnSlowAttackCancel] Slow attack ended!");
+        _animator.SetBool("ExecuteSlowAttack", false);
     }
     
     private void OnLightAttack(InputAction.CallbackContext obj)
@@ -189,12 +194,13 @@ public class PlayerCombat : MonoBehaviour
 
         Debug.Log("[PlayerCombat/OnLightAttack] Light attack performed!");
         
-        _animator.SetTrigger("LightAttack");
+        _animator.SetBool("ExecuteLightAttack", true);
     }
 
     private void OnLightAttackCancel(InputAction.CallbackContext obj)
     {
         Debug.Log("[PlayerCombat/OnLightAttackCancel] Light attack ended!");
+        _animator.SetBool("ExecuteLightAttack", false);
     }
 
     #endregion
@@ -239,9 +245,9 @@ public class PlayerCombat : MonoBehaviour
         else
             StrengthBoostTimer -= Time.deltaTime;
     }
-
-    #endregion
     
+    #endregion
+
     #region Public Helper Methods
     
     /// <summary>
@@ -298,6 +304,8 @@ public class PlayerCombat : MonoBehaviour
     /// </summary>
     public void InstantiateThrowingKnife()
     {
+        ActiveKnives++;
+        
         // Create throwing knife object
         GameObject knifeToCreate = Instantiate(throwKnifePrefab, throwKnifeSpawnTransform.position,
             new Quaternion());
@@ -383,7 +391,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is allowed to throw a knife, otherwise false.</returns>
     private bool CanThrowKnife()
     {
-        return IsInAttackState() && ActiveKnives != MaxKnives;
+        return ActiveKnives < MaxKnives;
     }
 
     /// <summary>
