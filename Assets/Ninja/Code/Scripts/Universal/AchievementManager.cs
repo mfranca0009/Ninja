@@ -72,12 +72,12 @@ public class CounterAchievement : Achievement
     }
     
     /// <summary>
-    /// The amount of collectibles that are obtainable
+    /// The required amount that needs to be met to fulfill the achievement.
     /// </summary>
     public int MaxCounter { get; set; }
 
     /// <summary>
-    /// The time that has elapsed towards the specific achievement.
+    /// The counter which tracks progress to the completion of the achievement.
     /// </summary>
     public int Counter { get; set; }
 }
