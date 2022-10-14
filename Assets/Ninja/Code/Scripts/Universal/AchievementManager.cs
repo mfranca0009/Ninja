@@ -110,7 +110,10 @@ public class AchievementManager : MonoBehaviour
     #region Public Properties
 
     public List<Achievement> Achievements { get; private set; }
-    public GameObject AchiList;
+    public GameObject achiList;
+    public Scrollbar scrollbar;
+
+    private int achisObtained;
 
     #endregion
 
@@ -119,10 +122,17 @@ public class AchievementManager : MonoBehaviour
         Achievements = new List<Achievement>();
         InitAchievements();
         FillAchievementUIList();
-
-
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Achievements[achisObtained].Obtained = true;
+            achisObtained++;
+            RefreshAchievementUIList();
+        }
+    }
 
     private void InitAchievements()
     {
@@ -219,6 +229,7 @@ public class AchievementManager : MonoBehaviour
     }
     private void FillAchievementUIList()
     {
+        int num = 1;
         foreach (var achievement in Achievements)
         {
             GameObject gameObject = new GameObject();
@@ -227,24 +238,25 @@ public class AchievementManager : MonoBehaviour
 
             title.name = "Name";
             description.name = "Description";
-            gameObject.name = "Achievement";
+            gameObject.name = $"Achievement {num}";
 
             gameObject.AddComponent<RectTransform>();
             gameObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
+
             gameObject.AddComponent<VerticalLayoutGroup>();
             gameObject.GetComponent<VerticalLayoutGroup>().childControlHeight = false;
             gameObject.GetComponent<VerticalLayoutGroup>().childControlWidth = false;
             gameObject.layer = LayerMask.NameToLayer("UI");
 
             title.AddComponent<TextMeshProUGUI>();
-            title.AddComponent<RectTransform>();
+
             title.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             title.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
 
             description.AddComponent<TextMeshProUGUI>();
             description.GetComponent<TextMeshProUGUI>().text = achievement.Description;
-            description.AddComponent<RectTransform>();
+
             description.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             description.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
 
@@ -261,10 +273,46 @@ public class AchievementManager : MonoBehaviour
                 description.GetComponent<TextMeshProUGUI>().color = Color.grey;
             }
 
-
             title.transform.SetParent(gameObject.transform, false);
             description.transform.SetParent(gameObject.transform, false);
-            gameObject.transform.SetParent(AchiList.transform, false);
+            gameObject.transform.SetParent(achiList.transform, false);
+            num++;
         }
+
+        GameObject completionPercent = new GameObject();
+        completionPercent.name = "Completion Percent";
+        completionPercent.AddComponent<RectTransform>();
+        completionPercent.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        completionPercent.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
+        completionPercent.AddComponent<TextMeshProUGUI>();
+        completionPercent.GetComponent<TextMeshProUGUI>().text = $"Achievements Obtained: {achisObtained}/{Achievements.Count}";
+        completionPercent.GetComponent<TextMeshProUGUI>().color = Color.grey;
+        completionPercent.transform.SetParent(achiList.transform, false);
+
+        achiList.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1236);
+    }
+
+    private void RefreshAchievementUIList()
+    {
+        //Gameobject.transform.childCount starts counting at 1 not 0.
+        //The last object in achiList is a completion total and is handled after the loop.
+        for (int i = 0; i < achiList.transform.childCount - 1; i++)
+        {
+            //if the achievement in question hasn't been obtained, skip checking it and move to the next achievement
+            if (!Achievements[i].Obtained)
+                continue;
+
+            //get the children of the current itteration and set both of their text to black and swap the game text
+            achiList.transform.GetChild(i).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = Achievements[i].Title;
+            achiList.transform.GetChild(i).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
+            achiList.transform.GetChild(i).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
+        }
+
+        achiList.transform.GetChild(24).gameObject.GetComponent<TextMeshProUGUI>().text = $"Achievements Obtained: {achisObtained}/{Achievements.Count}";
+
+        if (achisObtained != 24)
+            return;
+
+        achiList.transform.GetChild(24).gameObject.gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
     }
 }
