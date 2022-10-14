@@ -198,7 +198,7 @@ public class Health : MonoBehaviour
                 if(invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
                     enemyCombat.NotifyEngagement(invoker);
 
-                if (!_gameManager.TappedEnemiesHealth.Contains(this))
+                if (_gameManager && !_gameManager.TappedEnemiesHealth.Contains(this))
                     _gameManager.TappedEnemiesHealth.Add(this);
             }
 
