@@ -110,7 +110,7 @@ public class SwingingTrap_MiniBoss : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //If the trap hasn't hit anyone and has been activated
-        if (delayHit || collision.gameObject.tag != "Player")
+        if (delayHit || !collision.gameObject.CompareTag("Player"))
         {
             return;
         }

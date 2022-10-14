@@ -97,6 +97,7 @@ public class PlayerCombat : MonoBehaviour
     private SoundManager _soundManager;
 
     // Player Scripts
+    private Health _health;
     private PlayerMovement _playerMovement;
 
     #endregion
@@ -132,6 +133,7 @@ public class PlayerCombat : MonoBehaviour
     {
         _playerInputActions = new PlayerInputActions();
         _animator = GetComponent<Animator>();
+        _health = GetComponent<Health>();
         _playerMovement = GetComponent<PlayerMovement>();
         _soundManager = FindObjectOfType<SoundManager>();
         MaxKnives = 1;
@@ -379,7 +381,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is allowed to attack, otherwise false.</returns>
     private bool CanAttack()
     {
-        return IsInAttackState();
+        return !_health.Dead && IsInAttackState();
     }
     
     /// <summary>
@@ -388,7 +390,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is allowed to throw a knife, otherwise false.</returns>
     private bool CanThrowKnife()
     {
-        return ActiveKnives < MaxKnives;
+        return !_health.Dead && IsInAttackState() && ActiveKnives < MaxKnives;
     }
 
     /// <summary>

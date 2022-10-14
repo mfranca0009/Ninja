@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SwapCamera : MonoBehaviour
@@ -11,31 +9,28 @@ public class SwapCamera : MonoBehaviour
     public float xLevel = 150.0f;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (mainCamera.activeInHierarchy == false)
-        {
-            if (player.transform.position.y >= yLevel && player.transform.position.x <= xLevel)
-            {
-                mainCamera.SetActive(true);
-                secCamera.SetActive(false);
-            }
-        }
+        if (mainCamera.activeInHierarchy || !(player.transform.position.y >= yLevel) ||
+            !(player.transform.position.x <= xLevel))
+            return;
+
+        mainCamera.SetActive(true);
+        secCamera.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.name);
-        if (collision.gameObject.tag == "Player")
-        {
-            secCamera.SetActive(true);
-            mainCamera.SetActive(false);
-        }
+        if (!collision.gameObject.CompareTag("Player"))
+            return;
+        
+        secCamera.SetActive(true);
+        mainCamera.SetActive(false);
     }
 }
