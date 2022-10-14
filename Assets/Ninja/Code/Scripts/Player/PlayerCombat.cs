@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -142,7 +141,11 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
+        // Update this state to prevent any possible slip past the original player input check for knife throwing.
+        // The knife is spawned via animation, this condition through the animator seemed to have helped a bit more
+        // with preventing extra knives to throw when they should not.
         _animator.SetBool("CanThrowKnife", CanThrowKnife());
+        
         StrengthBoostUpdate();
     }
 
@@ -150,25 +153,21 @@ public class PlayerCombat : MonoBehaviour
     
     #region Input Callbacks
     
-    // Note: Animation event is configured through the throwing knife animation. Triggering the animation will also
-    // trigger `InstantiateThrowingKnife` at the proper frame when the rogue's dagger has been disabled replicating
-    // it has been thrown.
     private void OnThrowKnife(InputAction.CallbackContext obj)
     {
-        Debug.Log("[PlayerCombat/OnThrowKnife] Received knife throw input!");
-        
         if (!CanThrowKnife())
             return;
         
-        Debug.Log("[PlayerCombat/OnThrowKnife] Execute knife throw input!");
         _animator.SetBool("ExecuteThrowKnife", true);
+        
+        Debug.Log("[PlayerCombat/OnThrowKnife] Execute knife throw input!");
     }
 
     private void OnThrowKnifeCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("[PlayerCombat/OnThrowKnifeCancel] Knife throw ended!");
-        
         _animator.SetBool("ExecuteThrowKnife", false);
+        
+        Debug.Log("[PlayerCombat/OnThrowKnifeCancel] Knife throw ended!");
     }
     
     private void OnSlowAttack(InputAction.CallbackContext obj)
@@ -176,31 +175,33 @@ public class PlayerCombat : MonoBehaviour
         if (!CanAttack() || !_playerMovement.IsGrounded())
             return;
 
-        Debug.Log("[PlayerCombat/OnSlowAttack] Slow attack performed!");
-        
         _animator.SetBool("ExecuteSlowAttack", true);
+        
+        Debug.Log("[PlayerCombat/OnSlowAttack] Performing Slow attack!");
     }
 
     private void OnSlowAttackCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("[PlayerCombat/OnSlowAttackCancel] Slow attack ended!");
         _animator.SetBool("ExecuteSlowAttack", false);
+        
+        Debug.Log("[PlayerCombat/OnSlowAttackCancel] Slow attack ended!");
     }
     
     private void OnLightAttack(InputAction.CallbackContext obj)
     {
         if (!CanAttack())
             return;
-
-        Debug.Log("[PlayerCombat/OnLightAttack] Light attack performed!");
         
         _animator.SetBool("ExecuteLightAttack", true);
+        
+        Debug.Log("[PlayerCombat/OnLightAttack] Performing light attack!");
     }
 
     private void OnLightAttackCancel(InputAction.CallbackContext obj)
     {
-        Debug.Log("[PlayerCombat/OnLightAttackCancel] Light attack ended!");
         _animator.SetBool("ExecuteLightAttack", false);
+        
+        Debug.Log("[PlayerCombat/OnLightAttackCancel] Light attack ended!");
     }
 
     #endregion
@@ -256,9 +257,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is pressing an attack key, otherwise false.</returns>
     public bool IsInAttackState()
     {
-        bool inAttackState = _lightAttack.inProgress || _slowAttack.inProgress || _throwKnife.inProgress;
-        
-        return inAttackState;
+        return _lightAttack.inProgress || _slowAttack.inProgress || _throwKnife.inProgress;
     }
 
     /// <summary>
@@ -267,14 +266,12 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is playing an attack animation, otherwise false.</returns>
     public bool IsInAttackAnim()
     {
-        bool inAttackAnim = _animator.IsPlayingAnimation("Light Attack",
-                                (int)AnimationLayers.AttackAnimLayer) ||
-                            _animator.IsPlayingAnimation("Slow Attack",
-                                (int)AnimationLayers.AttackAnimLayer) ||
-                            _animator.IsPlayingAnimation("Throw Knife",
-                                (int)AnimationLayers.AttackAnimLayer);
-
-        return inAttackAnim;
+        return _animator.IsPlayingAnimation("Light Attack",
+                   (int)AnimationLayers.AttackAnimLayer) ||
+               _animator.IsPlayingAnimation("Slow Attack",
+                   (int)AnimationLayers.AttackAnimLayer) ||
+               _animator.IsPlayingAnimation("Throw Knife",
+                   (int)AnimationLayers.AttackAnimLayer);
     }
 
     /// <summary>
@@ -382,7 +379,7 @@ public class PlayerCombat : MonoBehaviour
     /// <returns>Returns true if player is allowed to attack, otherwise false.</returns>
     private bool CanAttack()
     {
-        return IsInAttackState() && !IsInAttackAnim();
+        return IsInAttackState();
     }
     
     /// <summary>
