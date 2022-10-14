@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 237149936644739824}
   - component: {fileID: 4594499663198562498}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Extra Rope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 274.0619, y: 269}
+  m_AnchoredPosition: {x: 461, y: 269}
   m_SizeDelta: {x: 24.7904, y: 160.9425}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &237149936644739824
@@ -86,7 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5820581208741082813}
   m_Layer: 5
-  m_Name: Sliding Area
+  m_Name: slider_area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -125,12 +125,12 @@ GameObject:
   - component: {fileID: 264599153888458223}
   - component: {fileID: 7955344408241390528}
   m_Layer: 5
-  m_Name: scroll_bg
+  m_Name: wide_scroll_bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4292852670786591058
 RectTransform:
   m_ObjectHideFlags: 0
@@ -148,8 +148,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3.3715, y: 0}
-  m_SizeDelta: {x: 728, y: 1132.8743}
+  m_AnchoredPosition: {x: -1.0288, y: 0.19482}
+  m_SizeDelta: {x: 783.6165, y: 1128.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &264599153888458223
 CanvasRenderer:
@@ -335,9 +335,8 @@ GameObject:
   - component: {fileID: 1159579126270760352}
   - component: {fileID: 7733502023850064001}
   - component: {fileID: 4961556732522176033}
-  - component: {fileID: 8221469426540274896}
   m_Layer: 5
-  m_Name: btn_back (1)
+  m_Name: achievements_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -402,62 +401,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8221469426540274896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5818000079842940512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 4961556732522176033}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ShowAchievementsUI
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &6179533257675573988
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,12 +413,12 @@ GameObject:
   - component: {fileID: 1325554304716654623}
   - component: {fileID: 9087251372226220715}
   m_Layer: 5
-  m_Name: scroll_bg (1)
+  m_Name: narrow_scroll_bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6925732504683182760
 RectTransform:
   m_ObjectHideFlags: 0
@@ -546,7 +489,7 @@ GameObject:
   - component: {fileID: 3302202251795908974}
   - component: {fileID: 4390927344571965064}
   m_Layer: 5
-  m_Name: Handle
+  m_Name: bead_slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -776,14 +719,14 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7129739287904158726}
+  - {fileID: 1159579126270760352}
   - {fileID: 4292852670786591058}
   - {fileID: 6925732504683182760}
   - {fileID: 6098421377717004499}
   - {fileID: 2958780108483637541}
   - {fileID: 7129739286121133020}
-  - {fileID: 1159579126270760352}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1076,7 +1019,7 @@ GameObject:
   - component: {fileID: 7026412968326015524}
   - component: {fileID: 799318856190009159}
   m_Layer: 5
-  m_Name: Scrollbar
+  m_Name: achievement_list_scrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1100,7 +1043,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 271.4, y: 63.793167}
+  m_AnchoredPosition: {x: 463, y: 63.793167}
   m_SizeDelta: {x: 23.1503, y: 538.244}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8102181327904417051
@@ -1185,7 +1128,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 7845911768875016848}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.8842268
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1204,7 +1147,7 @@ GameObject:
   - component: {fileID: 1392064888880703121}
   - component: {fileID: 931570538986640749}
   m_Layer: 5
-  m_Name: Scroll View (1)
+  m_Name: scroll_view
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1229,8 +1172,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.479702, y: 1.9339}
-  m_SizeDelta: {x: 597.0193, y: 665.8295}
+  m_AnchoredPosition: {x: -0.7822, y: 1.9339}
+  m_SizeDelta: {x: 990, y: 667}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8470956533632623651
 CanvasRenderer:
@@ -1286,7 +1229,7 @@ MonoBehaviour:
   m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 2
-  m_Elasticity: 300
+  m_Elasticity: 2
   m_Inertia: 0
   m_DecelerationRate: 0.135
   m_ScrollSensitivity: 30
@@ -1328,7 +1271,7 @@ GameObject:
   - component: {fileID: 5024306597408349046}
   - component: {fileID: 950068126760899342}
   m_Layer: 5
-  m_Name: Achi List
+  m_Name: achievement_list
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1351,8 +1294,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -332.9148}
-  m_SizeDelta: {x: 550, y: 0}
+  m_AnchoredPosition: {x: 0, y: -333.5}
+  m_SizeDelta: {x: 990, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &240122780810700809
 MonoBehaviour:
@@ -1372,7 +1315,7 @@ MonoBehaviour:
     m_Top: 16
     m_Bottom: 16
   m_ChildAlignment: 0
-  m_Spacing: 10
+  m_Spacing: 60
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0

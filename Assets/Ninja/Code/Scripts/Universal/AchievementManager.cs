@@ -15,36 +15,29 @@ public class Achievement
         Obtained = false;
         Eligible = true;
     }
-
-    //Used to restart the Achievement when going to the main menu or restarting the game.
-    public Achievement(Achievement achi)
-    {
-        Type = achi.Type;
-        Title = achi.Title;
-        Description = achi.Description;
-        Obtained = false;
-        Eligible = true;
-    }
-
+    
+    /// <summary>
+    /// The type of the achievement.
+    /// </summary>
     public AchievementType Type { get; set; }
     
     /// <summary>
-    /// The top line of the achievement, aka the title.
+    /// The achievement's title.
     /// </summary>
     public string Title { get; set; }
 
     /// <summary>
-    /// The fulfillment criteria for the achievement. What the player needs to do.
+    /// The achievement's description, fulfillment criteria for the achievement; what the player needs to do.
     /// </summary>
     public string Description { get; set; }
 
     /// <summary>
-    /// Determines if the player has achieved the achievement or not.
+    /// Determines if the player has obtained the achievement or not.
     /// </summary>
     public bool Obtained { get; set; }
 
     /// <summary>
-    /// Determines if the player is allowed to get the achievement during the active run.
+    /// Determines if the player is eligible to receive the achievement during the active run.
     /// </summary>
     public bool Eligible{ get; set; }
 }
@@ -58,49 +51,35 @@ public class SpeedBasedAchievement : Achievement
         TimeElapsed = 0.0f;
     }
 
-    //Used to restart the Achievement when going to the main menu or restarting the game.
-    public SpeedBasedAchievement(SpeedBasedAchievement sAchi) : base(sAchi.Type, sAchi.Title, sAchi.Description)
-    {
-        TimeToBeat = sAchi.TimeToBeat;
-        TimeElapsed = 0.0f;
-    }
-
     /// <summary>
-    /// float is used to determine speed based achievements. Not used by others.
+    /// The time that is required to be beat or met to obtain the achievement.
     /// </summary>
     public float TimeToBeat { get; set; }
 
     /// <summary>
-    /// The time that has elapsed towards the specific achievement.
+    /// The time that has elapsed towards the achievement.
     /// </summary>
     public float TimeElapsed { get; set; }
 }
 
-public class CollectiblesAchievement : Achievement
+public class CounterAchievement : Achievement
 {
-    public CollectiblesAchievement(AchievementType type, string title, string description,
-        int numberOfCollectablesToObtains) : base(type, title, description)
+    public CounterAchievement(AchievementType type, string title, string description,
+        int requiredAmount) : base(type, title, description)
     {
-        ObtainableCollectables = numberOfCollectablesToObtains;
-        CollectablesObtained = 0;
+        MaxCounter = requiredAmount;
+        Counter = 0;
     }
-
-    //Used to restart the Achievement when going to the main menu or restarting the game.
-    public CollectiblesAchievement(CollectiblesAchievement cAchi) : base(cAchi.Type, cAchi.Title, cAchi.Description)
-    {
-        ObtainableCollectables = cAchi.ObtainableCollectables;
-        CollectablesObtained = 0;
-    }
-
+    
     /// <summary>
-    /// float is used to determine speed based achievements. Not used by others.
+    /// The amount of collectibles that are obtainable
     /// </summary>
-    public int ObtainableCollectables { get; set; }
+    public int MaxCounter { get; set; }
 
     /// <summary>
     /// The time that has elapsed towards the specific achievement.
     /// </summary>
-    public int CollectablesObtained { get; set; }
+    public int Counter { get; set; }
 }
 
 #endregion
@@ -108,32 +87,54 @@ public class CollectiblesAchievement : Achievement
 public class AchievementManager : MonoBehaviour
 {
     #region Public Properties
-
+    
     public List<Achievement> Achievements { get; private set; }
-    public GameObject achiList;
-    public Scrollbar scrollbar;
-
-    private int achisObtained;
 
     #endregion
 
+    #region Public Fields
+
+    public GameObject achievementList;
+    public Scrollbar scrollbar;
+
+    #endregion
+    
+    #region Private Fields
+    
+    private TMP_Text[,] _cachedAchievementTexts;
+    private TMP_Text _cachedCompletionPctText;
+    private int _obtainedCount;
+    
+    #endregion
+    
+    #region Unity Events
+    
     private void Awake()
     {
         Achievements = new List<Achievement>();
         InitAchievements();
+        
+        _cachedAchievementTexts = new TMP_Text[Achievements.Count, 2];
         FillAchievementUIList();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Achievements[achisObtained].Obtained = true;
-            achisObtained++;
-            RefreshAchievementUIList();
-        }
+        // DEBUG
+        
+        if (!Input.GetKeyDown(KeyCode.Escape))
+            return;
+        
+        Achievements[_obtainedCount].Obtained = true;
+        _obtainedCount++;
+        
+        // DEBUG END
     }
+    
+    #endregion
 
+    #region Private Helper Methods
+    
     private void InitAchievements()
     {
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Enter the Jungle", "Clear level 1"));
@@ -151,16 +152,16 @@ public class AchievementManager : MonoBehaviour
 
         Achievements.Add(
             new Achievement(AchievementType.TriggerType, "The Corruption Lingers", "Obtain the bad ending"));
-        Achievements.Add(new CollectiblesAchievement(AchievementType.CollectibleType, "The corruption is cleansed",
+        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "The corruption is cleansed",
             "Obtain the good ending", 3));
 
-        Achievements.Add(new CollectiblesAchievement(AchievementType.CollectibleType, "Level 1 Genocide",
+        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Level 1 Genocide",
             "Kill all enemies in level 1", 8));
 
-        Achievements.Add(new CollectiblesAchievement(AchievementType.CollectibleType, "Level 2 Genocide",
+        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Level 2 Genocide",
             "Kill all enemies in Level 2", 7));
 
-        Achievements.Add(new CollectiblesAchievement(AchievementType.CollectibleType, "Level 3 Genocide",
+        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Level 3 Genocide",
             "Kill all enemies in Level 3", 11));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Level 1 Mostly Pacifist",
@@ -186,7 +187,7 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Proud Ninja",
             "Clear game without grabbing any pick-ups"));
 
-        Achievements.Add(new CollectiblesAchievement(AchievementType.CollectibleType, "Resourceful Ninja",
+        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Resourceful Ninja",
             "Grab a total of 50 pick-ups throughout your journey", 50));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Martial Ninja",
@@ -229,90 +230,94 @@ public class AchievementManager : MonoBehaviour
     }
     private void FillAchievementUIList()
     {
-        int num = 1;
-        foreach (var achievement in Achievements)
+        for(int i = 0; i < Achievements.Count; i++)
         {
-            GameObject gameObject = new GameObject();
-            GameObject title = new GameObject();
-            GameObject description = new GameObject();
+            // Retrieve the achievement.
+            Achievement achievement = Achievements[i];
+            
+            // Create the achievement's parent and children objects.
+            GameObject parentObject =
+                new GameObject($"Achievement {i + 1}", typeof(RectTransform), typeof(VerticalLayoutGroup));
+            parentObject.layer = LayerMask.NameToLayer("UI");
+            GameObject title = new GameObject("Name", typeof(TextMeshProUGUI));
+            GameObject description = new GameObject("Description", typeof(TextMeshProUGUI));
 
-            title.name = "Name";
-            description.name = "Description";
-            gameObject.name = $"Achievement {num}";
+            // Set the parent for the parent and children objects of the achievement object.
+            title.transform.SetParent(parentObject.transform, false);
+            description.transform.SetParent(parentObject.transform, false);
+            parentObject.transform.SetParent(achievementList.transform, false);
 
-            gameObject.AddComponent<RectTransform>();
-            gameObject.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
-
-            gameObject.AddComponent<VerticalLayoutGroup>();
-            gameObject.GetComponent<VerticalLayoutGroup>().childControlHeight = false;
-            gameObject.GetComponent<VerticalLayoutGroup>().childControlWidth = false;
-            gameObject.layer = LayerMask.NameToLayer("UI");
-
-            title.AddComponent<TextMeshProUGUI>();
-
-            title.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            title.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
-
-            description.AddComponent<TextMeshProUGUI>();
-            description.GetComponent<TextMeshProUGUI>().text = achievement.Description;
-
-            description.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            description.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
-
-            if (achievement.Obtained)
-            {
-                title.GetComponent<TextMeshProUGUI>().text = achievement.Title;
-                title.GetComponent<TextMeshProUGUI>().color = Color.black;
-                description.GetComponent<TextMeshProUGUI>().color = Color.black;
-            }
-            else
-            {
-                title.GetComponent<TextMeshProUGUI>().text = "???";
-                title.GetComponent<TextMeshProUGUI>().color = Color.grey;
-                description.GetComponent<TextMeshProUGUI>().color = Color.grey;
-            }
-
-            title.transform.SetParent(gameObject.transform, false);
-            description.transform.SetParent(gameObject.transform, false);
-            gameObject.transform.SetParent(achiList.transform, false);
-            num++;
+            // Retrieve necessary components for parent and child objects of the newly created achievement object.
+            RectTransform parentRectTransform = parentObject.GetComponent<RectTransform>();
+            VerticalLayoutGroup parentVerticalLayoutGroup = parentObject.GetComponent<VerticalLayoutGroup>();
+            RectTransform titleRectTransform = title.GetComponent<RectTransform>();
+            TMP_Text titleText = title.GetComponent<TMP_Text>();
+            RectTransform descriptionRectTransform = description.GetComponent<RectTransform>();
+            TMP_Text descriptionText = description.GetComponent<TMP_Text>();
+            
+            
+            // Setup necessary components for parent and child objects of the newly created achievement object.
+            parentRectTransform.anchoredPosition = titleRectTransform.anchoredPosition =
+                descriptionRectTransform.anchoredPosition = Vector2.zero;
+            
+            parentRectTransform.sizeDelta = titleRectTransform.sizeDelta =
+                descriptionRectTransform.sizeDelta = new Vector2(990, 40);
+            
+            parentVerticalLayoutGroup.childControlHeight = false;
+            parentVerticalLayoutGroup.childControlWidth = false;
+            descriptionText.text = achievement.Description;
+            titleText.text = achievement.Obtained ? achievement.Title : "???";
+            titleText.color = descriptionText.color = achievement.Obtained ? Color.black : Color.grey;
+            
+            // Cache the title and description text for that achievement [Refreshing purposes].
+            _cachedAchievementTexts[i, 0] = titleText;
+            _cachedAchievementTexts[i, 1] = descriptionText;
         }
 
-        GameObject completionPercent = new GameObject();
-        completionPercent.name = "Completion Percent";
-        completionPercent.AddComponent<RectTransform>();
-        completionPercent.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        completionPercent.GetComponent<RectTransform>().sizeDelta = new Vector2(990, 40);
-        completionPercent.AddComponent<TextMeshProUGUI>();
-        completionPercent.GetComponent<TextMeshProUGUI>().text = $"Achievements Obtained: {achisObtained}/{Achievements.Count}";
-        completionPercent.GetComponent<TextMeshProUGUI>().color = Color.grey;
-        completionPercent.transform.SetParent(achiList.transform, false);
+        // Create the completion percent gameobject and set its parent object.
+        GameObject completionPct =
+            new GameObject("Completion Percent", typeof(RectTransform), typeof(TextMeshProUGUI));
+        completionPct.transform.SetParent(achievementList.transform, false);
 
-        achiList.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1236);
+        // Retrieve necessary components from the completion percent and achievement list gameobjects.
+        RectTransform achieveListRectTransform = achievementList.GetComponent<RectTransform>();
+        RectTransform completionPctRectTransform = completionPct.GetComponent<RectTransform>();
+        TMP_Text completionPctText = completionPct.GetComponent<TMP_Text>();
+
+        // Setup the completion percent and achievement list gameobjects.
+        completionPctRectTransform.anchoredPosition = Vector2.zero;
+        completionPctRectTransform.sizeDelta = new Vector2(990, 40);
+        completionPctText.text = $"Achievements Obtained: {_obtainedCount}/{Achievements.Count}";
+        completionPctText.color = Color.grey;
+        achieveListRectTransform.anchoredPosition = new Vector2(0, -1236);
+        
+        // Cache the completion percent text [Refreshing purposes]
+        _cachedCompletionPctText = completionPctText;
     }
+    
+    #endregion
 
-    private void RefreshAchievementUIList()
+    #region Public Helper Methods
+    
+    public void RefreshAchievementUIList()
     {
         //Gameobject.transform.childCount starts counting at 1 not 0.
-        //The last object in achiList is a completion total and is handled after the loop.
-        for (int i = 0; i < achiList.transform.childCount - 1; i++)
+        //The last object in achievementList is a completion total and is handled after the loop.
+        for (int i = 0; i < achievementList.transform.childCount - 1; i++)
         {
-            //if the achievement in question hasn't been obtained, skip checking it and move to the next achievement
+            // Move to next achievement if current has not obtained.
             if (!Achievements[i].Obtained)
                 continue;
-
-            //get the children of the current itteration and set both of their text to black and swap the game text
-            achiList.transform.GetChild(i).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = Achievements[i].Title;
-            achiList.transform.GetChild(i).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
-            achiList.transform.GetChild(i).GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
+            
+            // Update the cached title and description texts as needed.
+            _cachedAchievementTexts[i, 0].text = Achievements[i].Title;
+            _cachedAchievementTexts[i, 0].color = _cachedAchievementTexts[i, 1].color = Color.black;
         }
 
-        achiList.transform.GetChild(24).gameObject.GetComponent<TextMeshProUGUI>().text = $"Achievements Obtained: {achisObtained}/{Achievements.Count}";
-
-        if (achisObtained != 24)
-            return;
-
-        achiList.transform.GetChild(24).gameObject.gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
+        // Update the cached completion percent text and color appropriately
+        _cachedCompletionPctText.text = $"Achievements Obtained: {_obtainedCount}/{Achievements.Count}";
+        _cachedCompletionPctText.color = _obtainedCount == Achievements.Count ? Color.black : Color.grey;
     }
+    
+    #endregion
 }
