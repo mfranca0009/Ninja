@@ -3,12 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagement : MonoBehaviour
 {
+
+    public UIManager _uIManager;
+
     #region Public Helper Methods
     
     public void LoadSceneByString(string sceneString)
     {
         SceneManager.LoadScene(sceneString);
         Debug.Log("sceneName to load: " + sceneString);
+        _uIManager.showLoadingUI(false);
     }
 
     public void LoadSceneByIndex(int sceneNumber)
@@ -42,6 +46,8 @@ public class SceneManagement : MonoBehaviour
     {
         Application.Quit();
     }
-    
+
+   
+
     #endregion
 }

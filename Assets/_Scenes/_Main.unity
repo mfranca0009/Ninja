@@ -249,6 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e719be190be06346a53253403fbc69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uIManager: {fileID: 0}
 --- !u!114 &1681883300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,13 +262,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb0c91370bc29b4f85d6b7b5ad15dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseCanvas: {fileID: 0}
+  gameOverCanvas: {fileID: 0}
   mainMenuCanvas: {fileID: 0}
   settingsCanvas: {fileID: 0}
   soundSettingsCanvas: {fileID: 0}
+  achievementsCanvas: {fileID: 0}
+  achievementsPopCanvas: {fileID: 0}
   scrollCanvas: {fileID: 0}
   healthCanvas: {fileID: 0}
+  loadingScreen: {fileID: 0}
+  livesImages: []
   livesSprites: []
-  playerHealth: {fileID: 0}
+  scrollEntries: []
 --- !u!1 &1944154757
 GameObject:
   m_ObjectHideFlags: 0

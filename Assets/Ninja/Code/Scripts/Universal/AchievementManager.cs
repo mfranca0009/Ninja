@@ -318,6 +318,11 @@ public class AchievementManager : MonoBehaviour
         _cachedCompletionPctText.text = $"Achievements Obtained: {_obtainedCount}/{Achievements.Count}";
         _cachedCompletionPctText.color = _obtainedCount == Achievements.Count ? Color.black : Color.grey;
     }
+
+    public void ObtainAchievement(string achievementName)
+    {
+        Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+    }
     
     #endregion
 }
