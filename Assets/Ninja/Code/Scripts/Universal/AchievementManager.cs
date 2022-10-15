@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -40,6 +41,11 @@ public class Achievement
     /// Determines if the player is eligible to receive the achievement during the active run.
     /// </summary>
     public bool Eligible{ get; set; }
+    
+    /// <summary>
+    /// Determines if the achievement has shown its pop notification or not.
+    /// </summary>
+    public bool HasPopped { get; set; }
 }
 
 public class SpeedBasedAchievement : Achievement
@@ -96,6 +102,11 @@ public class AchievementManager : MonoBehaviour
 
     public GameObject achievementList;
     public Scrollbar scrollbar;
+    // public Canvas popAchievementCanvas;
+    public GameObject popAchievementBg;
+    public TMP_Text popAchievementName;
+    public Animator popAchievementAnimator;
+    public float hidePopAchievementDelay = 5f;
 
     #endregion
     
@@ -104,6 +115,8 @@ public class AchievementManager : MonoBehaviour
     private TMP_Text[,] _cachedAchievementTexts;
     private TMP_Text _cachedCompletionPctText;
     private int _obtainedCount;
+
+    private float _hidePopAchievementTimer;
     
     #endregion
     
@@ -116,11 +129,16 @@ public class AchievementManager : MonoBehaviour
         
         _cachedAchievementTexts = new TMP_Text[Achievements.Count, 2];
         FillAchievementUIList();
+
+        _hidePopAchievementTimer = hidePopAchievementDelay;
     }
 
     private void Update()
     {
         // DEBUG
+        
+        ShowPopAchievementUI();
+        HidePopAchievementUI();
         
         if (!Input.GetKeyDown(KeyCode.Escape))
             return;
@@ -197,36 +215,6 @@ public class AchievementManager : MonoBehaviour
             "Beat the game without using any melee attacks"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Master Ninja", "Obtain all other Achievements"));
-
-        /*-----------------------------------------------------------------------------------/
-        |                                                                                    |
-        |   Filter out non-trigger type achievements, only select trigger type achievements  |
-        |                                                                                    |
-        |-----------------------------------------------------------------------------------*/
-
-        /*Achievement[] triggerAchievementArray = Achievements.FindAll(possibleAchievements =>
-            possibleAchievements.Type == AchievementType.TriggerType).ToArray();*/
-
-
-        /*-------------------------------------------------------/
-        |                                                        |
-        |  Search for a specific achievement by title and type   |
-        |                                                        |
-        |-------------------------------------------------------*/
-
-        /*Achievement achievementFound = Achievements.Find(possibleAchievement =>
-            possibleAchievement.Type == AchievementType.TriggerType &&
-            possibleAchievement.Title == "Expert Ninja");*/
-
-        /*-------------------------------------------------------/
-        |                                                        |
-        |        Search for an achievement by title              |
-        |                                                        |
-        |-------------------------------------------------------*/
-
-        /*SpeedBasedAchievement achi =
-            Achievements.Find(possibleAchievement =>
-                possibleAchievement.Title == "Enter the Jungle") as SpeedBasedAchievement;*/
     }
     private void FillAchievementUIList()
     {
@@ -294,6 +282,35 @@ public class AchievementManager : MonoBehaviour
         // Cache the completion percent text [Refreshing purposes]
         _cachedCompletionPctText = completionPctText;
     }
+
+    private void ShowPopAchievementUI()
+    {
+        if (!popAchievementAnimator.IsPlayingAnimation("Empty", (int)AnimationLayers.BaseAnimLayer))
+            return;
+
+        Achievement achievement = Achievements.Find(achievement => achievement.Obtained && !achievement.HasPopped);
+
+        if (achievement == null)
+            return;
+
+        popAchievementName.text = achievement.Title;
+        popAchievementAnimator.SetTrigger("Show");
+        achievement.HasPopped = true;
+    }
+
+    private void HidePopAchievementUI()
+    {
+        if (!popAchievementAnimator.IsPlayingAnimation("Show", (int)AnimationLayers.BaseAnimLayer))
+            return;
+
+        if (_hidePopAchievementTimer <= 0)
+        {
+            popAchievementAnimator.SetTrigger("Hide");
+            _hidePopAchievementTimer = hidePopAchievementDelay;
+        }
+        else
+            _hidePopAchievementTimer -= Time.unscaledDeltaTime;
+    }
     
     #endregion
 
@@ -321,8 +338,44 @@ public class AchievementManager : MonoBehaviour
 
     public void ObtainAchievement(string achievementName)
     {
-        Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        Achievement achievement = Achievements.Find(achieve => achieve.Title == achievementName);
+
+        if (achievement == null)
+            return;
+
+        achievement.Obtained = true;
     }
-    
+
     #endregion
 }
+
+
+/*-----------------------------------------------------------------------------------/
+|                                                                                    |
+|   Filter out non-trigger type achievements, only select trigger type achievements  |
+|                                                                                    |
+|-----------------------------------------------------------------------------------*/
+
+/*Achievement[] triggerAchievementArray = Achievements.FindAll(possibleAchievements =>
+    possibleAchievements.Type == AchievementType.TriggerType).ToArray();*/
+
+
+/*-------------------------------------------------------/
+|                                                        |
+|  Search for a specific achievement by title and type   |
+|                                                        |
+|-------------------------------------------------------*/
+
+/*Achievement achievementFound = Achievements.Find(possibleAchievement =>
+    possibleAchievement.Type == AchievementType.TriggerType &&
+    possibleAchievement.Title == "Expert Ninja");*/
+
+/*-------------------------------------------------------/
+|                                                        |
+|        Search for an achievement by title              |
+|                                                        |
+|-------------------------------------------------------*/
+
+/*SpeedBasedAchievement achi =
+    Achievements.Find(possibleAchievement =>
+        possibleAchievement.Title == "Enter the Jungle") as SpeedBasedAchievement;*/

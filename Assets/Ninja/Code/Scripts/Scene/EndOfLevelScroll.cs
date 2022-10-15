@@ -40,8 +40,15 @@ public class EndOfLevelScroll : MonoBehaviour
             return;
         
         _uiManager.ShowScrollUI(true);
+        ProcessEndOfLevelAchievement();
+    }
 
+    #endregion
 
+    #region Private Helper Methods
+
+    private void ProcessEndOfLevelAchievement()
+    {
         if (!_achievementManager)
             return;
 
@@ -50,8 +57,11 @@ public class EndOfLevelScroll : MonoBehaviour
 
         if (sceneNum == 4)
         {
-            CounterAchievement cAchi = _achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement;
-            goodEndingTrigger = cAchi.Counter == 3;
+            if (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed")
+                is not CounterAchievement counterAchievement)
+                return;
+            
+            goodEndingTrigger = counterAchievement.Counter == 3;
         }
 
         string achievementName = sceneNum switch
@@ -62,11 +72,8 @@ public class EndOfLevelScroll : MonoBehaviour
             4 => (goodEndingTrigger ? "The corruption is cleansed" : "The Corruption Lingers"),
             _ => string.Empty
         };
-
-
         
-        
-
+        _achievementManager.ObtainAchievement(achievementName);
     }
 
     #endregion

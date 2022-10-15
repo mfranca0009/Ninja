@@ -96,7 +96,6 @@ public class UIManager : MonoBehaviour
 		
 		// Achievements
 		ShowAchievementsUI(false);
-		ShowAchievementsPopUI(false);	
 	}
 
 	// Update is called once per frame
@@ -172,14 +171,14 @@ public class UIManager : MonoBehaviour
 		achievementsCanvas.gameObject.SetActive(show);
 	}
 
-	/// <summary>
-	/// Show/hide achievements pop-up UI.
-	/// </summary>
-	/// <param name="show">Whether to show the UI or not.</param>
-	public void ShowAchievementsPopUI(bool show)
-	{
-		achievementsPopCanvas.gameObject.SetActive(show);
-	}
+	// /// <summary>
+	// /// Show/hide achievements pop-up UI.
+	// /// </summary>
+	// /// <param name="show">Whether to show the UI or not.</param>
+	// public void ShowAchievementsPopUI(bool show)
+	// {
+	// 	achievementsPopCanvas.gameObject.SetActive(show);
+	// }
 
 	/// <summary>
 	/// Show/hide settings menu UI.
