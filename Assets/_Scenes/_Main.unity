@@ -249,6 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e719be190be06346a53253403fbc69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uIManager: {fileID: 0}
 --- !u!114 &1681883300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,6 +271,7 @@ MonoBehaviour:
   achievementsPopCanvas: {fileID: 0}
   scrollCanvas: {fileID: 0}
   healthCanvas: {fileID: 0}
+  loadingScreen: {fileID: 0}
   livesImages: []
   livesSprites: []
   scrollEntries: []

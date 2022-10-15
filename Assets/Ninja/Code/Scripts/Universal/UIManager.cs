@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
 	public Canvas achievementsPopCanvas;
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
+	public Canvas loadingScreen;
 	public Image[] livesImages; 
 
 	// Sprite prefabs
@@ -132,7 +133,12 @@ public class UIManager : MonoBehaviour
 	#endregion
 
 	#region Public UI Methods
-	
+
+	public void showLoadingUI(bool show)
+	{
+		loadingScreen.gameObject.SetActive(show);
+	}
+
 	/// <summary>
 	/// Show/hide main menu UI.
 	/// </summary>
