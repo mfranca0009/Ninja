@@ -48,9 +48,14 @@ public class GameManager : MonoBehaviour
     /// Enemies health that have been "tapped" by the player but not yet killed.
     /// </summary>
     public List<Health> TappedEnemiesHealth { get; private set; }
-    
+
+    /// <summary>
+    /// Reference to the achievement manager.
+    /// </summary>
+    public AchievementManager _achievementManager;
+
     #endregion
-    
+
     #region Serialized Fields
 
     [Header("Game Manager Settings")] 
@@ -102,6 +107,7 @@ public class GameManager : MonoBehaviour
     {
         _sceneManagement = FindObjectOfType<SceneManagement>();
         _uiManager = FindObjectOfType<UIManager>();
+        _achievementManager = FindObjectOfType<AchievementManager>();
         _resetDelayTimer = resetDelay;
         _gameOverDelayTimer = gameOverDelay;
         ActiveItemDrops = new List<GameObject>();

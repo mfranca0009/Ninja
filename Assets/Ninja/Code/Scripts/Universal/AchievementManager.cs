@@ -322,6 +322,10 @@ public class AchievementManager : MonoBehaviour
     public void ObtainAchievement(string achievementName)
     {
         Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+
+        //24. Master Ninja Check
+        if (_obtainedCount == Achievements.Count - 1)
+            Achievements.Find(achi => achi.Title == "Master Ninja").Obtained = true;
     }
     
     #endregion
