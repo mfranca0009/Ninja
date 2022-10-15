@@ -75,7 +75,7 @@ public class DamagePlayer_Trap : MonoBehaviour
         if (!hasHit && sTrap.ShouldRotate())
         {
             //and the object hit is either the player or an enemy.
-            if (collision.gameObject.tag == "Player") // || collision.gameObject.tag == "Enemy")
+            if (collision.gameObject.CompareTag("Player") /*|| collision.gameObject.CompareTag("Enemy"))*/)
             {
                 
                 // Trap hit sound effect

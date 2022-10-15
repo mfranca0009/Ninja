@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Random = UnityEngine.Random;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class TeleportWaypoint
@@ -101,6 +100,22 @@ public class MiniBossAI : MonoBehaviour
     }
 
     /// <summary>
+    /// Flip enemy health bar UI in relation to the enemy's current X-axis value of its local scale.
+    /// </summary>
+    private void FlipHealthUI()
+    {
+        if (!_healthComponent)
+            return;
+        
+        _healthComponent.enemyHealthImage.fillOrigin = transform.localScale.x switch
+        {
+            > 0  => (int)Image.OriginHorizontal.Left,
+            < 0  => (int)Image.OriginHorizontal.Right,
+            _ => (int)Image.OriginHorizontal.Left
+        };
+    }
+    
+    /// <summary>
     /// This function plays the particle system that is sent in. 
     /// </summary>
     /// <param name="smokeBomb"></param>
@@ -138,6 +153,7 @@ public class MiniBossAI : MonoBehaviour
         //Play particles
         PlayParticles(smokeBomb2);
         FaceRight(waypoints[teleportLocation].faceRight);
+        FlipHealthUI();
     }
 
     #endregion

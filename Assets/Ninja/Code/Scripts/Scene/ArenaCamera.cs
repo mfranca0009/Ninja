@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -79,7 +77,7 @@ public class ArenaCamera : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != "Player" || _miniBossHealth.Dead || arenaCamera.isActiveAndEnabled)
+        if (!collision.gameObject.CompareTag("Player") || _miniBossHealth.Dead || arenaCamera.isActiveAndEnabled)
             return;
 
         arenaCamera.transform.position = mainCamera.transform.position;

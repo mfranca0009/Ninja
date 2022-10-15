@@ -11,13 +11,12 @@ public class WarpToPoint : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Cloud")
-        {
-            SetWarpPoint(warpPoint, collision.gameObject);
-            collision.gameObject.transform.position = newWarpPoint;
-            Debug.Log(newWarpPoint);
-
-        }
+        if (!collision.gameObject.CompareTag("Cloud"))
+            return;
+        
+        SetWarpPoint(warpPoint, collision.gameObject);
+        collision.gameObject.transform.position = newWarpPoint;
+        Debug.Log(newWarpPoint);
     }
 
     //Script Functions

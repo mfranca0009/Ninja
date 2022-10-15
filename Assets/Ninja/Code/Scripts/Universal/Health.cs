@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
@@ -31,6 +32,14 @@ public class Health : MonoBehaviour
     [Tooltip("Is this the player gameobject?")]
     public bool isPlayer;
 
+    [Header("Enemy Health UI Settings")] 
+    
+    [Tooltip("The enemy health UI canvas")] 
+    public Canvas enemyHealthCanvas;
+
+    [Tooltip("The enemy health UI image")] 
+    public Image enemyHealthImage;
+    
     #endregion
 
     #region Serialized Fields
@@ -85,7 +94,7 @@ public class Health : MonoBehaviour
     
     // Player Scripts
     private PlayerMovement _playerMovement;
-    
+
     #endregion
 
     #region Unity Events
@@ -99,6 +108,11 @@ public class Health : MonoBehaviour
         _gameManager = FindObjectOfType<GameManager>();
         _uiManager = FindObjectOfType<UIManager>();
         HealthPoints = maxHealth;
+        
+        if (!_uiManager || !enemyHealthCanvas)
+            return;
+
+        UIManager.ShowEnemyHealthUI(enemyHealthCanvas, false);
     }
     
     // Update is called once per frame
@@ -108,6 +122,9 @@ public class Health : MonoBehaviour
         // the player// through the Update loop due to it being a persistent object.
         if (!_playerMovement && _gameManager && _gameManager.Player && isPlayer)
             _playerMovement = _gameManager.Player.GetComponent<PlayerMovement>();
+
+        if (!isPlayer)
+            UIManager.ShowEnemyHealthUI(enemyHealthCanvas, !Dead && HealthPoints < maxHealth);
 
         switch (Dead)
         {
@@ -181,7 +198,7 @@ public class Health : MonoBehaviour
                 if(invoker && !enemyCombat.ChaseTarget && !enemyCombat.InCombat)
                     enemyCombat.NotifyEngagement(invoker);
 
-                if (!_gameManager.TappedEnemiesHealth.Contains(this))
+                if (_gameManager && !_gameManager.TappedEnemiesHealth.Contains(this))
                     _gameManager.TappedEnemiesHealth.Add(this);
             }
 

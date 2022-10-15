@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -225,7 +226,8 @@ public class EnemyMovement : MonoBehaviour
         else
         {
             FlipSprite();
-            
+            FlipHealthUI();
+
             float currentSpeed = alwaysWalk switch
             {
                 true => walkSpeed,
@@ -292,6 +294,8 @@ public class EnemyMovement : MonoBehaviour
         if (!waypoint.WaypointReached)
         {
             FlipSprite();
+            FlipHealthUI();
+
             float currentSpeed = waypoint.shouldRun ? runSpeed : walkSpeed;
 
             UpdateWalkRunSfxPitch(currentSpeed);
@@ -320,6 +324,7 @@ public class EnemyMovement : MonoBehaviour
             return;
 
         FlipSprite();
+        FlipHealthUI();
         
         Vector2 currentPos = _rigidBody.position;
 
@@ -342,6 +347,7 @@ public class EnemyMovement : MonoBehaviour
             return;
 
         FlipSprite();
+        FlipHealthUI();
         
         Vector2 currentPos = _rigidBody.position;
         Vector2 destPos = GetMidPoint(_enemyCombat.Target);
@@ -364,6 +370,7 @@ public class EnemyMovement : MonoBehaviour
             return;
 
         FlipSprite();
+        FlipHealthUI();
         
         Vector2 currentPos = _rigidBody.position;
         Vector2 destPos = _enemyCombat.InvestigateDestPos;
@@ -448,10 +455,26 @@ public class EnemyMovement : MonoBehaviour
             _rigidBody.velocity.x == 0)
             return;
 
-        Vector3 currentScale = transform.localScale;
-        transform.localScale = new Vector3(-currentScale.x, currentScale.y, currentScale.z);
+        Vector3 enemyScale = transform.localScale;
+        transform.localScale = new Vector3(-enemyScale.x, enemyScale.y, enemyScale.z);
     }
 
+    /// <summary>
+    /// Flip enemy health bar UI in relation to the enemy's current X-axis value of its local scale.
+    /// </summary>
+    private void FlipHealthUI()
+    {
+        if (!_health)
+            return;
+        
+        _health.enemyHealthImage.fillOrigin = transform.localScale.x switch
+        {
+            > 0  => (int)Image.OriginHorizontal.Left,
+            < 0  => (int)Image.OriginHorizontal.Right,
+            _ => (int)Image.OriginHorizontal.Left
+        };
+    }
+    
     /// <summary>
     /// Determine pitch of movement sound effect based on current speed.
     /// <param name="currentSpeed">The gameobject's current speed</param>
