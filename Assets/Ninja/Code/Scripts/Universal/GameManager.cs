@@ -163,6 +163,8 @@ public class GameManager : MonoBehaviour
         
         // Update the scene's build index
         _currSceneBuildIndex = _currScene.buildIndex;
+
+        IncrementLevelTimer(_currScene);
     }
 
     #endregion
@@ -252,10 +254,16 @@ public class GameManager : MonoBehaviour
             _gameOverDelayTimer -= Time.deltaTime;
     }
 
+    private void IncrementLevelTimer(Scene scene)
+    {
+        //scene.buildIndex;
+    }
+
+
     #endregion
 
     #region Private Helper Methods
-    
+
     /// <summary>
     /// Wipe all active item drops as long as they are still valid references in the current level.
     /// </summary>
