@@ -40,6 +40,7 @@ public class NoLand : MonoBehaviour
     #region Private Fields
 
     private SoundManager _soundManager;
+    private AchievementManager _achievementManager;
 
     #endregion
     
@@ -48,6 +49,7 @@ public class NoLand : MonoBehaviour
     private void Awake()
     {
         _soundManager = FindObjectOfType<SoundManager>();
+        _achievementManager = FindObjectOfType<AchievementManager>();
     }
     
     private void OnCollisionEnter2D(Collision2D col)
@@ -76,8 +78,16 @@ public class NoLand : MonoBehaviour
             ShouldUseProvidedForce(collidingGoVelocity) ? force : new Vector2(collidingGoVelocity.x, force.y),
             forceMode2D);
 
-        // If no damage should occur, then leave the method body now.
-        if (!shouldDamage || col.gameObject.layer != LayerMask.NameToLayer("Player"))
+        // If the player is the one landing on the entity, give Achievement
+        if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            Achievement achi = _achievementManager.Achievements.Find(achi => achi.Title == "Not an Italian Plumber");
+            if (achi.Obtained == false)
+                achi.Obtained = true;
+        }
+
+            // If no damage should occur, then leave the method body now.
+            if (!shouldDamage || col.gameObject.layer != LayerMask.NameToLayer("Player"))
             return;
 
         // Play hit sound effect
