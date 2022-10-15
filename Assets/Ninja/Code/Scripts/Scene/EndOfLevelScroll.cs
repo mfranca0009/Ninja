@@ -41,6 +41,8 @@ public class EndOfLevelScroll : MonoBehaviour
         
         _uiManager.ShowScrollUI(true);
 
+        //Achievements 1, 2, 3, 8, 9
+        #region Level Completion Achievements
 
         if (!_achievementManager)
             return;
@@ -63,10 +65,30 @@ public class EndOfLevelScroll : MonoBehaviour
             _ => string.Empty
         };
 
+        _achievementManager.Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        #endregion
 
-        
-        
+        //Achievements 4, 5, 6, 7
+        #region Level Speed Clear Achievements
 
+        //Determine which Achievement we should be checking by scene number
+        achievementName = sceneNum switch
+        {
+            1 => "Quick Ninja",
+            2 => "Hasty Ninja",
+            3 => "Untraceable Ninja",
+            4 => "Coup de Grâce",
+            _ => string.Empty
+        };
+
+        //Store the matching Achievement as a SpeedBasedAchievement so we can access time based properties
+        SpeedBasedAchievement sAchi = _achievementManager.Achievements.Find(achi => achi.Title == achievementName) as SpeedBasedAchievement;
+
+        //If the time is low enough, and hasn't been awarded already, award the achievement.
+        if (sAchi.TimeElapsed <= sAchi.TimeToBeat && sAchi.Obtained == false)
+            sAchi.Obtained = true;
+
+        #endregion
     }
 
     #endregion

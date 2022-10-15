@@ -125,8 +125,7 @@ public class AchievementManager : MonoBehaviour
         if (!Input.GetKeyDown(KeyCode.Escape))
             return;
         
-        Achievements[_obtainedCount].Obtained = true;
-        _obtainedCount++;
+        ObtainAchievement(Achievements[_obtainedCount].Title);
         
         // DEBUG END
     }
@@ -145,7 +144,7 @@ public class AchievementManager : MonoBehaviour
             "Clear level 1 in 1:30 minutes", 90f));
         Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Hasty Ninja",
             "Clear level 2 in under 1:30 minutes", 90f));
-        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Un-trackable Ninja",
+        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Untraceable Ninja",
             "Clear level 3 in under 1:30 minutes", 90f));
         Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Coup de Grâce",
             "Defeat White Face in under 45 Seconds", 45f));
@@ -322,11 +321,22 @@ public class AchievementManager : MonoBehaviour
     public void ObtainAchievement(string achievementName)
     {
         Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        _obtainedCount++;
 
         //24. Master Ninja Check
         if (_obtainedCount == Achievements.Count - 1)
+        {
             Achievements.Find(achi => achi.Title == "Master Ninja").Obtained = true;
+            _obtainedCount++;
+        }
     }
     
+    public void ResetTimers()
+    {
+        (Achievements.Find(achi => achi.Title == "Quick Ninja") as SpeedBasedAchievement).TimeElapsed = 0.0f;
+        (Achievements.Find(achi => achi.Title == "Hasty Ninja") as SpeedBasedAchievement).TimeElapsed = 0.0f;
+        (Achievements.Find(achi => achi.Title == "Untraceable Ninja") as SpeedBasedAchievement).TimeElapsed = 0.0f;
+        (Achievements.Find(achi => achi.Title == "Coup de Grâce") as SpeedBasedAchievement).TimeElapsed = 0.0f;
+    }
     #endregion
 }

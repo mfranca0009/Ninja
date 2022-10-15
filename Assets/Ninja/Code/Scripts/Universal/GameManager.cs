@@ -99,6 +99,10 @@ public class GameManager : MonoBehaviour
     private bool _livesSet;
     private bool _gameOver;
 
+    // Achievements
+    private SpeedBasedAchievement _speedBasedAchievement;
+    
+
     #endregion
 
     #region Unity Events
@@ -160,11 +164,14 @@ public class GameManager : MonoBehaviour
             _gameOver = false;
             LevelMidpointReached = false;
         }
-        
+
+        //increment the proper level timer
+        IncrementLevelTimer();
+
+
         // Update the scene's build index
         _currSceneBuildIndex = _currScene.buildIndex;
 
-        IncrementLevelTimer(_currScene);
     }
 
     #endregion
@@ -254,9 +261,31 @@ public class GameManager : MonoBehaviour
             _gameOverDelayTimer -= Time.deltaTime;
     }
 
-    private void IncrementLevelTimer(Scene scene)
+    private void IncrementLevelTimer()
     {
-        //scene.buildIndex;
+        if (_currSceneBuildIndex != _currScene.buildIndex)
+        {
+            SpeedBasedAchievement sAchi = _currScene.buildIndex switch
+            {
+                1 => _achievementManager.Achievements.Find(achi => achi.Title == "Quick Ninja") as SpeedBasedAchievement,
+                2 => _achievementManager.Achievements.Find(achi => achi.Title == "Hasty Ninja") as SpeedBasedAchievement,
+                3 => _achievementManager.Achievements.Find(achi => achi.Title == "Untrackable Ninja") as SpeedBasedAchievement,
+                4 => _achievementManager.Achievements.Find(achi => achi.Title == "Coup de Grace") as SpeedBasedAchievement,
+                _ => new SpeedBasedAchievement(AchievementType.SpeedType, "", "", 0.0f)
+            };
+            _speedBasedAchievement = sAchi;
+        }
+
+        if (_speedBasedAchievement != null && _speedBasedAchievement.Title != "")
+        {
+            _speedBasedAchievement.TimeElapsed += Time.deltaTime;
+
+            if (_speedBasedAchievement.TimeElapsed > _speedBasedAchievement.TimeToBeat)
+                _speedBasedAchievement.Eligible = false;
+        }
+
+        
+
     }
 
 
