@@ -7,13 +7,11 @@ public class SecretScrollBehavior : MonoBehaviour
     public int scrollNumber;
 
     private GameManager _gameManager;
-    private AchievementManager _achievementManager;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        _achievementManager = FindObjectOfType<AchievementManager>();
-        _gameManager = GetComponent<GameManager>();
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -23,6 +21,6 @@ public class SecretScrollBehavior : MonoBehaviour
 
         _gameManager.CollectScroll(scrollNumber);
 
-
+        gameObject.SetActive(false);
     }
 }

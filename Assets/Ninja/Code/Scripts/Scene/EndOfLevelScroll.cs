@@ -48,6 +48,8 @@ public class EndOfLevelScroll : MonoBehaviour
 
     }
 
+    #endregion
+
     private void CheckAchievements()
     {
         //Achievements 1, 2, 3, 8, 9
@@ -150,6 +152,4 @@ public class EndOfLevelScroll : MonoBehaviour
         }
 
     }
-
-    #endregion
 }

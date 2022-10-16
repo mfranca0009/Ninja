@@ -33,16 +33,17 @@ public class UIManager : MonoBehaviour
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
 	public Canvas loadingScreen;
+	public Canvas secretScrollCanvas;
 	public Image[] livesImages; 
 
 	// Sprite prefabs
 	public Sprite[] livesSprites;
+
+	// Scroll fragment gameobjects
+	public GameObject[] scrollFragments;
 	
 	// End-of-level scroll messages
 	public List<ScrollEntry> scrollEntries;
-
-	// Achievement Manager
-	public AchievementManager _achievementManager;
 	
 	#endregion
 
@@ -59,6 +60,12 @@ public class UIManager : MonoBehaviour
 	private Scene _currentScene;
 	private bool _paused;
 
+	// Achievement Manager
+	private AchievementManager _achievementManager;
+
+	// Game Manager
+	private GameManager _gameManager;
+	
 	// UI States
 	private bool _pauseShown;
 
@@ -75,6 +82,7 @@ public class UIManager : MonoBehaviour
 		_sceneManagement = FindObjectOfType<SceneManagement>();
 		_soundManager = FindObjectOfType<SoundManager>();
 		_achievementManager = FindObjectOfType<AchievementManager>();
+		_gameManager = FindObjectOfType<GameManager>();
 
 		_currSoundSettings = new float[(int)AudioMixerGroup.Max];
 
@@ -85,22 +93,6 @@ public class UIManager : MonoBehaviour
 		_slidersChanged = new Dictionary<string, Slider>();
 		
 		Time.timeScale = 1f;
-		
-
-		ShowSettingsUI(false);
-		ShowSoundSettingsUI(false);
-
-		ShowPauseUI(false);
-		ShowFinishedUI(false);
-		ShowScrollUI(false);
-		
-		// Settings
-		ShowSettingsUI(false);
-		ShowSoundSettingsUI(false);
-		
-		// Achievements
-		ShowAchievementsUI(false);
-		ShowAchievementsPopUI(false);	
 	}
 
 	// Update is called once per frame
@@ -110,6 +102,7 @@ public class UIManager : MonoBehaviour
 		
 		ShowMainMenuUI(_sceneManagement.HasBuildIndex(_currentScene, 0));
 		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
+		ShowSecretScrollUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
 
 		//uses the p or escape button to pause and unpause the game
 		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) &&
@@ -371,6 +364,38 @@ public class UIManager : MonoBehaviour
 		
 		nextLevelBtnText.text = "Continue";
 	}
+
+	/// <summary>
+	/// Show/hide the Secret Scroll UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowSecretScrollUI(bool show)
+    {
+		secretScrollCanvas.gameObject.SetActive(show);
+	}
+
+	/// <summary>
+	/// Update secret scroll fragment UI depending on how many were collected.
+	/// </summary>
+	public void UpdateSecretScrollFragmentUI()
+	{
+		bool allFragmentsObtained =
+			_gameManager.ScrollStatus(0) && _gameManager.ScrollStatus(1) && _gameManager.ScrollStatus(2);
+
+		if (allFragmentsObtained)
+		{
+			scrollFragments[1].SetActive(false);
+			scrollFragments[2].SetActive(false);
+			scrollFragments[3].SetActive(false);
+			scrollFragments[0].SetActive(true);
+			return;
+		}
+		
+		for (int i = 0; i < scrollFragments.Length - 1; i++)
+		{
+			scrollFragments[i + 1].SetActive(_gameManager.ScrollStatus(i));
+		}
+    }
 
 	/// <summary>
 	/// Show/hide the game over UI.

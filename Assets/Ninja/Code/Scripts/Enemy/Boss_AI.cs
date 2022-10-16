@@ -25,6 +25,7 @@ public class Boss_AI : MonoBehaviour
     
     //Health Logic
     private Health _healthComponent;
+    private Health _playerHealthComponent;
     private float previousHealth;
 
     //flip logic
@@ -35,6 +36,7 @@ public class Boss_AI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _playerHealthComponent = FindObjectOfType<PlayerCombat>().gameObject.GetComponent<Health>();
         _healthComponent = GetComponent<Health>();
         previousHealth = _healthComponent.HealthPoints;
         curLocalScale = transform.localScale;
@@ -47,6 +49,7 @@ public class Boss_AI : MonoBehaviour
     {
         DamageCheck();
         ScrollCheck();
+        PlayerDeadCheck();
     }
 
     //Check if you've been damaged
@@ -146,5 +149,23 @@ public class Boss_AI : MonoBehaviour
             < 0  => (int)Image.OriginHorizontal.Right,
             _ => (int)Image.OriginHorizontal.Left
         };
+    }
+    
+    private void PlayerDeadCheck()
+    {
+        if (!_playerHealthComponent.Dead)
+            return;
+
+        EnemyCombat[] enemies = FindObjectsOfType<EnemyCombat>();
+
+        foreach (EnemyCombat enemy in enemies)
+        {
+            if (enemy.gameObject.name == "Boss")
+                continue;
+
+            Destroy(enemy.gameObject);
+            previousHealth = _healthComponent.maxHealth;
+        }
+
     }
 }

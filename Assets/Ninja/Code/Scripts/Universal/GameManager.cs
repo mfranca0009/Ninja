@@ -48,13 +48,8 @@ public class GameManager : MonoBehaviour
     /// Enemies health that have been "tapped" by the player but not yet killed.
     /// </summary>
     public List<Health> TappedEnemiesHealth { get; private set; }
-
-    /// <summary>
-    /// Reference to the achievement manager.
-    /// </summary>
-    public AchievementManager _achievementManager;
-
     
+    public int EnemyCount { get; private set; }
 
     #endregion
 
@@ -102,9 +97,11 @@ public class GameManager : MonoBehaviour
     private bool _gameOver;
 
     // Achievements
+    private AchievementManager _achievementManager;
     private SpeedBasedAchievement _speedBasedAchievement;
-    public int EnemyCount { get; private set; }
 
+    private bool[] _obtainedScrollFragmentStates;
+    
     #endregion
 
     #region Unity Events
@@ -118,6 +115,8 @@ public class GameManager : MonoBehaviour
         _gameOverDelayTimer = gameOverDelay;
         ActiveItemDrops = new List<GameObject>();
         TappedEnemiesHealth = new List<Health>();
+
+        _obtainedScrollFragmentStates = new bool[3];
     }
 
     // Update is called once per frame
@@ -305,9 +304,24 @@ public class GameManager : MonoBehaviour
 
     public void CollectScroll(int scrollNum)
     {
-        //TODO: Tell UI to add visual indicator of having collected the matching scroll
+        _obtainedScrollFragmentStates[scrollNum - 1] = true;
+        
+        // Update achievement progress
+        if (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") is not
+            CounterAchievement counterAchievement)
+            return;
 
-        (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement).Counter++;
+        counterAchievement.Counter++;
+
+        // Update GUI
+        _uiManager.UpdateSecretScrollFragmentUI();
+
+    }
+
+    //Used by the UI Manager to confirm which fragments should be showing.
+    public bool ScrollStatus(int fragmentNum)
+    {
+        return _obtainedScrollFragmentStates[fragmentNum];
     }
 
     #endregion
