@@ -13,7 +13,7 @@ public class SecretScrollBehavior : MonoBehaviour
     void Start()
     {
         _achievementManager = FindObjectOfType<AchievementManager>();
-        _gameManager = GetComponent<GameManager>();
+        _gameManager = FindObjectOfType<GameManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -23,6 +23,6 @@ public class SecretScrollBehavior : MonoBehaviour
 
         _gameManager.CollectScroll(scrollNumber);
 
-
+        gameObject.SetActive(false);
     }
 }

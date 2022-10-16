@@ -33,16 +33,21 @@ public class UIManager : MonoBehaviour
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
 	public Canvas loadingScreen;
+	public Canvas secretScrollCanvas;
 	public Image[] livesImages; 
 
 	// Sprite prefabs
 	public Sprite[] livesSprites;
+	public GameObject[] scrollFragments;
 	
 	// End-of-level scroll messages
 	public List<ScrollEntry> scrollEntries;
 
 	// Achievement Manager
-	public AchievementManager _achievementManager;
+	private AchievementManager _achievementManager;
+
+	// Game Manager
+	private GameManager _gameManager;
 	
 	#endregion
 
@@ -75,6 +80,7 @@ public class UIManager : MonoBehaviour
 		_sceneManagement = FindObjectOfType<SceneManagement>();
 		_soundManager = FindObjectOfType<SoundManager>();
 		_achievementManager = FindObjectOfType<AchievementManager>();
+		_gameManager = FindObjectOfType<GameManager>();
 
 		_currSoundSettings = new float[(int)AudioMixerGroup.Max];
 
@@ -93,7 +99,9 @@ public class UIManager : MonoBehaviour
 		ShowPauseUI(false);
 		ShowFinishedUI(false);
 		ShowScrollUI(false);
-		
+
+		ShowSecretScrollUI(false);
+
 		// Settings
 		ShowSettingsUI(false);
 		ShowSoundSettingsUI(false);
@@ -110,6 +118,7 @@ public class UIManager : MonoBehaviour
 		
 		ShowMainMenuUI(_sceneManagement.HasBuildIndex(_currentScene, 0));
 		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
+		ShowSecretScrollUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
 
 		//uses the p or escape button to pause and unpause the game
 		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) &&
@@ -371,6 +380,35 @@ public class UIManager : MonoBehaviour
 		
 		nextLevelBtnText.text = "Continue";
 	}
+
+	/// <summary>
+	/// Show/hide the Secret Scroll UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowSecretScrollUI(bool show)
+    {
+		secretScrollCanvas.gameObject.SetActive(show);
+	}
+
+	/// <summary>
+	/// Updates Secret Scroll Progress
+	/// </summary>
+	public void UpdateSecretScrollFragments()
+    {
+		if ((_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement).Counter == 3)
+        {
+			scrollFragments[1].SetActive(false);
+			scrollFragments[2].SetActive(false);
+			scrollFragments[3].SetActive(false);
+			scrollFragments[0].SetActive(true);
+			return;
+		}
+
+		for(int i = 1; i < scrollFragments.Length; i++)
+        {
+			scrollFragments[i].SetActive(_gameManager.ScrollStatus(i));
+        }
+    }
 
 	/// <summary>
 	/// Show/hide the game over UI.
