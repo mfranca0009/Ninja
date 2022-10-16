@@ -304,8 +304,6 @@ public class GameManager : MonoBehaviour
 
     public void CollectScroll(int scrollNum)
     {
-        //TODO: Tell UI to add visual indicator of having collected the matching scroll
-
         _obtainedScrollFragmentStates[scrollNum - 1] = true;
         
         // Update achievement progress
