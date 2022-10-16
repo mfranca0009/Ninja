@@ -1,65 +1,92 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SwingingTrap : MonoBehaviour
 {
+    #region Public Properties
+    
+    /// <summary>
+    /// Whether the trap should rotate or not.
+    /// </summary>
+    public bool ShouldRotate { get; private set; }
+    
+    #endregion
+    
+    #region Public Fields
+    
+    [Header("Swinging Trap Settings")]
+    
+    [Tooltip("The trap that will be triggered from pressure plate")]
     public GameObject trap;
+    
+    [Tooltip("The trap's blade")]
     public GameObject blade;
+    
+    [Tooltip("The rotation speed in which the blade will rotate")]
     public float rotationSpeed = 360.0f;
+    
+    #endregion
 
-    private bool shouldRotate = false;
-    private bool hasActivated = false;
-    private float step = -4.0f;
-    private GameObject trapParent;
+    #region Private Fields
+    
+    private bool _hasActivated;
+    private float _step = -4.0f;
+    private GameObject _trapParent;
     private AchievementManager _achievementManager;
+    
+    #endregion
 
-    void Start()
+    #region Unity Events
+    
+    private void Start()
     {
-        trapParent = trap.transform.parent.gameObject;
+        _trapParent = trap.transform.parent.gameObject;
         _achievementManager = FindObjectOfType<AchievementManager>();
     }
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (shouldRotate)
+        if (!ShouldRotate)
+            return;
+        
+        trap.transform.Rotate(0.0f, 0.0f, _step * Time.deltaTime);
+        _step -= 1.0f;
+        
+        if (_trapParent.transform.localScale.x >= 0.00f)
         {
-            trap.transform.Rotate(0.0f, 0.0f, step * Time.deltaTime);
-            step -= 1.0f;
-            if (trapParent.transform.localScale.x >= 0.00f)
+            blade.transform.Rotate(0.0f, 0.0f, rotationSpeed);
+            if (trap.transform.rotation.z <= -.92f) // Based on the z value of the rotation Quaternion
             {
-                blade.transform.Rotate(0.0f, 0.0f, rotationSpeed);
-                if (trap.transform.rotation.z <= -.92f) // Based on the z value of the rotation Quaternion
-                {
-                    shouldRotate = false;
-                }
-            }
-            else
-            {
-                blade.transform.Rotate(0.0f, 0.0f, -rotationSpeed);
-
-                if (trap.transform.rotation.z >= .92f) //Based on the z value of the rotation Quaternion
-                {
-                    shouldRotate = false;
-                }
+                ShouldRotate = false;
             }
         }
-        
-    }
+        else
+        {
+            blade.transform.Rotate(0.0f, 0.0f, -rotationSpeed);
 
-    public bool ShouldRotate()
-    {
-        return shouldRotate;
+            if (trap.transform.rotation.z >= .92f) //Based on the z value of the rotation Quaternion
+            {
+                ShouldRotate = false;
+            }
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player") || hasActivated)
+        if (!collision.gameObject.CompareTag("Player") || _hasActivated)
             return;
 
-        shouldRotate = true;
-        hasActivated = true;
+        ShouldRotate = true;
+        _hasActivated = true;
 
-        _achievementManager.Achievements.Find(achi => achi.Title == "No Traps Activated").Eligible = false;
+        Achievement noTrapAchievement =
+            _achievementManager.Achievements.Find(achievement => achievement.Title == "No Traps Activated");
+
+        if (noTrapAchievement == null)
+            return;
+        
+        noTrapAchievement.Eligible = false;
     }
+    
+    #endregion
 }

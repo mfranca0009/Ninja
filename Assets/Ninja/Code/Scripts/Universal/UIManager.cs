@@ -86,20 +86,8 @@ public class UIManager : MonoBehaviour
 		
 		Time.timeScale = 1f;
 		
-
-		ShowSettingsUI(false);
-		ShowSoundSettingsUI(false);
-
-		ShowPauseUI(false);
-		ShowFinishedUI(false);
-		ShowScrollUI(false);
-		
-		// Settings
-		ShowSettingsUI(false);
-		ShowSoundSettingsUI(false);
-		
-		// Achievements
-		ShowAchievementsUI(false);
+		// Note: no need to hide UI elements in Start() anymore. Since we have them referenced as public through
+		// the editor we can have them hidden by default on the `PersistentObjects` prefab and not have to find them.
 	}
 
 	// Update is called once per frame
@@ -137,7 +125,7 @@ public class UIManager : MonoBehaviour
 
 	#region Public UI Methods
 
-	public void showLoadingUI(bool show)
+	public void ShowLoadingUI(bool show)
 	{
 		loadingScreen.gameObject.SetActive(show);
 	}

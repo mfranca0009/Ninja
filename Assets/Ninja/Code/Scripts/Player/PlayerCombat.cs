@@ -142,8 +142,10 @@ public class PlayerCombat : MonoBehaviour
         _playerMovement = GetComponent<PlayerMovement>();
         _soundManager = FindObjectOfType<SoundManager>();
         _achievementManager = FindObjectOfType<AchievementManager>();
-        _rangedAchievement = _achievementManager.Achievements.Find(achi => achi.Title == "Distance Ninja");
-        _meleeAchievement = _achievementManager.Achievements.Find(achi => achi.Title == "Martial Ninja");
+        
+        _rangedAchievement =
+            _achievementManager.Achievements.Find(achievement => achievement.Title == "Distance Ninja");
+        _meleeAchievement = _achievementManager.Achievements.Find(achievement => achievement.Title == "Martial Ninja");
 
         MaxKnives = 1;
         
@@ -172,7 +174,7 @@ public class PlayerCombat : MonoBehaviour
         _animator.SetBool("ExecuteThrowKnife", true);
 
         //Disable Martial Ninja Eligibility
-        if (_meleeAchievement.Eligible)
+        if (_meleeAchievement is { Eligible: true })
             _meleeAchievement.Eligible = false;
         
         Debug.Log("[PlayerCombat/OnThrowKnife] Execute knife throw input!");
@@ -193,7 +195,7 @@ public class PlayerCombat : MonoBehaviour
         _animator.SetBool("ExecuteSlowAttack", true);
 
         //Disable Distance Ninja Eligibility
-        if (_rangedAchievement.Eligible)
+        if (_rangedAchievement is { Eligible: true })
             _rangedAchievement.Eligible = false;
 
         Debug.Log("[PlayerCombat/OnSlowAttack] Performing Slow attack!");
@@ -214,7 +216,7 @@ public class PlayerCombat : MonoBehaviour
         _animator.SetBool("ExecuteLightAttack", true);
 
         //Disable Distance Ninja Eligibility
-        if (_rangedAchievement.Eligible)
+        if (_rangedAchievement is { Eligible: true })
             _rangedAchievement.Eligible = false;
 
         Debug.Log("[PlayerCombat/OnLightAttack] Performing light attack!");

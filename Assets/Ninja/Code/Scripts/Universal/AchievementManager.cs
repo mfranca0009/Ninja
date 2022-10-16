@@ -1,7 +1,9 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 #region Achievement Classes
@@ -40,7 +42,7 @@ public class Achievement
     /// <summary>
     /// Determines if the player is eligible to receive the achievement during the active run.
     /// </summary>
-    public bool Eligible{ get; set; }
+    public bool Eligible { get; set; }
     
     /// <summary>
     /// Determines if the achievement has shown its pop notification or not.
@@ -101,7 +103,6 @@ public class AchievementManager : MonoBehaviour
     #region Public Fields
 
     public GameObject achievementList;
-
     public Scrollbar scrollbar;
 
     // public Canvas popAchievementCanvas;
@@ -109,6 +110,8 @@ public class AchievementManager : MonoBehaviour
     public TMP_Text popAchievementName;
     public Animator popAchievementAnimator;
     public float hidePopAchievementDelay = 5f;
+
+    public AudioClip achievementObtainedSound;
 
     #endregion
 
@@ -120,12 +123,24 @@ public class AchievementManager : MonoBehaviour
 
     private float _hidePopAchievementTimer;
 
+    // Speed achievement currently tracked for active level
+    private SpeedAchievement _trackedSpeedAchievement;
+
+    private SoundManager _soundManager;
+
+    private Queue<Achievement> _obtainedAchievementQueue;
+    private bool _achievementPopInProgress;
+    
+    private int _currentBuildIndex;
     #endregion
 
     #region Unity Events
 
     private void Awake()
     {
+        _soundManager = FindObjectOfType<SoundManager>();
+
+        _obtainedAchievementQueue = new Queue<Achievement>();
         Achievements = new List<Achievement>();
         InitAchievements();
 
@@ -137,11 +152,22 @@ public class AchievementManager : MonoBehaviour
 
     private void Update()
     {
-        // DEBUG
+        int buildIndex = SceneManager.GetActiveScene().buildIndex;
 
+        AchievementCleanUp(buildIndex);
+        
         ShowPopAchievementUI();
         HidePopAchievementUI();
+        popAchievementAnimator.SetBool("PopInProgress", _achievementPopInProgress);
+        
+        TrackAchievementTimer(buildIndex);
+        UpdateTrackedSpeedAchievementTimer();
 
+        // Update the build index of the active level last.
+        _currentBuildIndex = buildIndex;
+        
+        // DEBUG
+        
         if (!Input.GetKeyDown(KeyCode.Escape))
             return;
 
@@ -149,11 +175,14 @@ public class AchievementManager : MonoBehaviour
 
         // DEBUG END
     }
-
+    
     #endregion
 
     #region Private Helper Methods
 
+    /// <summary>
+    /// Initialize and store all achievements for the game.
+    /// </summary>
     private void InitAchievements()
     {
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Enter the Jungle", "Clear level 1"));
@@ -201,7 +230,7 @@ public class AchievementManager : MonoBehaviour
             "Reach the boss without activating any swinging traps"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Proud Ninja",
-            "Reach the boss without grabing any pick-ups"));
+            "Reach the boss without grabbing any pick-ups"));
 
         Achievements.Add(new CounterAchievement(AchievementType.CounterType, "Resourceful Ninja",
             "Grab a total of 50 pick-ups throughout your journey", 50));
@@ -213,11 +242,14 @@ public class AchievementManager : MonoBehaviour
             "Beat the game without using any melee attacks"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
-            "Clear the game without losing any lives"));
+            "Clear the game without dying"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Master Ninja", "Obtain all other Achievements"));
     }
 
+    /// <summary>
+    /// Initial setup of the achievement UI building all achievement objects.
+    /// </summary>
     private void FillAchievementUIList()
     {
         for (int i = 0; i < Achievements.Count; i++)
@@ -285,39 +317,58 @@ public class AchievementManager : MonoBehaviour
         _cachedCompletionPctText = completionPctText;
     }
 
+    /// <summary>
+    /// Play the obtain pop achievement notification show animation.
+    /// </summary>
     private void ShowPopAchievementUI()
     {
-        if (!popAchievementAnimator.IsPlayingAnimation("Empty", (int)AnimationLayers.BaseAnimLayer))
+        if (!popAchievementAnimator.IsPlayingAnimation("Empty", (int)AnimationLayers.BaseAnimLayer) ||
+            _achievementPopInProgress || _obtainedAchievementQueue.Count == 0)
             return;
 
-        Achievement achievement = Achievements.Find(achievement => achievement.Obtained && !achievement.HasPopped);
+        _achievementPopInProgress = true;
+        
+        Achievement achievement = _obtainedAchievementQueue.Dequeue();
 
-        if (achievement == null)
-            return;
-
+        achievement.HasPopped = true;
         popAchievementName.text = achievement.Title;
         popAchievementAnimator.SetTrigger("Show");
-        achievement.HasPopped = true;
-    }
-
-    private void HidePopAchievementUI()
-    {
-        if (!popAchievementAnimator.IsPlayingAnimation("Show", (int)AnimationLayers.BaseAnimLayer))
+        
+        if (!_soundManager)
             return;
 
-        if (_hidePopAchievementTimer <= 0)
+        _soundManager.PlaySoundEffect(AudioSourceType.UiEffects, achievementObtainedSound);
+    }
+
+    /// <summary>
+    /// Play the obtain pop achievement notification hide animation. Also updates pop-notification progress to false.
+    /// </summary>
+    private void HidePopAchievementUI()
+    {
+        if (popAchievementAnimator.IsPlayingAnimation("Show", (int)AnimationLayers.BaseAnimLayer) &&
+            popAchievementAnimator.GetCurrentAnimatorStateInfo((int)AnimationLayers.BaseAnimLayer).normalizedTime >= 1f)
         {
-            popAchievementAnimator.SetTrigger("Hide");
-            _hidePopAchievementTimer = hidePopAchievementDelay;
+            if (_hidePopAchievementTimer <= 0)
+            {
+                popAchievementAnimator.SetTrigger("Hide");
+                _hidePopAchievementTimer = hidePopAchievementDelay;
+            }
+            else
+                _hidePopAchievementTimer -= Time.unscaledDeltaTime;
         }
-        else
-            _hidePopAchievementTimer -= Time.unscaledDeltaTime;
+
+        if (popAchievementAnimator.IsPlayingAnimation("Hide", (int)AnimationLayers.BaseAnimLayer) &&
+            popAchievementAnimator.GetCurrentAnimatorStateInfo((int)AnimationLayers.BaseAnimLayer).normalizedTime >= 1f)
+            _achievementPopInProgress = false;
     }
 
     #endregion
 
     #region Public Helper Methods
 
+    /// <summary>
+    /// Refresh the achievement UI to reflect any changes with obtained achievements.
+    /// </summary>
     public void RefreshAchievementUIList()
     {
         //Gameobject.transform.childCount starts counting at 1 not 0.
@@ -345,25 +396,91 @@ public class AchievementManager : MonoBehaviour
     /// achievement as obtained. Then if all other achievements have been obtained, 
     /// it awards the Master Ninja Achievement.
     /// </summary>
-    /// <param name="achievementName"></param>
+    /// <param name="achievementName">The achievement's title to obtain.</param>
     public void ObtainAchievement(string achievementName)
     {
         Achievement achievement = Achievements.Find(achievement => achievement.Title == achievementName);
         
         if (achievement is not { Eligible: true } || achievement.Obtained)
             return;
-
+        
         achievement.Obtained = true;
         _obtainedCount++;
+        _obtainedAchievementQueue.Enqueue(achievement);
         
         //24. Master Ninja Check - return if achievement count is not max count.
         if (_obtainedCount != Achievements.Count - 1)
             return;
-        
-        Achievements.Find(possibleAchievement => possibleAchievement.Title == "Master Ninja").Obtained = true;
-        _obtainedCount++;
-    }
 
+        achievement = Achievements.Find(possibleAchievement => possibleAchievement.Title == "Master Ninja");
+        
+        if (achievement is not { Eligible: true } || achievement.Obtained)
+            return;
+
+        achievement.Obtained = true;
+        _obtainedCount++;
+        _obtainedAchievementQueue.Enqueue(achievement);
+
+    }
+    
+    /// <summary>
+    /// Assign the appropriate speed achievement that should be tracked if the active level has changed.
+    /// </summary>
+    /// <param name="newBuildIndex">The new scene build index.</param>
+    private void TrackAchievementTimer(int newBuildIndex)
+    {
+        if (_currentBuildIndex == newBuildIndex)
+            return;
+        
+        SpeedAchievement speedAchievement = newBuildIndex switch
+        {
+            1 => Achievements.Find(achievement => achievement.Title == "Quick Ninja") as SpeedAchievement,
+            2 => Achievements.Find(achievement => achievement.Title == "Hasty Ninja") as SpeedAchievement,
+            3 => Achievements.Find(achievement => achievement.Title == "Untrackable Ninja") as SpeedAchievement,
+            4 => Achievements.Find(achievement => achievement.Title == "Coup de Grâce") as SpeedAchievement,
+            _ => null
+        };
+
+        _trackedSpeedAchievement = speedAchievement;
+    }
+    
+    /// <summary>
+    /// Update the achievement timer for the tracked speed achievement for the active level.
+    /// </summary>
+    private void UpdateTrackedSpeedAchievementTimer()
+    {
+        if (_trackedSpeedAchievement == null)
+            return;
+        
+        _trackedSpeedAchievement.TimeElapsed += Time.deltaTime;
+        
+        if (_trackedSpeedAchievement.TimeElapsed > _trackedSpeedAchievement.TimeToBeat)
+            _trackedSpeedAchievement.Eligible = false;
+    }
+    
+    /// <summary>
+    /// Clean-up timers and counters when the active level has changed depending on circumstances.
+    /// </summary>
+    /// <param name="newBuildIndex">The new scene build index.</param>
+    private void AchievementCleanUp(int newBuildIndex)
+    {
+        if (_currentBuildIndex == newBuildIndex)
+            return;
+        
+        ResetTimers();
+
+        if (newBuildIndex != 1) 
+            return;
+        
+        ResetCounters();
+        Achievements.Find(achievement => achievement.Title == "Martial Ninja").Eligible = true;
+        Achievements.Find(achievement => achievement.Title == "Distance Ninja").Eligible = true;
+        Achievements.Find(achievement => achievement.Title == "Expert Ninja").Eligible = true;
+    }
+    
+    /// <summary>
+    /// Reset timers for all speed-based achievements
+    /// </summary>
     public void ResetTimers()
     {
         if (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.SpeedType)
@@ -378,9 +495,8 @@ public class AchievementManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Resets the Counters in all achievements if sceneNum is 1
+    /// Reset counters for all counter-type achievements.
     /// </summary>
-    /// <param name="sceneNum"></param>
     public void ResetCounters()
     {
         if (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.CounterType)

@@ -40,15 +40,22 @@ public class RestartPlane : MonoBehaviour
         if (isPlayer)
             return;
 
-        //Implementation for Achievement 17. Being a Bully
-        Achievement achievement = _achievementManager.Achievements.Find(achi => achi.Title == "Being a Bully");
-        if ( achievement.Obtained == false)
-            achievement.Obtained = true;
-
         if (shouldDestroyEnemy)
             Destroy(collision.gameObject, enemyDestroyDelay);
         else
             collision.gameObject.SetActive(false);
+
+        if (!_achievementManager)
+            return;
+        
+        // Achievement 17 [Being a bully]
+        Achievement achievement =
+            _achievementManager.Achievements.Find(achievement => achievement.Title == "Being a Bully");
+
+        if (achievement == null)
+            return;
+
+        _achievementManager.ObtainAchievement(achievement.Title);
     }
     
     #endregion

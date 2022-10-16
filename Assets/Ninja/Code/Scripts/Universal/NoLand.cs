@@ -78,15 +78,7 @@ public class NoLand : MonoBehaviour
             ShouldUseProvidedForce(collidingGoVelocity) ? force : new Vector2(collidingGoVelocity.x, force.y),
             forceMode2D);
 
-        // If the player is the one landing on the entity, give Achievement
-        if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            Achievement achi = _achievementManager.Achievements.Find(achi => achi.Title == "Not an Italian Plumber");
-            if (achi.Obtained == false)
-                achi.Obtained = true;
-        }
-
-            // If no damage should occur, then leave the method body now.
+        // If no damage should occur, then leave the method body now.
             if (!shouldDamage || col.gameObject.layer != LayerMask.NameToLayer("Player"))
             return;
 
@@ -96,6 +88,19 @@ public class NoLand : MonoBehaviour
         
         // Damage victim
         gameObject.GetComponent<Health>().DealDamage(landingDamage, col.gameObject);
+        
+        /* ACHIEVEMENT CHECK */
+
+        if (!_achievementManager || col.gameObject.layer != LayerMask.NameToLayer("Player"))
+            return;
+
+        Achievement noLandAchievement =
+            _achievementManager.Achievements.Find(achievement => achievement.Title == "Not an Italian Plumber");
+
+        if (noLandAchievement == null)
+            return;
+
+        _achievementManager.ObtainAchievement(noLandAchievement.Title);
     }
     
     #endregion

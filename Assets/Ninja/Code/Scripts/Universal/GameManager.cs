@@ -50,9 +50,9 @@ public class GameManager : MonoBehaviour
     public List<Health> TappedEnemiesHealth { get; private set; }
 
     /// <summary>
-    /// Total amount of enemies within the current level
+    /// The total amount of enemies present at start of active level.
     /// </summary>
-    public int EnemyCount { get; private set; }
+    public int TotalEnemiesForLevel { get; private set; }
     
     #endregion
 
@@ -130,7 +130,7 @@ public class GameManager : MonoBehaviour
         // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
-            EnemyCount = GetEnemyCount();
+            TotalEnemiesForLevel = GetEnemyCount();
             LevelMidpointReached = false;
             ActiveItemDrops.Clear();
             TappedEnemiesHealth.Clear();
@@ -168,13 +168,8 @@ public class GameManager : MonoBehaviour
             LevelMidpointReached = false;
         }
 
-        //increment the proper level timer
-        IncrementLevelTimer();
-
-
         // Update the scene's build index
         _currSceneBuildIndex = _currScene.buildIndex;
-
     }
 
     #endregion
@@ -245,8 +240,8 @@ public class GameManager : MonoBehaviour
         else
             _resetDelayTimer -= Time.deltaTime;
 
-        //Disable no death eligability
-        _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = false;
+        //Disable no death eligibility
+        _achievementManager.Achievements.Find(achievement => achievement.Title == "Expert Ninja").Eligible = false;
     }
 
     /// <summary>
@@ -272,37 +267,21 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    #region Achievement Helper Methods
-
-    private void IncrementLevelTimer()
-    {
-        if (_currSceneBuildIndex != _currScene.buildIndex)
-        {
-            SpeedAchievement speedAchievement = _currScene.buildIndex switch
-            {
-                1 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Quick Ninja") as SpeedAchievement,
-                2 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Hasty Ninja") as SpeedAchievement,
-                3 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Untrackable Ninja") as SpeedAchievement,
-                4 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Coup de Grace") as SpeedAchievement,
-                _ => new SpeedAchievement(AchievementType.SpeedType, "", "", 0.0f)
-            };
-            _speedAchievement = speedAchievement;
-        }
-
-        if (_speedAchievement == null || _speedAchievement.Title == "")
-            return;
-        
-        _speedAchievement.TimeElapsed += Time.deltaTime;
-        
-        if (_speedAchievement.TimeElapsed > _speedAchievement.TimeToBeat)
-            _speedAchievement.Eligible = false;
-    }
-
+    #region Public Helper Methods
+    
+    /// <summary>
+    /// Retrieve most recent enemy count for active level.
+    /// </summary>
+    /// <returns>Returns the amount of enemies remaining on the active level.</returns>
     public int GetEnemyCount()
     {
         return FindObjectsOfType<EnemyCombat>().Length;
     }
-
+    
+    // Matt: Since the scroll fragment will end up having a script of its own to determine if the trigger was entered,
+    // we should have a scroll fragment count variable within the game manager class. Anything specific to achievement
+    // processing or updating should be put in the achievement manager, and anything specific to the UI should be moved
+    // to the UI manager.
     public void CollectScroll(int scrollNum)
     {
         //TODO: Tell UI to add visual indicator of having collected the matching scroll
@@ -310,9 +289,9 @@ public class GameManager : MonoBehaviour
         ((CounterAchievement)_achievementManager.Achievements.Find(achievement =>
             achievement.Title == "The corruption is cleansed")).Counter++;
     }
-
+    
     #endregion
-
+    
     #region Private Helper Methods
 
     /// <summary>

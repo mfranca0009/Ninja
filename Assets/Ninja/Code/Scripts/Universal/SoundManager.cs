@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour
 	public AudioSource AttackEffectsSource;
 	public AudioSource DamageEffectsSource;
 	public AudioSource ItemEffectsSource;
+	public AudioSource UiEffectsSource;
 
 	// Random pitch adjustment range.
 	public float LowPitchRange = .95f;
@@ -36,6 +37,7 @@ public class SoundManager : MonoBehaviour
 			AudioSourceType.AttackEffects => AttackEffectsSource,
 			AudioSourceType.DamageEffects => DamageEffectsSource,
 			AudioSourceType.ItemEffects => ItemEffectsSource,
+			AudioSourceType.UiEffects => UiEffectsSource,
 			AudioSourceType.None or _ => null
 		};
 
@@ -70,6 +72,7 @@ public class SoundManager : MonoBehaviour
 			AudioSourceType.AttackEffects => AttackEffectsSource,
 			AudioSourceType.DamageEffects => DamageEffectsSource,
 			AudioSourceType.ItemEffects => ItemEffectsSource,
+			AudioSourceType.UiEffects => UiEffectsSource,
 			AudioSourceType.None or _ => null
 		};
 

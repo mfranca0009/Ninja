@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DamagePlayer_Trap : MonoBehaviour
@@ -72,7 +70,7 @@ public class DamagePlayer_Trap : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //If the trap hasn't hit anyone and has been activated
-        if (!hasHit && sTrap.ShouldRotate())
+        if (!hasHit && sTrap.ShouldRotate)
         {
             //and the object hit is either the player or an enemy.
             if (collision.gameObject.CompareTag("Player") /*|| collision.gameObject.CompareTag("Enemy"))*/)

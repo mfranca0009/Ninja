@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -98,15 +97,10 @@ public class EndOfLevelScroll : MonoBehaviour
             1 => "Quick Ninja",
             2 => "Hasty Ninja",
             3 => "Untraceable Ninja",
-            4 => "Coup de Gr�ce",
+            4 => "Coup de Grâce",
             _ => string.Empty
         };
-
-        //Store the matching Achievement as a SpeedAchievement so we can access time based properties
-        SpeedAchievement speedAchievement =
-            _achievementManager.Achievements.Find(achievement => achievement.Title == achievementName) as
-                SpeedAchievement;
-
+        
         _achievementManager.ObtainAchievement(achievementName);
     }
 
@@ -136,7 +130,7 @@ public class EndOfLevelScroll : MonoBehaviour
             _achievementManager.ObtainAchievement(achievementName);
         }
         
-        if (_gameManager.EnemyCount - _gameManager.GetEnemyCount() > 1)
+        if (_gameManager.TotalEnemiesForLevel - _gameManager.GetEnemyCount() is > 1/* or < 1*/)
             return;
         
         ////PACIFIST
