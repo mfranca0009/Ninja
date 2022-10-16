@@ -93,7 +93,7 @@ public class CounterAchievement : Achievement
 public class AchievementManager : MonoBehaviour
 {
     #region Public Properties
-    
+
     public List<Achievement> Achievements { get; private set; }
 
     #endregion
@@ -101,7 +101,9 @@ public class AchievementManager : MonoBehaviour
     #region Public Fields
 
     public GameObject achievementList;
+
     public Scrollbar scrollbar;
+
     // public Canvas popAchievementCanvas;
     public GameObject popAchievementBg;
     public TMP_Text popAchievementName;
@@ -109,24 +111,24 @@ public class AchievementManager : MonoBehaviour
     public float hidePopAchievementDelay = 5f;
 
     #endregion
-    
+
     #region Private Fields
-    
+
     private TMP_Text[,] _cachedAchievementTexts;
     private TMP_Text _cachedCompletionPctText;
     private int _obtainedCount;
 
     private float _hidePopAchievementTimer;
-    
+
     #endregion
-    
+
     #region Unity Events
-    
+
     private void Awake()
     {
         Achievements = new List<Achievement>();
         InitAchievements();
-        
+
         _cachedAchievementTexts = new TMP_Text[Achievements.Count, 2];
         FillAchievementUIList();
 
@@ -136,23 +138,22 @@ public class AchievementManager : MonoBehaviour
     private void Update()
     {
         // DEBUG
-        
+
         ShowPopAchievementUI();
         HidePopAchievementUI();
-        
+
         if (!Input.GetKeyDown(KeyCode.Escape))
             return;
-        
-        Achievements[_obtainedCount].Obtained = true;
-        _obtainedCount++;
-        
+
+        ObtainAchievement(Achievements[_obtainedCount].Title);
+
         // DEBUG END
     }
-    
+
     #endregion
 
     #region Private Helper Methods
-    
+
     private void InitAchievements()
     {
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Enter the Jungle", "Clear level 1"));
@@ -163,7 +164,7 @@ public class AchievementManager : MonoBehaviour
             "Clear level 1 in 1:30 minutes", 90f));
         Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Hasty Ninja",
             "Clear level 2 in under 1:30 minutes", 90f));
-        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Un-trackable Ninja",
+        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Untraceable Ninja",
             "Clear level 3 in under 1:30 minutes", 90f));
         Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Coup de Grâce",
             "Defeat White Face in under 45 Seconds", 45f));
@@ -197,13 +198,10 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Being a Bully", "Push an enemy into a pit"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "No Traps Activated",
-            "Clear the game without activating any swinging traps"));
-
-        Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
-            "Clear the game without losing any lives"));
+            "Reach the boss without activating any swinging traps"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Proud Ninja",
-            "Clear game without grabbing any pick-ups"));
+            "Reach the boss without grabing any pick-ups"));
 
         Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Resourceful Ninja",
             "Grab a total of 50 pick-ups throughout your journey", 50));
@@ -214,15 +212,19 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Distance Ninja",
             "Beat the game without using any melee attacks"));
 
+        Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
+            "Clear the game without losing any lives"));
+
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Master Ninja", "Obtain all other Achievements"));
     }
+
     private void FillAchievementUIList()
     {
-        for(int i = 0; i < Achievements.Count; i++)
+        for (int i = 0; i < Achievements.Count; i++)
         {
             // Retrieve the achievement.
             Achievement achievement = Achievements[i];
-            
+
             // Create the achievement's parent and children objects.
             GameObject parentObject =
                 new GameObject($"Achievement {i + 1}", typeof(RectTransform), typeof(VerticalLayoutGroup));
@@ -242,21 +244,21 @@ public class AchievementManager : MonoBehaviour
             TMP_Text titleText = title.GetComponent<TMP_Text>();
             RectTransform descriptionRectTransform = description.GetComponent<RectTransform>();
             TMP_Text descriptionText = description.GetComponent<TMP_Text>();
-            
-            
+
+
             // Setup necessary components for parent and child objects of the newly created achievement object.
             parentRectTransform.anchoredPosition = titleRectTransform.anchoredPosition =
                 descriptionRectTransform.anchoredPosition = Vector2.zero;
-            
+
             parentRectTransform.sizeDelta = titleRectTransform.sizeDelta =
                 descriptionRectTransform.sizeDelta = new Vector2(990, 40);
-            
+
             parentVerticalLayoutGroup.childControlHeight = false;
             parentVerticalLayoutGroup.childControlWidth = false;
             descriptionText.text = achievement.Description;
             titleText.text = achievement.Obtained ? achievement.Title : "???";
             titleText.color = descriptionText.color = achievement.Obtained ? Color.black : Color.grey;
-            
+
             // Cache the title and description text for that achievement [Refreshing purposes].
             _cachedAchievementTexts[i, 0] = titleText;
             _cachedAchievementTexts[i, 1] = descriptionText;
@@ -278,7 +280,7 @@ public class AchievementManager : MonoBehaviour
         completionPctText.text = $"Achievements Obtained: {_obtainedCount}/{Achievements.Count}";
         completionPctText.color = Color.grey;
         achieveListRectTransform.anchoredPosition = new Vector2(0, -1236);
-        
+
         // Cache the completion percent text [Refreshing purposes]
         _cachedCompletionPctText = completionPctText;
     }
@@ -311,11 +313,11 @@ public class AchievementManager : MonoBehaviour
         else
             _hidePopAchievementTimer -= Time.unscaledDeltaTime;
     }
-    
+
     #endregion
 
     #region Public Helper Methods
-    
+
     public void RefreshAchievementUIList()
     {
         //Gameobject.transform.childCount starts counting at 1 not 0.
@@ -325,7 +327,7 @@ public class AchievementManager : MonoBehaviour
             // Move to next achievement if current has not obtained.
             if (!Achievements[i].Obtained)
                 continue;
-            
+
             // Update the cached title and description texts as needed.
             _cachedAchievementTexts[i, 0].text = Achievements[i].Title;
             _cachedAchievementTexts[i, 0].color = _cachedAchievementTexts[i, 1].color = Color.black;
@@ -336,19 +338,59 @@ public class AchievementManager : MonoBehaviour
         _cachedCompletionPctText.color = _obtainedCount == Achievements.Count ? Color.black : Color.grey;
     }
 
+
+    /// <summary>
+    /// This Function takes the title of an achievement and checks if that achievement
+    /// is eligible and hasn't been obtained. If both are true, it marks that named 
+    /// achievement as obtained. Then if all other achievements have been obtained, 
+    /// it awards the Master Ninja Achievement.
+    /// </summary>
+    /// <param name="achievementName"></param>
     public void ObtainAchievement(string achievementName)
     {
-        Achievement achievement = Achievements.Find(achieve => achieve.Title == achievementName);
-
-        if (achievement == null)
+        Achievement achievement = Achievements.Find(achi => achi.Title == achievementName);
+        if (!achievement.Eligible || achievement.Obtained)
             return;
 
         achievement.Obtained = true;
+        _obtainedCount++;
+        
+        //24. Master Ninja Check - return if achievement count is not max count.
+        if (_obtainedCount != Achievements.Count - 1)
+            return;
+        
+        Achievements.Find(achi => achi.Title == "Master Ninja").Obtained = true;
+        _obtainedCount++;
     }
 
-    #endregion
+    public void ResetTimers()
+    {
+        Achievement[] speedAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.SpeedType)).ToArray();
+
+        foreach (SpeedBasedAchievement achievement in speedAchievementArray)
+        {
+            achievement.TimeElapsed = 0.0f;
+            achievement.Eligible = true;
+        }
+    }
+
+    /// <summary>
+    /// Resets the Counters in all achievements if sceneNum is 1
+    /// </summary>
+    /// <param name="sceneNum"></param>
+    public void ResetCounters()
+    {
+        Achievement[] collectableAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.CollectibleType)).ToArray();
+
+        foreach (CounterAchievement achievement in collectableAchievementArray)
+        {
+            achievement.Counter = 0;
+            achievement.Eligible = true;
+        }
+    }
 }
 
+#endregion
 
 /*-----------------------------------------------------------------------------------/
 |                                                                                    |

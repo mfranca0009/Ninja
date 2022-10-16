@@ -48,9 +48,16 @@ public class GameManager : MonoBehaviour
     /// Enemies health that have been "tapped" by the player but not yet killed.
     /// </summary>
     public List<Health> TappedEnemiesHealth { get; private set; }
+
+    /// <summary>
+    /// Reference to the achievement manager.
+    /// </summary>
+    public AchievementManager _achievementManager;
+
     
+
     #endregion
-    
+
     #region Serialized Fields
 
     [Header("Game Manager Settings")] 
@@ -94,6 +101,10 @@ public class GameManager : MonoBehaviour
     private bool _livesSet;
     private bool _gameOver;
 
+    // Achievements
+    private SpeedBasedAchievement _speedBasedAchievement;
+    public int EnemyCount { get; private set; }
+
     #endregion
 
     #region Unity Events
@@ -102,6 +113,7 @@ public class GameManager : MonoBehaviour
     {
         _sceneManagement = FindObjectOfType<SceneManagement>();
         _uiManager = FindObjectOfType<UIManager>();
+        _achievementManager = FindObjectOfType<AchievementManager>();
         _resetDelayTimer = resetDelay;
         _gameOverDelayTimer = gameOverDelay;
         ActiveItemDrops = new List<GameObject>();
@@ -118,6 +130,7 @@ public class GameManager : MonoBehaviour
         // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
+            EnemyCount = GetEnemyCount();
             LevelMidpointReached = false;
             ActiveItemDrops.Clear();
             TappedEnemiesHealth.Clear();
@@ -154,9 +167,14 @@ public class GameManager : MonoBehaviour
             _gameOver = false;
             LevelMidpointReached = false;
         }
-        
+
+        //increment the proper level timer
+        IncrementLevelTimer();
+
+
         // Update the scene's build index
         _currSceneBuildIndex = _currScene.buildIndex;
+
     }
 
     #endregion
@@ -226,6 +244,9 @@ public class GameManager : MonoBehaviour
         }
         else
             _resetDelayTimer -= Time.deltaTime;
+
+        //Disable no death eligability
+        _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = false;
     }
 
     /// <summary>
@@ -246,10 +267,53 @@ public class GameManager : MonoBehaviour
             _gameOverDelayTimer -= Time.deltaTime;
     }
 
+
+
+
+    #endregion
+
+    #region Achievement Helper Methods
+
+    private void IncrementLevelTimer()
+    {
+        if (_currSceneBuildIndex != _currScene.buildIndex)
+        {
+            SpeedBasedAchievement sAchi = _currScene.buildIndex switch
+            {
+                1 => _achievementManager.Achievements.Find(achi => achi.Title == "Quick Ninja") as SpeedBasedAchievement,
+                2 => _achievementManager.Achievements.Find(achi => achi.Title == "Hasty Ninja") as SpeedBasedAchievement,
+                3 => _achievementManager.Achievements.Find(achi => achi.Title == "Untrackable Ninja") as SpeedBasedAchievement,
+                4 => _achievementManager.Achievements.Find(achi => achi.Title == "Coup de Grace") as SpeedBasedAchievement,
+                _ => new SpeedBasedAchievement(AchievementType.SpeedType, "", "", 0.0f)
+            };
+            _speedBasedAchievement = sAchi;
+        }
+
+        if (_speedBasedAchievement != null && _speedBasedAchievement.Title != "")
+        {
+            _speedBasedAchievement.TimeElapsed += Time.deltaTime;
+
+            if (_speedBasedAchievement.TimeElapsed > _speedBasedAchievement.TimeToBeat)
+                _speedBasedAchievement.Eligible = false;
+        }
+    }
+
+    public int GetEnemyCount()
+    {
+        return FindObjectsOfType<EnemyCombat>().Length;
+    }
+
+    public void CollectScroll(int scrollNum)
+    {
+        //TODO: Tell UI to add visual indicator of having collected the matching scroll
+
+        (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement).Counter++;
+    }
+
     #endregion
 
     #region Private Helper Methods
-    
+
     /// <summary>
     /// Wipe all active item drops as long as they are still valid references in the current level.
     /// </summary>

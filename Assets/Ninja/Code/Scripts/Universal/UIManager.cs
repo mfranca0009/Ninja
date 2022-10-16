@@ -40,6 +40,9 @@ public class UIManager : MonoBehaviour
 	
 	// End-of-level scroll messages
 	public List<ScrollEntry> scrollEntries;
+
+	// Achievement Manager
+	public AchievementManager _achievementManager;
 	
 	#endregion
 
@@ -71,6 +74,7 @@ public class UIManager : MonoBehaviour
 	{
 		_sceneManagement = FindObjectOfType<SceneManagement>();
 		_soundManager = FindObjectOfType<SoundManager>();
+		_achievementManager = FindObjectOfType<AchievementManager>();
 
 		_currSoundSettings = new float[(int)AudioMixerGroup.Max];
 
@@ -420,12 +424,14 @@ public class UIManager : MonoBehaviour
 
 	public void LoadSceneByString(string sceneString)
 	{
+		_achievementManager.ResetTimers();
 		Debug.Log($"sceneName to load: {sceneString}");
 		SceneManager.LoadScene(sceneString, LoadSceneMode.Single);
 	}
 	
 	public void LoadSceneByIndex(int sceneNumber)
 	{
+		_achievementManager.ResetTimers();
 		Debug.Log($"sceneBuildIndex to load: {sceneNumber}");
 		SceneManager.LoadScene(sceneNumber, LoadSceneMode.Single);
 	}

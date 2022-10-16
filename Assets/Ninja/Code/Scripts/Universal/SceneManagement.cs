@@ -5,11 +5,18 @@ public class SceneManagement : MonoBehaviour
 {
 
     public UIManager _uIManager;
+    public AchievementManager _achievementManager;
 
     #region Public Helper Methods
-    
+
+    private void Start()
+    {
+        _achievementManager = FindObjectOfType<AchievementManager>();
+    }
+
     public void LoadSceneByString(string sceneString)
     {
+        AchievementCleanUp(SceneManager.GetSceneByName(sceneString).buildIndex);
         SceneManager.LoadScene(sceneString);
         Debug.Log("sceneName to load: " + sceneString);
         _uIManager.showLoadingUI(false);
@@ -17,6 +24,7 @@ public class SceneManagement : MonoBehaviour
 
     public void LoadSceneByIndex(int sceneNumber)
     {
+        AchievementCleanUp(sceneNumber);
         SceneManager.LoadScene(sceneNumber);
         Debug.Log("sceneBuildIndex to load: " + sceneNumber);
     }
@@ -47,7 +55,18 @@ public class SceneManagement : MonoBehaviour
         Application.Quit();
     }
 
-   
+    private void AchievementCleanUp(int sceneNum)
+    {
+        _achievementManager.ResetTimers();
+
+        if (sceneNum == 1)
+        {
+            _achievementManager.ResetCounters();
+            _achievementManager.Achievements.Find(achi => achi.Title == "Martial Ninja").Eligible = true;
+            _achievementManager.Achievements.Find(achi => achi.Title == "Distance Ninja").Eligible = true;
+            _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = true;
+        }
+    }
 
     #endregion
 }
