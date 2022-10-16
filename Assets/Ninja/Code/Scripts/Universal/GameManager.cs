@@ -101,7 +101,8 @@ public class GameManager : MonoBehaviour
 
     // Achievements
     private SpeedBasedAchievement _speedBasedAchievement;
-    
+    public int EnemyCount { get; private set; }
+
 
     #endregion
 
@@ -128,6 +129,7 @@ public class GameManager : MonoBehaviour
         // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
+            EnemyCount = GetEnemyCount();
             LevelMidpointReached = false;
             ActiveItemDrops.Clear();
             TappedEnemiesHealth.Clear();
@@ -261,6 +263,13 @@ public class GameManager : MonoBehaviour
             _gameOverDelayTimer -= Time.deltaTime;
     }
 
+
+
+
+    #endregion
+
+    #region Achievement Helper Methods
+
     private void IncrementLevelTimer()
     {
         if (_currSceneBuildIndex != _currScene.buildIndex)
@@ -284,12 +293,18 @@ public class GameManager : MonoBehaviour
                 _speedBasedAchievement.Eligible = false;
         }
 
-        
+
 
     }
 
+    public int GetEnemyCount()
+    {
+        return FindObjectsOfType<EnemyCombat>().Length;
+    }
 
     #endregion
+
+
 
     #region Private Helper Methods
 

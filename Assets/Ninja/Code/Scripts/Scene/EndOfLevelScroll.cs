@@ -13,10 +13,11 @@ public class EndOfLevelScroll : MonoBehaviour
 
     #region Private Fields
 
-    // UI Manager
+    // Managers
     private UIManager _uiManager;
     private AchievementManager _achievementManager;
     private SceneManagement _sceneManagement;
+    private GameManager _gameManager;
     #endregion
 
     #region Unity Events
@@ -26,6 +27,7 @@ public class EndOfLevelScroll : MonoBehaviour
         _uiManager = FindObjectOfType<UIManager>();
         _achievementManager = FindObjectOfType<AchievementManager>();
         _sceneManagement = FindObjectOfType<SceneManagement>();
+        _gameManager = FindObjectOfType<GameManager>();
 
 
         if (!_uiManager)
@@ -85,8 +87,42 @@ public class EndOfLevelScroll : MonoBehaviour
         SpeedBasedAchievement sAchi = _achievementManager.Achievements.Find(achi => achi.Title == achievementName) as SpeedBasedAchievement;
 
         //If the time is low enough, and hasn't been awarded already, award the achievement.
-        if (sAchi.TimeElapsed <= sAchi.TimeToBeat && sAchi.Obtained == false)
+        if (sAchi.Eligible && sAchi.Obtained == false)
             sAchi.Obtained = true;
+
+        #endregion
+
+        //Achievements 10, 11, 12, 13, 14, 15
+        #region Genecide/Pacifist Achievements
+        /////NOT PROOFED AGAINST REPEAT ACHIEVEMENT POPS//////
+
+        ////GENOCIDE
+        //Determine which Achievement we should be checking by scene number
+        if (_gameManager.GetEnemyCount() == 0) {
+            achievementName = sceneNum switch
+            {
+                1 => "Level 1 Genocide",
+                2 => "Level 2 Genocide",
+                3 => "Level 3 Genocide",
+                _ => string.Empty
+            };
+
+            _achievementManager.Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        }
+
+        ////PACIFIST
+        if (_gameManager.EnemyCount - _gameManager.GetEnemyCount() <= 1)
+        {
+            achievementName = sceneNum switch
+            {
+                1 => "Level 1 Mostly Pacifist",
+                2 => "Level 2 Mostly Pacifist",
+                3 => "Level 3 Mostly Pacifist",
+                _ => string.Empty
+            };
+
+            _achievementManager.Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        }
 
         #endregion
     }

@@ -333,10 +333,13 @@ public class AchievementManager : MonoBehaviour
     
     public void ResetTimers()
     {
-        (Achievements.Find(achi => achi.Title == "Quick Ninja") as SpeedBasedAchievement).TimeElapsed = 0.0f;
-        (Achievements.Find(achi => achi.Title == "Hasty Ninja") as SpeedBasedAchievement).TimeElapsed = 0.0f;
-        (Achievements.Find(achi => achi.Title == "Untraceable Ninja") as SpeedBasedAchievement).TimeElapsed = 0.0f;
-        (Achievements.Find(achi => achi.Title == "Coup de Grâce") as SpeedBasedAchievement).TimeElapsed = 0.0f;
+        Achievement[] speedAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.SpeedType)).ToArray();
+
+        foreach (SpeedBasedAchievement achievement in speedAchievementArray)
+        {
+            achievement.TimeElapsed = 0.0f;
+            achievement.Eligible = true;
+        }
     }
     #endregion
 }
