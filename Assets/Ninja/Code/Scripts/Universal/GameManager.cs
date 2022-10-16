@@ -50,12 +50,10 @@ public class GameManager : MonoBehaviour
     public List<Health> TappedEnemiesHealth { get; private set; }
 
     /// <summary>
-    /// Reference to the achievement manager.
+    /// Total amount of enemies within the current level
     /// </summary>
-    public AchievementManager _achievementManager;
-
+    public int EnemyCount { get; private set; }
     
-
     #endregion
 
     #region Serialized Fields
@@ -88,6 +86,9 @@ public class GameManager : MonoBehaviour
     // UI Manager
     private UIManager _uiManager;
     
+    // Achievement Manager
+    private AchievementManager _achievementManager;
+    
     // Player Scripts
     private Health _playerHealth;
     private PlayerCombat _playerCombat;
@@ -102,8 +103,7 @@ public class GameManager : MonoBehaviour
     private bool _gameOver;
 
     // Achievements
-    private SpeedBasedAchievement _speedBasedAchievement;
-    public int EnemyCount { get; private set; }
+    private SpeedAchievement _speedAchievement;
 
     #endregion
 
@@ -278,24 +278,24 @@ public class GameManager : MonoBehaviour
     {
         if (_currSceneBuildIndex != _currScene.buildIndex)
         {
-            SpeedBasedAchievement sAchi = _currScene.buildIndex switch
+            SpeedAchievement speedAchievement = _currScene.buildIndex switch
             {
-                1 => _achievementManager.Achievements.Find(achi => achi.Title == "Quick Ninja") as SpeedBasedAchievement,
-                2 => _achievementManager.Achievements.Find(achi => achi.Title == "Hasty Ninja") as SpeedBasedAchievement,
-                3 => _achievementManager.Achievements.Find(achi => achi.Title == "Untrackable Ninja") as SpeedBasedAchievement,
-                4 => _achievementManager.Achievements.Find(achi => achi.Title == "Coup de Grace") as SpeedBasedAchievement,
-                _ => new SpeedBasedAchievement(AchievementType.SpeedType, "", "", 0.0f)
+                1 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Quick Ninja") as SpeedAchievement,
+                2 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Hasty Ninja") as SpeedAchievement,
+                3 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Untrackable Ninja") as SpeedAchievement,
+                4 => _achievementManager.Achievements.Find(achievement => achievement.Title == "Coup de Grace") as SpeedAchievement,
+                _ => new SpeedAchievement(AchievementType.SpeedType, "", "", 0.0f)
             };
-            _speedBasedAchievement = sAchi;
+            _speedAchievement = speedAchievement;
         }
 
-        if (_speedBasedAchievement != null && _speedBasedAchievement.Title != "")
-        {
-            _speedBasedAchievement.TimeElapsed += Time.deltaTime;
-
-            if (_speedBasedAchievement.TimeElapsed > _speedBasedAchievement.TimeToBeat)
-                _speedBasedAchievement.Eligible = false;
-        }
+        if (_speedAchievement == null || _speedAchievement.Title == "")
+            return;
+        
+        _speedAchievement.TimeElapsed += Time.deltaTime;
+        
+        if (_speedAchievement.TimeElapsed > _speedAchievement.TimeToBeat)
+            _speedAchievement.Eligible = false;
     }
 
     public int GetEnemyCount()
@@ -307,7 +307,8 @@ public class GameManager : MonoBehaviour
     {
         //TODO: Tell UI to add visual indicator of having collected the matching scroll
 
-        (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement).Counter++;
+        ((CounterAchievement)_achievementManager.Achievements.Find(achievement =>
+            achievement.Title == "The corruption is cleansed")).Counter++;
     }
 
     #endregion

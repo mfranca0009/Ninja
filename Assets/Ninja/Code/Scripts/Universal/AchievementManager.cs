@@ -48,9 +48,9 @@ public class Achievement
     public bool HasPopped { get; set; }
 }
 
-public class SpeedBasedAchievement : Achievement
+public class SpeedAchievement : Achievement
 {
-    public SpeedBasedAchievement(AchievementType type, string title, string description, float timer) : base(type,
+    public SpeedAchievement(AchievementType type, string title, string description, float timer) : base(type,
         title, description)
     {
         TimeToBeat = timer;
@@ -160,27 +160,27 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Jungle with a View", "Clear level 2"));
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Source of the corruption", "Clear level 3"));
 
-        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Quick Ninja",
+        Achievements.Add(new SpeedAchievement(AchievementType.SpeedType, "Quick Ninja",
             "Clear level 1 in 1:30 minutes", 90f));
-        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Hasty Ninja",
+        Achievements.Add(new SpeedAchievement(AchievementType.SpeedType, "Hasty Ninja",
             "Clear level 2 in under 1:30 minutes", 90f));
-        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Untraceable Ninja",
+        Achievements.Add(new SpeedAchievement(AchievementType.SpeedType, "Untraceable Ninja",
             "Clear level 3 in under 1:30 minutes", 90f));
-        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Coup de Grâce",
+        Achievements.Add(new SpeedAchievement(AchievementType.SpeedType, "Coup de Grâce",
             "Defeat White Face in under 45 Seconds", 45f));
 
         Achievements.Add(
             new Achievement(AchievementType.TriggerType, "The Corruption Lingers", "Obtain the bad ending"));
-        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "The corruption is cleansed",
+        Achievements.Add(new CounterAchievement(AchievementType.CounterType, "The corruption is cleansed",
             "Obtain the good ending", 3));
 
-        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Level 1 Genocide",
+        Achievements.Add(new CounterAchievement(AchievementType.CounterType, "Level 1 Genocide",
             "Kill all enemies in level 1", 8));
 
-        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Level 2 Genocide",
+        Achievements.Add(new CounterAchievement(AchievementType.CounterType, "Level 2 Genocide",
             "Kill all enemies in Level 2", 7));
 
-        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Level 3 Genocide",
+        Achievements.Add(new CounterAchievement(AchievementType.CounterType, "Level 3 Genocide",
             "Kill all enemies in Level 3", 11));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Level 1 Mostly Pacifist",
@@ -203,7 +203,7 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Proud Ninja",
             "Reach the boss without grabing any pick-ups"));
 
-        Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Resourceful Ninja",
+        Achievements.Add(new CounterAchievement(AchievementType.CounterType, "Resourceful Ninja",
             "Grab a total of 50 pick-ups throughout your journey", 50));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Martial Ninja",
@@ -348,8 +348,9 @@ public class AchievementManager : MonoBehaviour
     /// <param name="achievementName"></param>
     public void ObtainAchievement(string achievementName)
     {
-        Achievement achievement = Achievements.Find(achi => achi.Title == achievementName);
-        if (!achievement.Eligible || achievement.Obtained)
+        Achievement achievement = Achievements.Find(achievement => achievement.Title == achievementName);
+        
+        if (achievement is not { Eligible: true } || achievement.Obtained)
             return;
 
         achievement.Obtained = true;
@@ -359,15 +360,17 @@ public class AchievementManager : MonoBehaviour
         if (_obtainedCount != Achievements.Count - 1)
             return;
         
-        Achievements.Find(achi => achi.Title == "Master Ninja").Obtained = true;
+        Achievements.Find(possibleAchievement => possibleAchievement.Title == "Master Ninja").Obtained = true;
         _obtainedCount++;
     }
 
     public void ResetTimers()
     {
-        Achievement[] speedAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.SpeedType)).ToArray();
+        if (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.SpeedType)
+                .ToArray() is not SpeedAchievement[] speedAchievements)
+            return;
 
-        foreach (SpeedBasedAchievement achievement in speedAchievementArray)
+        foreach (SpeedAchievement achievement in speedAchievements)
         {
             achievement.TimeElapsed = 0.0f;
             achievement.Eligible = true;
@@ -380,9 +383,11 @@ public class AchievementManager : MonoBehaviour
     /// <param name="sceneNum"></param>
     public void ResetCounters()
     {
-        Achievement[] collectableAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.CollectibleType)).ToArray();
-
-        foreach (CounterAchievement achievement in collectableAchievementArray)
+        if (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.CounterType)
+            .ToArray() is not CounterAchievement[] counterAchievements)
+            return;
+        
+        foreach (CounterAchievement achievement in counterAchievements)
         {
             achievement.Counter = 0;
             achievement.Eligible = true;
@@ -418,6 +423,6 @@ public class AchievementManager : MonoBehaviour
 |                                                        |
 |-------------------------------------------------------*/
 
-/*SpeedBasedAchievement achi =
+/*SpeedAchievement achi =
     Achievements.Find(possibleAchievement =>
-        possibleAchievement.Title == "Enter the Jungle") as SpeedBasedAchievement;*/
+        possibleAchievement.Title == "Enter the Jungle") as SpeedAchievement;*/

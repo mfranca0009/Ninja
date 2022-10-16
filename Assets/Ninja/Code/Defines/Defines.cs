@@ -56,7 +56,7 @@ public enum AchievementType
 {
     TriggerType = 0,
     SpeedType = 1,
-    CollectibleType = 2,
+    CounterType = 2,
     
     Max = 3
 }

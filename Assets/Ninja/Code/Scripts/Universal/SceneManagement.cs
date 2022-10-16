@@ -3,23 +3,34 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagement : MonoBehaviour
 {
+    #region Private Fields
 
-    public UIManager _uIManager;
-    public AchievementManager _achievementManager;
-
-    #region Public Helper Methods
-
+    // UI Manager
+    private UIManager _uiManager;
+    
+    // Achievement Manager
+    private AchievementManager _achievementManager;
+    
+    #endregion
+    
+    #region Unity Events
+    
     private void Start()
     {
+        _uiManager = FindObjectOfType<UIManager>();
         _achievementManager = FindObjectOfType<AchievementManager>();
     }
-
+    
+    #endregion
+    
+    #region Public Helper Methods
+    
     public void LoadSceneByString(string sceneString)
     {
         AchievementCleanUp(SceneManager.GetSceneByName(sceneString).buildIndex);
         SceneManager.LoadScene(sceneString);
         Debug.Log("sceneName to load: " + sceneString);
-        _uIManager.showLoadingUI(false);
+        _uiManager.showLoadingUI(false);
     }
 
     public void LoadSceneByIndex(int sceneNumber)
@@ -55,18 +66,22 @@ public class SceneManagement : MonoBehaviour
         Application.Quit();
     }
 
+    #endregion
+    
+    #region Private Helper Methods
+    
     private void AchievementCleanUp(int sceneNum)
     {
         _achievementManager.ResetTimers();
 
-        if (sceneNum == 1)
-        {
-            _achievementManager.ResetCounters();
-            _achievementManager.Achievements.Find(achi => achi.Title == "Martial Ninja").Eligible = true;
-            _achievementManager.Achievements.Find(achi => achi.Title == "Distance Ninja").Eligible = true;
-            _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = true;
-        }
+        if (sceneNum != 1) 
+            return;
+        
+        _achievementManager.ResetCounters();
+        _achievementManager.Achievements.Find(achievement => achievement.Title == "Martial Ninja").Eligible = true;
+        _achievementManager.Achievements.Find(achievement => achievement.Title == "Distance Ninja").Eligible = true;
+        _achievementManager.Achievements.Find(achievement => achievement.Title == "Expert Ninja").Eligible = true;
     }
-
+    
     #endregion
 }
