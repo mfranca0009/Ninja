@@ -47,7 +47,9 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Enemies health that have been "tapped" by the player but not yet killed.
     /// </summary>
-    public List<Health> TappedEnemiesHealth { get; private set; }  
+    public List<Health> TappedEnemiesHealth { get; private set; }
+    
+    public int EnemyCount { get; private set; }
 
     #endregion
 
@@ -95,19 +97,11 @@ public class GameManager : MonoBehaviour
     private bool _gameOver;
 
     // Achievements
-
-
-    /// <summary>
-    /// Reference to the achievement manager.
-    /// </summary>
     private AchievementManager _achievementManager;
-
     private SpeedBasedAchievement _speedBasedAchievement;
-    public int EnemyCount { get; private set; }
-    private bool fragment1Obtained;
-    private bool fragment2Obtained;
-    private bool fragment3Obtained;
 
+    private bool[] _obtainedScrollFragmentStates;
+    
     #endregion
 
     #region Unity Events
@@ -121,6 +115,8 @@ public class GameManager : MonoBehaviour
         _gameOverDelayTimer = gameOverDelay;
         ActiveItemDrops = new List<GameObject>();
         TappedEnemiesHealth = new List<Health>();
+
+        _obtainedScrollFragmentStates = new bool[3];
     }
 
     // Update is called once per frame
@@ -310,36 +306,24 @@ public class GameManager : MonoBehaviour
     {
         //TODO: Tell UI to add visual indicator of having collected the matching scroll
 
-         switch (scrollNum)
-        {
-            case 1 : fragment1Obtained = true;
-                break;
-            case 2 : fragment2Obtained = true;
-                break;
-            case 3 : fragment3Obtained = true;
-                break;
-            default: 
-                break;
-        }
+        _obtainedScrollFragmentStates[scrollNum - 1] = true;
+        
+        // Update achievement progress
+        if (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") is not
+            CounterAchievement counterAchievement)
+            return;
 
-        //update achievement progress
-        (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement).Counter++;
+        counterAchievement.Counter++;
 
-        //Update GUI
-        _uiManager.UpdateSecretScrollFragments();
+        // Update GUI
+        _uiManager.UpdateSecretScrollFragmentUI();
 
     }
 
     //Used by the UI Manager to confirm which fragments should be showing.
     public bool ScrollStatus(int fragmentNum)
     {
-        return fragmentNum switch
-        {
-            1 => fragment1Obtained,
-            2 => fragment2Obtained,
-            3 => fragment3Obtained,
-            _ => false
-        };
+        return _obtainedScrollFragmentStates[fragmentNum];
     }
 
     #endregion

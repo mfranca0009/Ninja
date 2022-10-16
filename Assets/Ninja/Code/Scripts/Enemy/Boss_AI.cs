@@ -150,13 +150,13 @@ public class Boss_AI : MonoBehaviour
             _ => (int)Image.OriginHorizontal.Left
         };
     }
-
+    
     private void PlayerDeadCheck()
     {
         if (!_playerHealthComponent.Dead)
             return;
 
-        EnemyCombat[] enemies= FindObjectsOfType<EnemyCombat>();
+        EnemyCombat[] enemies = FindObjectsOfType<EnemyCombat>();
 
         foreach (EnemyCombat enemy in enemies)
         {

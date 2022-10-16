@@ -38,16 +38,12 @@ public class UIManager : MonoBehaviour
 
 	// Sprite prefabs
 	public Sprite[] livesSprites;
+
+	// Scroll fragment gameobjects
 	public GameObject[] scrollFragments;
 	
 	// End-of-level scroll messages
 	public List<ScrollEntry> scrollEntries;
-
-	// Achievement Manager
-	private AchievementManager _achievementManager;
-
-	// Game Manager
-	private GameManager _gameManager;
 	
 	#endregion
 
@@ -64,6 +60,12 @@ public class UIManager : MonoBehaviour
 	private Scene _currentScene;
 	private bool _paused;
 
+	// Achievement Manager
+	private AchievementManager _achievementManager;
+
+	// Game Manager
+	private GameManager _gameManager;
+	
 	// UI States
 	private bool _pauseShown;
 
@@ -91,24 +93,6 @@ public class UIManager : MonoBehaviour
 		_slidersChanged = new Dictionary<string, Slider>();
 		
 		Time.timeScale = 1f;
-		
-
-		ShowSettingsUI(false);
-		ShowSoundSettingsUI(false);
-
-		ShowPauseUI(false);
-		ShowFinishedUI(false);
-		ShowScrollUI(false);
-
-		ShowSecretScrollUI(false);
-
-		// Settings
-		ShowSettingsUI(false);
-		ShowSoundSettingsUI(false);
-		
-		// Achievements
-		ShowAchievementsUI(false);
-		ShowAchievementsPopUI(false);	
 	}
 
 	// Update is called once per frame
@@ -391,23 +375,26 @@ public class UIManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Updates Secret Scroll Progress
+	/// Update secret scroll fragment UI depending on how many were collected.
 	/// </summary>
-	public void UpdateSecretScrollFragments()
-    {
-		if ((_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement).Counter == 3)
-        {
+	public void UpdateSecretScrollFragmentUI()
+	{
+		bool allFragmentsObtained =
+			_gameManager.ScrollStatus(0) && _gameManager.ScrollStatus(1) && _gameManager.ScrollStatus(2);
+
+		if (allFragmentsObtained)
+		{
 			scrollFragments[1].SetActive(false);
 			scrollFragments[2].SetActive(false);
 			scrollFragments[3].SetActive(false);
 			scrollFragments[0].SetActive(true);
 			return;
 		}
-
-		for(int i = 1; i < scrollFragments.Length; i++)
-        {
-			scrollFragments[i].SetActive(_gameManager.ScrollStatus(i));
-        }
+		
+		for (int i = 0; i < scrollFragments.Length - 1; i++)
+		{
+			scrollFragments[i + 1].SetActive(_gameManager.ScrollStatus(i));
+		}
     }
 
 	/// <summary>
