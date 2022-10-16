@@ -16,7 +16,7 @@ public class SceneManagement : MonoBehaviour
 
     public void LoadSceneByString(string sceneString)
     {
-        _achievementManager.ResetTimers();
+        AchievementCleanUp(SceneManager.GetSceneByName(sceneString).buildIndex);
         SceneManager.LoadScene(sceneString);
         Debug.Log("sceneName to load: " + sceneString);
         _uIManager.showLoadingUI(false);
@@ -24,7 +24,7 @@ public class SceneManagement : MonoBehaviour
 
     public void LoadSceneByIndex(int sceneNumber)
     {
-        _achievementManager.ResetTimers();
+        AchievementCleanUp(sceneNumber);
         SceneManager.LoadScene(sceneNumber);
         Debug.Log("sceneBuildIndex to load: " + sceneNumber);
     }
@@ -55,7 +55,11 @@ public class SceneManagement : MonoBehaviour
         Application.Quit();
     }
 
-   
+    private void AchievementCleanUp(int sceneNum)
+    {
+        _achievementManager.ResetTimers();
+        _achievementManager.ResetCounters(sceneNum);
+    }
 
     #endregion
 }

@@ -125,6 +125,11 @@ public class EndOfLevelScroll : MonoBehaviour
         }
 
         #endregion
+
+        //Achievement 18. No Traps Activated
+        if (sceneNum == 3 && _achievementManager.Achievements.Find( achi => achi.Title == "No Traps Activated").Eligible)
+            _achievementManager.Achievements.Find(achi => achi.Title == "No Traps Activated").Obtained = true;
+
     }
 
     #endregion

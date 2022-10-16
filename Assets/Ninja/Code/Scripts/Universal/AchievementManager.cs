@@ -178,13 +178,10 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Being a Bully", "Push an enemy into a pit"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "No Traps Activated",
-            "Clear the game without activating any swinging traps"));
-
-        Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
-            "Clear the game without losing any lives"));
+            "Reach the boss without activating any swinging traps"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Proud Ninja",
-            "Clear game without grabbing any pick-ups"));
+            "Reach the boss without grabing any pick-ups"));
 
         Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Resourceful Ninja",
             "Grab a total of 50 pick-ups throughout your journey", 50));
@@ -195,37 +192,10 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Distance Ninja",
             "Beat the game without using any melee attacks"));
 
+        Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
+            "Clear the game without losing any lives"));
+
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Master Ninja", "Obtain all other Achievements"));
-
-        /*-----------------------------------------------------------------------------------/
-        |                                                                                    |
-        |   Filter out non-trigger type achievements, only select trigger type achievements  |
-        |                                                                                    |
-        |-----------------------------------------------------------------------------------*/
-
-        /*Achievement[] triggerAchievementArray = Achievements.FindAll(possibleAchievements =>
-            possibleAchievements.Type == AchievementType.TriggerType).ToArray();*/
-
-
-        /*-------------------------------------------------------/
-        |                                                        |
-        |  Search for a specific achievement by title and type   |
-        |                                                        |
-        |-------------------------------------------------------*/
-
-        /*Achievement achievementFound = Achievements.Find(possibleAchievement =>
-            possibleAchievement.Type == AchievementType.TriggerType &&
-            possibleAchievement.Title == "Expert Ninja");*/
-
-        /*-------------------------------------------------------/
-        |                                                        |
-        |        Search for an achievement by title              |
-        |                                                        |
-        |-------------------------------------------------------*/
-
-        /*SpeedBasedAchievement achi =
-            Achievements.Find(possibleAchievement =>
-                possibleAchievement.Title == "Enter the Jungle") as SpeedBasedAchievement;*/
     }
     private void FillAchievementUIList()
     {
@@ -341,5 +311,24 @@ public class AchievementManager : MonoBehaviour
             achievement.Eligible = true;
         }
     }
+
+    /// <summary>
+    /// Resets the Counters in all achievements if sceneNum is 1
+    /// </summary>
+    /// <param name="sceneNum"></param>
+    public void ResetCounters(int sceneNum)
+    {
+        Achievement[] collectableAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.CollectibleType)).ToArray();
+
+        if (sceneNum == 1)
+        {
+            foreach (CounterAchievement achievement in collectableAchievementArray)
+            {
+                achievement.Counter = 0;
+                achievement.Eligible = true;
+            }
+        }
+    }
+
     #endregion
 }
