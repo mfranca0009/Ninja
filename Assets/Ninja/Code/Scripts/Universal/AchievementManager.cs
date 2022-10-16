@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -96,42 +94,57 @@ public class AchievementManager : MonoBehaviour
 {
     #region Public Properties
 
+    /// <summary>
+    /// The list that loads and contains all achievements of the game.
+    /// </summary>
     public List<Achievement> Achievements { get; private set; }
 
     #endregion
 
     #region Public Fields
 
+    [Header("Achievement UI Settings")]
+    
+    [Tooltip("The achievement list gameobject that will contain all achievements once built")]
     public GameObject achievementList;
-    public Scrollbar scrollbar;
-
-    // public Canvas popAchievementCanvas;
-    public GameObject popAchievementBg;
+    
+    [Header("Achievement Pop Notification UI Settings")]
+    
+    [Tooltip("Text component used for achievement title")]
     public TMP_Text popAchievementName;
+    
+    [Tooltip("The animator controlling the show/hide of the UI")]
     public Animator popAchievementAnimator;
+    
+    [Tooltip("The delay before hiding the UI")]
     public float hidePopAchievementDelay = 5f;
-
+    
+    [Tooltip("The sound effect played when the UI is being shown")]
     public AudioClip achievementObtainedSound;
 
     #endregion
 
     #region Private Fields
 
+    // Achievements UI
     private TMP_Text[,] _cachedAchievementTexts;
     private TMP_Text _cachedCompletionPctText;
     private int _obtainedCount;
 
-    private float _hidePopAchievementTimer;
-
-    // Speed achievement currently tracked for active level
+    // Speed achievement tracked for active level
     private SpeedAchievement _trackedSpeedAchievement;
 
-    private SoundManager _soundManager;
-
+    // Achievement pop notification UI
     private Queue<Achievement> _obtainedAchievementQueue;
+    private float _hidePopAchievementTimer;
     private bool _achievementPopInProgress;
     
+    // Sound Manager
+    private SoundManager _soundManager;
+    
+    // Scene Management
     private int _currentBuildIndex;
+    
     #endregion
 
     #region Unity Events
@@ -165,15 +178,6 @@ public class AchievementManager : MonoBehaviour
 
         // Update the build index of the active level last.
         _currentBuildIndex = buildIndex;
-        
-        // DEBUG
-        
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        ObtainAchievement(Achievements[_obtainedCount].Title);
-
-        // DEBUG END
     }
     
     #endregion

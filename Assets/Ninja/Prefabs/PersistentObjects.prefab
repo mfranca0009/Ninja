@@ -319,15 +319,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbbed9b49a26a7458dd754f804101f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainAudioMixer: {fileID: 24100000, guid: d94239b734fff0c43b1343fd385be8f0, type: 2}
-  MusicSource: {fileID: 3619797098286513700}
-  MovementEffectsSource: {fileID: 157499583125419022}
-  AttackEffectsSource: {fileID: 3436322144135919927}
-  DamageEffectsSource: {fileID: 7651747179277637704}
-  ItemEffectsSource: {fileID: 6833808526752996098}
-  UiEffectsSource: {fileID: 5387039643246456455}
-  LowPitchRange: 0.95
-  HighPitchRange: 1.05
+  mainAudioMixer: {fileID: 24100000, guid: d94239b734fff0c43b1343fd385be8f0, type: 2}
+  musicSource: {fileID: 3619797098286513700}
+  movementEffectsSource: {fileID: 157499583125419022}
+  attackEffectsSource: {fileID: 3436322144135919927}
+  damageEffectsSource: {fileID: 7651747179277637704}
+  itemEffectsSource: {fileID: 6833808526752996098}
+  uiEffectsSource: {fileID: 5387039643246456455}
+  lowPitchRange: 0.95
+  highPitchRange: 1.05
 --- !u!82 &3619797098286513700
 AudioSource:
   m_ObjectHideFlags: 0
@@ -993,8 +993,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   achievementList: {fileID: 1345053056177161287}
-  scrollbar: {fileID: 7286823809314195731}
-  popAchievementBg: {fileID: 4890250539222145845}
   popAchievementName: {fileID: 7109200265617705464}
   popAchievementAnimator: {fileID: 4409022862951615457}
   hidePopAchievementDelay: 5
@@ -2741,17 +2739,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8980926727778488851, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
   m_PrefabInstance: {fileID: 7928657402980865620}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7286823809314195731 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 799318856190009159, guid: 92c4f288aa7e2794483f98a3eca9540c, type: 3}
-  m_PrefabInstance: {fileID: 7928657402980865620}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8792313008665917125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2896,11 +2883,6 @@ Canvas:
 --- !u!95 &4409022862951615457 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5128312404834090276, guid: 2bc8e57ffca01444e9d6364730acb35b, type: 3}
-  m_PrefabInstance: {fileID: 8792313008665917125}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4890250539222145845 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4168427722632883696, guid: 2bc8e57ffca01444e9d6364730acb35b, type: 3}
   m_PrefabInstance: {fileID: 8792313008665917125}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &7109200265617705464 stripped

@@ -233,21 +233,21 @@ public class UIManager : MonoBehaviour
 			switch (pair.Key)
 			{
 				case "MasterVol":
-					_soundManager.MainAudioMixer.SetFloat("MasterVol",
+					_soundManager.mainAudioMixer.SetFloat("MasterVol",
 						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.Master]) * 20);
 
 					_currSoundSettings[(int)AudioMixerGroup.Master] = 
 						_soundSettingChanges[(int)AudioMixerGroup.Master];
 					break;
 				case "SFXVol":
-					_soundManager.MainAudioMixer.SetFloat("SFXVol",
+					_soundManager.mainAudioMixer.SetFloat("SFXVol",
 						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.SoundEffects]) * 20);
 
 					_currSoundSettings[(int)AudioMixerGroup.SoundEffects] =
 						_soundSettingChanges[(int)AudioMixerGroup.SoundEffects];
 					break;
 				case "BGMusicVol":
-					_soundManager.MainAudioMixer.SetFloat("BGMusicVol",
+					_soundManager.mainAudioMixer.SetFloat("BGMusicVol",
 						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.BgMusic]) * 20);
 
 					_currSoundSettings[(int)AudioMixerGroup.BgMusic] =

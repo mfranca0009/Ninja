@@ -9,6 +9,7 @@ public class EndOfLevelScroll : MonoBehaviour
     private UIManager _uiManager;
     private AchievementManager _achievementManager;
     private GameManager _gameManager;
+    
     #endregion
 
     #region Unity Events
@@ -18,8 +19,7 @@ public class EndOfLevelScroll : MonoBehaviour
         _uiManager = FindObjectOfType<UIManager>();
         _achievementManager = FindObjectOfType<AchievementManager>();
         _gameManager = FindObjectOfType<GameManager>();
-
-
+        
         if (!_uiManager)
             return;
         
