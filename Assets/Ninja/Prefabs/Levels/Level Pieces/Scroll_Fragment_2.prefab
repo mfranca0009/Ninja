@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5132491720459860678}
   - component: {fileID: 9222093827497910617}
   - component: {fileID: 7469393809105850608}
+  - component: {fileID: 4931004914982086671}
   m_Layer: 0
   m_Name: Scroll_Fragment_2
   m_TagString: Untagged
@@ -126,3 +127,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amplifier: 0.3
   frequency: 3
+--- !u!114 &4931004914982086671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8704083780977846105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b02475dab9d60954580f8e9595a53df2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollNumber: 2

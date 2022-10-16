@@ -125,8 +125,7 @@ public class AchievementManager : MonoBehaviour
         if (!Input.GetKeyDown(KeyCode.Escape))
             return;
         
-        Achievements[_obtainedCount].Obtained = true;
-        _obtainedCount++;
+        ObtainAchievement(Achievements[_obtainedCount].Title);
         
         // DEBUG END
     }
@@ -145,7 +144,7 @@ public class AchievementManager : MonoBehaviour
             "Clear level 1 in 1:30 minutes", 90f));
         Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Hasty Ninja",
             "Clear level 2 in under 1:30 minutes", 90f));
-        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Un-trackable Ninja",
+        Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Untraceable Ninja",
             "Clear level 3 in under 1:30 minutes", 90f));
         Achievements.Add(new SpeedBasedAchievement(AchievementType.SpeedType, "Coup de Grâce",
             "Defeat White Face in under 45 Seconds", 45f));
@@ -179,13 +178,10 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Being a Bully", "Push an enemy into a pit"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "No Traps Activated",
-            "Clear the game without activating any swinging traps"));
-
-        Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
-            "Clear the game without losing any lives"));
+            "Reach the boss without activating any swinging traps"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Proud Ninja",
-            "Clear game without grabbing any pick-ups"));
+            "Reach the boss without grabing any pick-ups"));
 
         Achievements.Add(new CounterAchievement(AchievementType.CollectibleType, "Resourceful Ninja",
             "Grab a total of 50 pick-ups throughout your journey", 50));
@@ -196,37 +192,10 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Distance Ninja",
             "Beat the game without using any melee attacks"));
 
+        Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
+            "Clear the game without losing any lives"));
+
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Master Ninja", "Obtain all other Achievements"));
-
-        /*-----------------------------------------------------------------------------------/
-        |                                                                                    |
-        |   Filter out non-trigger type achievements, only select trigger type achievements  |
-        |                                                                                    |
-        |-----------------------------------------------------------------------------------*/
-
-        /*Achievement[] triggerAchievementArray = Achievements.FindAll(possibleAchievements =>
-            possibleAchievements.Type == AchievementType.TriggerType).ToArray();*/
-
-
-        /*-------------------------------------------------------/
-        |                                                        |
-        |  Search for a specific achievement by title and type   |
-        |                                                        |
-        |-------------------------------------------------------*/
-
-        /*Achievement achievementFound = Achievements.Find(possibleAchievement =>
-            possibleAchievement.Type == AchievementType.TriggerType &&
-            possibleAchievement.Title == "Expert Ninja");*/
-
-        /*-------------------------------------------------------/
-        |                                                        |
-        |        Search for an achievement by title              |
-        |                                                        |
-        |-------------------------------------------------------*/
-
-        /*SpeedBasedAchievement achi =
-            Achievements.Find(possibleAchievement =>
-                possibleAchievement.Title == "Enter the Jungle") as SpeedBasedAchievement;*/
     }
     private void FillAchievementUIList()
     {
@@ -319,10 +288,56 @@ public class AchievementManager : MonoBehaviour
         _cachedCompletionPctText.color = _obtainedCount == Achievements.Count ? Color.black : Color.grey;
     }
 
+
+    /// <summary>
+    /// This Function takes the title of an achievement and checks if that achievement
+    /// is eligible and hasn't been obtained. If both are true, it marks that named 
+    /// achievement as obtained. Then if all other achievements have been obtained, 
+    /// it awards the Master Ninja Achievement.
+    /// </summary>
+    /// <param name="achievementName"></param>
     public void ObtainAchievement(string achievementName)
     {
-        Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        Achievement achievement = Achievements.Find(achi => achi.Title == achievementName);
+        if (!achievement.Eligible || achievement.Obtained)
+            return;
+
+        achievement.Obtained = true;
+        _obtainedCount++;
+
+        //24. Master Ninja Check
+        if (_obtainedCount == Achievements.Count - 1)
+        {
+            Achievements.Find(achi => achi.Title == "Master Ninja").Obtained = true;
+            _obtainedCount++;
+        }
     }
     
+    public void ResetTimers()
+    {
+        Achievement[] speedAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.SpeedType)).ToArray();
+
+        foreach (SpeedBasedAchievement achievement in speedAchievementArray)
+        {
+            achievement.TimeElapsed = 0.0f;
+            achievement.Eligible = true;
+        }
+    }
+
+    /// <summary>
+    /// Resets the Counters in all achievements if sceneNum is 1
+    /// </summary>
+    /// <param name="sceneNum"></param>
+    public void ResetCounters()
+    {
+        Achievement[] collectableAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.CollectibleType)).ToArray();
+
+        foreach (CounterAchievement achievement in collectableAchievementArray)
+        {
+            achievement.Counter = 0;
+            achievement.Eligible = true;
+        }
+    }
+
     #endregion
 }

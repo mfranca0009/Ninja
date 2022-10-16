@@ -12,10 +12,12 @@ public class SwingingTrap : MonoBehaviour
     private bool hasActivated = false;
     private float step = -4.0f;
     private GameObject trapParent;
+    private AchievementManager _achievementManager;
 
     void Start()
     {
         trapParent = trap.transform.parent.gameObject;
+        _achievementManager = FindObjectOfType<AchievementManager>();
     }
     // Update is called once per frame
     void Update()
@@ -54,8 +56,10 @@ public class SwingingTrap : MonoBehaviour
     {
         if (!collision.gameObject.CompareTag("Player") || hasActivated)
             return;
-        
+
         shouldRotate = true;
         hasActivated = true;
+
+        _achievementManager.Achievements.Find(achi => achi.Title == "No Traps Activated").Eligible = false;
     }
 }
