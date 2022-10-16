@@ -58,7 +58,14 @@ public class SceneManagement : MonoBehaviour
     private void AchievementCleanUp(int sceneNum)
     {
         _achievementManager.ResetTimers();
-        _achievementManager.ResetCounters(sceneNum);
+
+        if (sceneNum == 1)
+        {
+            _achievementManager.ResetCounters();
+            _achievementManager.Achievements.Find(achi => achi.Title == "Martial Ninja").Eligible = true;
+            _achievementManager.Achievements.Find(achi => achi.Title == "Distance Ninja").Eligible = true;
+            _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = true;
+        }
     }
 
     #endregion

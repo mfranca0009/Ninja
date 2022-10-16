@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public AchievementManager _achievementManager;
 
+    
+
     #endregion
 
     #region Serialized Fields
@@ -102,7 +104,6 @@ public class GameManager : MonoBehaviour
     // Achievements
     private SpeedBasedAchievement _speedBasedAchievement;
     public int EnemyCount { get; private set; }
-
 
     #endregion
 
@@ -243,6 +244,9 @@ public class GameManager : MonoBehaviour
         }
         else
             _resetDelayTimer -= Time.deltaTime;
+
+        //Disable no death eligability
+        _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = false;
     }
 
     /// <summary>
@@ -292,9 +296,6 @@ public class GameManager : MonoBehaviour
             if (_speedBasedAchievement.TimeElapsed > _speedBasedAchievement.TimeToBeat)
                 _speedBasedAchievement.Eligible = false;
         }
-
-
-
     }
 
     public int GetEnemyCount()
@@ -302,9 +303,14 @@ public class GameManager : MonoBehaviour
         return FindObjectsOfType<EnemyCombat>().Length;
     }
 
+    public void CollectScroll(int scrollNum)
+    {
+        //TODO: Tell UI to add visual indicator of having collected the matching scroll
+
+        (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement).Counter++;
+    }
+
     #endregion
-
-
 
     #region Private Helper Methods
 

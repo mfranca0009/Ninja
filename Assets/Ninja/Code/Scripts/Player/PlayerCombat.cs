@@ -100,6 +100,11 @@ public class PlayerCombat : MonoBehaviour
     private Health _health;
     private PlayerMovement _playerMovement;
 
+    // Achievements
+    private AchievementManager _achievementManager;
+    private Achievement _rangedAchievement;
+    private Achievement _meleeAchievement;
+
     #endregion
     
     #region Unity Events
@@ -136,6 +141,10 @@ public class PlayerCombat : MonoBehaviour
         _health = GetComponent<Health>();
         _playerMovement = GetComponent<PlayerMovement>();
         _soundManager = FindObjectOfType<SoundManager>();
+        _achievementManager = FindObjectOfType<AchievementManager>();
+        _rangedAchievement = _achievementManager.Achievements.Find(achi => achi.Title == "Distance Ninja");
+        _meleeAchievement = _achievementManager.Achievements.Find(achi => achi.Title == "Martial Ninja");
+
         MaxKnives = 1;
         
         SetupMeleeWeapons();
@@ -161,6 +170,10 @@ public class PlayerCombat : MonoBehaviour
             return;
         
         _animator.SetBool("ExecuteThrowKnife", true);
+
+        //Disable Martial Ninja Eligibility
+        if (_meleeAchievement.Eligible)
+            _meleeAchievement.Eligible = false;
         
         Debug.Log("[PlayerCombat/OnThrowKnife] Execute knife throw input!");
     }
@@ -178,7 +191,11 @@ public class PlayerCombat : MonoBehaviour
             return;
 
         _animator.SetBool("ExecuteSlowAttack", true);
-        
+
+        //Disable Distance Ninja Eligibility
+        if (_rangedAchievement.Eligible)
+            _rangedAchievement.Eligible = false;
+
         Debug.Log("[PlayerCombat/OnSlowAttack] Performing Slow attack!");
     }
 
@@ -195,7 +212,11 @@ public class PlayerCombat : MonoBehaviour
             return;
         
         _animator.SetBool("ExecuteLightAttack", true);
-        
+
+        //Disable Distance Ninja Eligibility
+        if (_rangedAchievement.Eligible)
+            _rangedAchievement.Eligible = false;
+
         Debug.Log("[PlayerCombat/OnLightAttack] Performing light attack!");
     }
 

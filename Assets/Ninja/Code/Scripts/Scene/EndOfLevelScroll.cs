@@ -43,6 +43,13 @@ public class EndOfLevelScroll : MonoBehaviour
         
         _uiManager.ShowScrollUI(true);
 
+        CheckAchievements();
+        
+
+    }
+
+    private void CheckAchievements()
+    {
         //Achievements 1, 2, 3, 8, 9
         #region Level Completion Achievements
 
@@ -67,7 +74,7 @@ public class EndOfLevelScroll : MonoBehaviour
             _ => string.Empty
         };
 
-        _achievementManager.Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        _achievementManager.ObtainAchievement(achievementName);
         #endregion
 
         //Achievements 4, 5, 6, 7
@@ -86,19 +93,17 @@ public class EndOfLevelScroll : MonoBehaviour
         //Store the matching Achievement as a SpeedBasedAchievement so we can access time based properties
         SpeedBasedAchievement sAchi = _achievementManager.Achievements.Find(achi => achi.Title == achievementName) as SpeedBasedAchievement;
 
-        //If the time is low enough, and hasn't been awarded already, award the achievement.
-        if (sAchi.Eligible && sAchi.Obtained == false)
-            sAchi.Obtained = true;
+        _achievementManager.ObtainAchievement(achievementName);
 
         #endregion
 
         //Achievements 10, 11, 12, 13, 14, 15
         #region Genecide/Pacifist Achievements
-        /////NOT PROOFED AGAINST REPEAT ACHIEVEMENT POPS//////
 
         ////GENOCIDE
         //Determine which Achievement we should be checking by scene number
-        if (_gameManager.GetEnemyCount() == 0) {
+        if (_gameManager.GetEnemyCount() == 0)
+        {
             achievementName = sceneNum switch
             {
                 1 => "Level 1 Genocide",
@@ -107,7 +112,7 @@ public class EndOfLevelScroll : MonoBehaviour
                 _ => string.Empty
             };
 
-            _achievementManager.Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+            _achievementManager.ObtainAchievement(achievementName);
         }
 
         ////PACIFIST
@@ -121,14 +126,28 @@ public class EndOfLevelScroll : MonoBehaviour
                 _ => string.Empty
             };
 
-            _achievementManager.Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+            _achievementManager.ObtainAchievement(achievementName);
         }
 
         #endregion
 
+        //End of Level 3 checks
         //Achievement 18. No Traps Activated
-        if (sceneNum == 3 && _achievementManager.Achievements.Find( achi => achi.Title == "No Traps Activated").Eligible)
-            _achievementManager.Achievements.Find(achi => achi.Title == "No Traps Activated").Obtained = true;
+        //Achievement 19. Proud Ninja
+        if (sceneNum == 3)
+        {
+            _achievementManager.ObtainAchievement("No Traps Activated");
+            _achievementManager.ObtainAchievement("Proud Ninja");
+        }
+
+        //End of Level
+        //Achievements 21 - 23
+        if (sceneNum == 4)
+        {
+            _achievementManager.ObtainAchievement("Martial Ninja");
+            _achievementManager.ObtainAchievement("Distance Ninja");
+            _achievementManager.ObtainAchievement("Expert Ninja");
+        }
 
     }
 

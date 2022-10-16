@@ -288,9 +288,21 @@ public class AchievementManager : MonoBehaviour
         _cachedCompletionPctText.color = _obtainedCount == Achievements.Count ? Color.black : Color.grey;
     }
 
+
+    /// <summary>
+    /// This Function takes the title of an achievement and checks if that achievement
+    /// is eligible and hasn't been obtained. If both are true, it marks that named 
+    /// achievement as obtained. Then if all other achievements have been obtained, 
+    /// it awards the Master Ninja Achievement.
+    /// </summary>
+    /// <param name="achievementName"></param>
     public void ObtainAchievement(string achievementName)
     {
-        Achievements.Find(achi => achi.Title == achievementName).Obtained = true;
+        Achievement achievement = Achievements.Find(achi => achi.Title == achievementName);
+        if (!achievement.Eligible || achievement.Obtained)
+            return;
+
+        achievement.Obtained = true;
         _obtainedCount++;
 
         //24. Master Ninja Check
@@ -316,17 +328,14 @@ public class AchievementManager : MonoBehaviour
     /// Resets the Counters in all achievements if sceneNum is 1
     /// </summary>
     /// <param name="sceneNum"></param>
-    public void ResetCounters(int sceneNum)
+    public void ResetCounters()
     {
         Achievement[] collectableAchievementArray = (Achievements.FindAll(possibleAchievements => possibleAchievements.Type == AchievementType.CollectibleType)).ToArray();
 
-        if (sceneNum == 1)
+        foreach (CounterAchievement achievement in collectableAchievementArray)
         {
-            foreach (CounterAchievement achievement in collectableAchievementArray)
-            {
-                achievement.Counter = 0;
-                achievement.Eligible = true;
-            }
+            achievement.Counter = 0;
+            achievement.Eligible = true;
         }
     }
 
