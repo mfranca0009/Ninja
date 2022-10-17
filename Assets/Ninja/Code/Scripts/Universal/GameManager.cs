@@ -105,6 +105,9 @@ public class GameManager : MonoBehaviour
     // Achievements
     private SpeedAchievement _speedAchievement;
 
+    // Scroll Fragment States
+    private bool[] _obtainedScrollFragmentStates;
+    
     #endregion
 
     #region Unity Events
@@ -118,6 +121,8 @@ public class GameManager : MonoBehaviour
         _gameOverDelayTimer = gameOverDelay;
         ActiveItemDrops = new List<GameObject>();
         TappedEnemiesHealth = new List<Health>();
+
+        _obtainedScrollFragmentStates = new bool[3];
     }
 
     // Update is called once per frame
@@ -261,10 +266,7 @@ public class GameManager : MonoBehaviour
         else
             _gameOverDelayTimer -= Time.deltaTime;
     }
-
-
-
-
+    
     #endregion
 
     #region Public Helper Methods
@@ -277,17 +279,27 @@ public class GameManager : MonoBehaviour
     {
         return FindObjectsOfType<EnemyCombat>().Length;
     }
-    
-    // Matt: Since the scroll fragment will end up having a script of its own to determine if the trigger was entered,
-    // we should have a scroll fragment count variable within the game manager class. Anything specific to achievement
-    // processing or updating should be put in the achievement manager, and anything specific to the UI should be moved
-    // to the UI manager.
+
     public void CollectScroll(int scrollNum)
     {
-        //TODO: Tell UI to add visual indicator of having collected the matching scroll
+        _obtainedScrollFragmentStates[scrollNum - 1] = true;
+        
+        // Update achievement progress
+        if (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") is not
+            CounterAchievement counterAchievement)
+            return;
 
-        ((CounterAchievement)_achievementManager.Achievements.Find(achievement =>
-            achievement.Title == "The corruption is cleansed")).Counter++;
+        counterAchievement.Counter++;
+
+        // Update GUI
+        _uiManager.UpdateSecretScrollFragmentUI();
+
+    }
+
+    //Used by the UI Manager to confirm which fragments should be showing.
+    public bool ScrollStatus(int fragmentNum)
+    {
+        return _obtainedScrollFragmentStates[fragmentNum];
     }
     
     #endregion

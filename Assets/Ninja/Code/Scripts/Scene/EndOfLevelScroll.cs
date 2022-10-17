@@ -130,7 +130,7 @@ public class EndOfLevelScroll : MonoBehaviour
             _achievementManager.ObtainAchievement(achievementName);
         }
         
-        if (_gameManager.TotalEnemiesForLevel - _gameManager.GetEnemyCount() is > 1/* or < 1*/)
+        if (_gameManager.TotalEnemiesForLevel - _gameManager.GetEnemyCount() is > 1 or < 1)
             return;
         
         ////PACIFIST
