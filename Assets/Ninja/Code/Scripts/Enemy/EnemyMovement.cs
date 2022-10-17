@@ -531,7 +531,7 @@ public class EnemyMovement : MonoBehaviour
     }
     
     /// <summary>
-    /// Checks if the player is jumping (positive velocity on Y axis)
+    /// Checks if the enemy is jumping (positive velocity on Y axis)
     /// </summary>
     /// <returns>Returns true if player is jumping, otherwise false.</returns>
     public bool IsJumping()
@@ -540,7 +540,7 @@ public class EnemyMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the player is falling (negative velocity on Y axis)
+    /// Checks if the enemy is falling (negative velocity on Y axis)
     /// </summary>
     /// <returns>Returns true if player is falling, otherwise false.</returns>
     public bool IsFalling()
