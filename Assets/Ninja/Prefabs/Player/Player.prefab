@@ -1257,7 +1257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9f546e89bec3fd4aa8bcb22c12729e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
+  mainCamera: {fileID: 0}
   applySmoothing: 1
   applyXAxisLock: 1
   verticalOffset: 3.5
@@ -1278,6 +1278,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   isPlayer: 1
+  enemyHealthCanvas: {fileID: 0}
+  enemyHealthImage: {fileID: 0}
   shouldDestroyAfterDeath: 1
   destroyDelay: 2
   playerDeathSoundClip: {fileID: 8300000, guid: ca4d61fb3eef03a40818f4e9c97f80f1, type: 3}
@@ -2335,6 +2337,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hitbox_l
       objectReference: {fileID: 0}
+    - target: {fileID: 4893294928937951861, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 8474151331642021897, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
       propertyPath: m_Name
       value: MeleeWeaponLeft
@@ -2463,6 +2469,10 @@ PrefabInstance:
     - target: {fileID: 4893294928937951861, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
       propertyPath: m_Name
       value: Hitbox_r
+      objectReference: {fileID: 0}
+    - target: {fileID: 4893294928937951861, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8474151331642021897, guid: e2643128d5d250a44a2ac77a1af502b2, type: 3}
       propertyPath: m_Name

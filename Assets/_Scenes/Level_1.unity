@@ -6212,8 +6212,11 @@ MonoBehaviour:
   achievementsPopCanvas: {fileID: 0}
   scrollCanvas: {fileID: 0}
   healthCanvas: {fileID: 0}
+  loadingScreen: {fileID: 0}
+  secretScrollCanvas: {fileID: 0}
   livesImages: []
   livesSprites: []
+  scrollFragments: []
   scrollEntries: []
 --- !u!4 &2022685868
 Transform:
@@ -8056,6 +8059,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8862957453690271467, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
       propertyPath: camera
+      value: 
+      objectReference: {fileID: 2075302199}
+    - target: {fileID: 8862957453690271467, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+      propertyPath: mainCamera
       value: 
       objectReference: {fileID: 2075302199}
     m_RemovedComponents: []

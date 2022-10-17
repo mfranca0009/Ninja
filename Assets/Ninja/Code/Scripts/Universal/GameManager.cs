@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
         }
 
         // If the player does not exist or is invalid for this scene, then retrieve the player again.
-        if (!Player || !Player.scene.IsValid())
+        if (!Player || Player.activeInHierarchy)
             Player = GameObject.FindWithTag("Player");
 
         // Retrieve the required player scripts for the game manager if necessary.
@@ -350,8 +350,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void RetrievePlayerScripts()
     {
-        if (_sceneManagement.HasBuildIndex(_currScene, 0) || !Player ||
-            (Player && _playerHealth && _playerCombat && _playerCamera))
+        if (_sceneManagement.HasBuildIndex(_currScene, 0) || !Player || !Player.activeInHierarchy ||
+            (Player && Player.activeInHierarchy &&_playerHealth && _playerCombat && _playerCamera))
             return;
 
         _playerHealth = Player.GetComponent<Health>();

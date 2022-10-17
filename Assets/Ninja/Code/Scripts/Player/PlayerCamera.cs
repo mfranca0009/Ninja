@@ -5,7 +5,7 @@ public class PlayerCamera : MonoBehaviour
     #region Serialized Fields
     
     [Tooltip("The camera that will follow the target")]
-    [SerializeField] private new Camera camera;
+    [SerializeField] private Camera mainCamera;
 
     [Tooltip("Enable camera smoothing")]
     [SerializeField] private bool applySmoothing = true;
@@ -48,8 +48,8 @@ public class PlayerCamera : MonoBehaviour
         _smoothVelocity = Vector2.zero;
         _updateMode = applySmoothing ? UpdateMode.FixedUpdate : UpdateMode.Update;
         _currentPlayerPosition = transform.position;
-        camera.transform.position = _currentCameraPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset,
-            _currentPlayerPosition.y + verticalOffset, camera.transform.position.z);
+        mainCamera.transform.position = _currentCameraPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset,
+            _currentPlayerPosition.y + verticalOffset, mainCamera.transform.position.z);
     }
     
     // Update is called once per frame
@@ -109,7 +109,7 @@ public class PlayerCamera : MonoBehaviour
                 Vector3 xAxisLockPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset,
                     _currentCameraPosition.y, _currentCameraPosition.z);
                 
-                camera.transform.position = _currentCameraPosition = Vector3.SmoothDamp(_currentCameraPosition,
+                mainCamera.transform.position = _currentCameraPosition = Vector3.SmoothDamp(_currentCameraPosition,
                     applyXAxisLock ? xAxisLockPosition : targetPosition,
                     ref _smoothVelocity, smoothTime, maxSmoothSpeed);
                 break;   
@@ -119,12 +119,12 @@ public class PlayerCamera : MonoBehaviour
                 targetPosition = new Vector3(_currentPlayerPosition.x + horizontalOffset, _currentCameraPosition.y,
                     _currentCameraPosition.z);
                 
-                camera.transform.position = _currentCameraPosition = targetPosition;
+                mainCamera.transform.position = _currentCameraPosition = targetPosition;
                 break;   
             }
             default:
             {
-                camera.transform.position = _currentCameraPosition = targetPosition;
+                mainCamera.transform.position = _currentCameraPosition = targetPosition;
                 break;   
             }
         }
@@ -143,9 +143,9 @@ public class PlayerCamera : MonoBehaviour
     public void SetCameraPosition(Vector2 position)
     {
         Vector3 newPos = new Vector3(position.x + horizontalOffset, position.y + verticalOffset,
-            camera.transform.position.z);
+            mainCamera.transform.position.z);
         
-        camera.transform.position = newPos;
+        mainCamera.transform.position = newPos;
         _currentCameraPosition = newPos;
     }
 
