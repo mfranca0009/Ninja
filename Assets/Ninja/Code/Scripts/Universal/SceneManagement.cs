@@ -3,30 +3,40 @@ using UnityEngine.SceneManagement;
 
 public class SceneManagement : MonoBehaviour
 {
+    #region Private Fields
 
-    public UIManager _uIManager;
-    public AchievementManager _achievementManager;
-
-    #region Public Helper Methods
-
+    // UI Manager
+    private UIManager _uiManager;
+    
+    #endregion
+    
+    #region Unity Events
+    
     private void Start()
     {
-        _achievementManager = FindObjectOfType<AchievementManager>();
+        _uiManager = FindObjectOfType<UIManager>();
     }
-
+    
+    #endregion
+    
+    #region Public Helper Methods
+    
     public void LoadSceneByString(string sceneString)
     {
-        AchievementCleanUp(SceneManager.GetSceneByName(sceneString).buildIndex);
         SceneManager.LoadScene(sceneString);
         Debug.Log("sceneName to load: " + sceneString);
-        _uIManager.showLoadingUI(false);
+
+        if (!_uiManager)
+            _uiManager.ShowLoadingUI(false);
     }
 
     public void LoadSceneByIndex(int sceneNumber)
     {
-        AchievementCleanUp(sceneNumber);
         SceneManager.LoadScene(sceneNumber);
         Debug.Log("sceneBuildIndex to load: " + sceneNumber);
+
+        if (!_uiManager)
+            _uiManager.ShowLoadingUI(false);
     }
 
     public void GetActiveScene() 
@@ -39,6 +49,9 @@ public class SceneManagement : MonoBehaviour
     public void LoadNextScene() 
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        
+        if (!_uiManager)
+            _uiManager.ShowLoadingUI(false);
     }
 
     public bool HasBuildIndex(Scene scene, params int[] buildIndices)
@@ -53,19 +66,6 @@ public class SceneManagement : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    private void AchievementCleanUp(int sceneNum)
-    {
-        _achievementManager.ResetTimers();
-
-        if (sceneNum == 1)
-        {
-            _achievementManager.ResetCounters();
-            _achievementManager.Achievements.Find(achi => achi.Title == "Martial Ninja").Eligible = true;
-            _achievementManager.Achievements.Find(achi => achi.Title == "Distance Ninja").Eligible = true;
-            _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = true;
-        }
     }
 
     #endregion

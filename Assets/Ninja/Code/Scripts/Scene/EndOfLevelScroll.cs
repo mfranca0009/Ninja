@@ -1,23 +1,15 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class EndOfLevelScroll : MonoBehaviour
 {
-    #region Public Fields
-    
-    // UNUSED - maybe in the future?
-    // public string levelToLoad;
-
-    #endregion
-
     #region Private Fields
 
     // Managers
     private UIManager _uiManager;
     private AchievementManager _achievementManager;
-    private SceneManagement _sceneManagement;
     private GameManager _gameManager;
+    
     #endregion
 
     #region Unity Events
@@ -26,10 +18,8 @@ public class EndOfLevelScroll : MonoBehaviour
     {
         _uiManager = FindObjectOfType<UIManager>();
         _achievementManager = FindObjectOfType<AchievementManager>();
-        _sceneManagement = FindObjectOfType<SceneManagement>();
         _gameManager = FindObjectOfType<GameManager>();
-
-
+        
         if (!_uiManager)
             return;
         
@@ -42,29 +32,42 @@ public class EndOfLevelScroll : MonoBehaviour
             return;
         
         _uiManager.ShowScrollUI(true);
-
-        CheckAchievements();
         
+        int sceneNum = SceneManager.GetActiveScene().buildIndex;
+        CheckAllEndOfLevelAchievements(sceneNum);
 
     }
 
-    #endregion
-
-    private void CheckAchievements()
+    /// <summary>
+    /// Call all achievement check methods relevant to touching end-of-level scroll.<br></br><br></br>
+    /// </summary>
+    private void CheckAllEndOfLevelAchievements(int sceneNum)
     {
-        //Achievements 1, 2, 3, 8, 9
-        #region Level Completion Achievements
-
+        CheckEndOfLevelAchievements(sceneNum);
+        CheckTimeClearAchievements(sceneNum);
+        CheckGenocidePacifistAchievements(sceneNum);
+        CheckLevelThreeAchievements(sceneNum);
+        CheckLevelFourAchievements(sceneNum);
+    }
+    
+    /// <summary>
+    /// Check end of level achievements.<br></br><br></br>
+    /// Note: Achievements 1, 2, 3, 8, 9
+    /// </summary>
+    private void CheckEndOfLevelAchievements(int sceneNum)
+    {
         if (!_achievementManager)
             return;
-
-        int sceneNum = SceneManager.GetActiveScene().buildIndex;
+        
         bool goodEndingTrigger = false;
 
         if (sceneNum == 4)
         {
-            CounterAchievement cAchi = _achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") as CounterAchievement;
-            goodEndingTrigger = cAchi.Counter == 3;
+            if (_achievementManager.Achievements.Find(achievement => achievement.Title == "The corruption is cleansed")
+                is not CounterAchievement counterAchievement)
+                return;
+            
+            goodEndingTrigger = counterAchievement.Counter == 3;
         }
 
         string achievementName = sceneNum switch
@@ -77,31 +80,41 @@ public class EndOfLevelScroll : MonoBehaviour
         };
 
         _achievementManager.ObtainAchievement(achievementName);
-        #endregion
+    }
 
-        //Achievements 4, 5, 6, 7
-        #region Level Speed Clear Achievements
-
+    /// <summary>
+    /// Check level speed clear achievements.<br></br><br></br>
+    /// Note: Achievements 4, 5, 6, 7
+    /// </summary>
+    private void CheckTimeClearAchievements(int sceneNum)
+    {
+        if (!_achievementManager)
+            return;
+        
         //Determine which Achievement we should be checking by scene number
-        achievementName = sceneNum switch
+        string achievementName = sceneNum switch
         {
             1 => "Quick Ninja",
             2 => "Hasty Ninja",
             3 => "Untraceable Ninja",
-            4 => "Coup de Grâce",
+            4 => "Coup de GrÃ¢ce",
             _ => string.Empty
         };
-
-        //Store the matching Achievement as a SpeedBasedAchievement so we can access time based properties
-        SpeedBasedAchievement sAchi = _achievementManager.Achievements.Find(achi => achi.Title == achievementName) as SpeedBasedAchievement;
-
+        
         _achievementManager.ObtainAchievement(achievementName);
+    }
 
-        #endregion
-
-        //Achievements 10, 11, 12, 13, 14, 15
-        #region Genecide/Pacifist Achievements
-
+    /// <summary>
+    /// Check genocide/pacifist achievements.<br></br><br></br>
+    /// Note: Achievements 10, 11, 12, 13, 14, 15
+    /// </summary>
+    private void CheckGenocidePacifistAchievements(int sceneNum)
+    {
+        if (!_achievementManager)
+            return;
+        
+        string achievementName;
+        
         ////GENOCIDE
         //Determine which Achievement we should be checking by scene number
         if (_gameManager.GetEnemyCount() == 0)
@@ -116,40 +129,48 @@ public class EndOfLevelScroll : MonoBehaviour
 
             _achievementManager.ObtainAchievement(achievementName);
         }
-
+        
+        if (_gameManager.TotalEnemiesForLevel - _gameManager.GetEnemyCount() is > 1 or < 1)
+            return;
+        
         ////PACIFIST
-        if (_gameManager.EnemyCount - _gameManager.GetEnemyCount() <= 1)
+        achievementName = sceneNum switch
         {
-            achievementName = sceneNum switch
-            {
-                1 => "Level 1 Mostly Pacifist",
-                2 => "Level 2 Mostly Pacifist",
-                3 => "Level 3 Mostly Pacifist",
-                _ => string.Empty
-            };
+            1 => "Level 1 Mostly Pacifist",
+            2 => "Level 2 Mostly Pacifist",
+            3 => "Level 3 Mostly Pacifist",
+            _ => string.Empty
+        };
 
-            _achievementManager.ObtainAchievement(achievementName);
-        }
-
-        #endregion
-
-        //End of Level 3 checks
-        //Achievement 18. No Traps Activated
-        //Achievement 19. Proud Ninja
-        if (sceneNum == 3)
-        {
-            _achievementManager.ObtainAchievement("No Traps Activated");
-            _achievementManager.ObtainAchievement("Proud Ninja");
-        }
-
-        //End of Level
-        //Achievements 21 - 23
-        if (sceneNum == 4)
-        {
-            _achievementManager.ObtainAchievement("Martial Ninja");
-            _achievementManager.ObtainAchievement("Distance Ninja");
-            _achievementManager.ObtainAchievement("Expert Ninja");
-        }
-
+        _achievementManager.ObtainAchievement(achievementName);
     }
+
+    /// <summary>
+    /// Check level three achievements.<br></br><br></br>
+    /// Note: Achievements 18, 19 [No Traps Activated, Proud Ninja]
+    /// </summary>
+    private void CheckLevelThreeAchievements(int sceneNum)
+    {
+        if (!_achievementManager || sceneNum != 3)
+            return;
+        
+        _achievementManager.ObtainAchievement("No Traps Activated");
+        _achievementManager.ObtainAchievement("Proud Ninja");
+    }
+
+    /// <summary>
+    /// Check level four achievements.<br></br><br></br>
+    /// Note: Achievements 21, 22, 23
+    /// </summary>
+    private void CheckLevelFourAchievements(int sceneNum)
+    {
+        if (!_achievementManager || sceneNum != 4)
+            return;
+        
+        _achievementManager.ObtainAchievement("Martial Ninja");
+        _achievementManager.ObtainAchievement("Distance Ninja");
+        _achievementManager.ObtainAchievement("Expert Ninja");
+    }
+    
+    #endregion
 }

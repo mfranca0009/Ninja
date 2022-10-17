@@ -93,6 +93,9 @@ public class UIManager : MonoBehaviour
 		_slidersChanged = new Dictionary<string, Slider>();
 		
 		Time.timeScale = 1f;
+		
+		// Note: no need to hide UI elements in Start() anymore. Since we have them referenced as public through
+		// the editor we can have them hidden by default on the `PersistentObjects` prefab and not have to find them.
 	}
 
 	// Update is called once per frame
@@ -131,7 +134,7 @@ public class UIManager : MonoBehaviour
 
 	#region Public UI Methods
 
-	public void showLoadingUI(bool show)
+	public void ShowLoadingUI(bool show)
 	{
 		loadingScreen.gameObject.SetActive(show);
 	}
@@ -169,14 +172,14 @@ public class UIManager : MonoBehaviour
 		achievementsCanvas.gameObject.SetActive(show);
 	}
 
-	/// <summary>
-	/// Show/hide achievements pop-up UI.
-	/// </summary>
-	/// <param name="show">Whether to show the UI or not.</param>
-	public void ShowAchievementsPopUI(bool show)
-	{
-		achievementsPopCanvas.gameObject.SetActive(show);
-	}
+	// /// <summary>
+	// /// Show/hide achievements pop-up UI.
+	// /// </summary>
+	// /// <param name="show">Whether to show the UI or not.</param>
+	// public void ShowAchievementsPopUI(bool show)
+	// {
+	// 	achievementsPopCanvas.gameObject.SetActive(show);
+	// }
 
 	/// <summary>
 	/// Show/hide settings menu UI.
@@ -239,21 +242,21 @@ public class UIManager : MonoBehaviour
 			switch (pair.Key)
 			{
 				case "MasterVol":
-					_soundManager.MainAudioMixer.SetFloat("MasterVol",
+					_soundManager.mainAudioMixer.SetFloat("MasterVol",
 						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.Master]) * 20);
 
 					_currSoundSettings[(int)AudioMixerGroup.Master] = 
 						_soundSettingChanges[(int)AudioMixerGroup.Master];
 					break;
 				case "SFXVol":
-					_soundManager.MainAudioMixer.SetFloat("SFXVol",
+					_soundManager.mainAudioMixer.SetFloat("SFXVol",
 						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.SoundEffects]) * 20);
 
 					_currSoundSettings[(int)AudioMixerGroup.SoundEffects] =
 						_soundSettingChanges[(int)AudioMixerGroup.SoundEffects];
 					break;
 				case "BGMusicVol":
-					_soundManager.MainAudioMixer.SetFloat("BGMusicVol",
+					_soundManager.mainAudioMixer.SetFloat("BGMusicVol",
 						Mathf.Log10(_soundSettingChanges[(int)AudioMixerGroup.BgMusic]) * 20);
 
 					_currSoundSettings[(int)AudioMixerGroup.BgMusic] =

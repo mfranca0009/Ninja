@@ -5,18 +5,71 @@ using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
-	// Audio players components.
-	public AudioMixer MainAudioMixer;
-	public AudioSource MusicSource;
-	public AudioSource MovementEffectsSource;
-	public AudioSource AttackEffectsSource;
-	public AudioSource DamageEffectsSource;
-	public AudioSource ItemEffectsSource;
+	#region Public Fields
 
-	// Random pitch adjustment range.
-	public float LowPitchRange = .95f;
-	public float HighPitchRange = 1.05f;
+	[Header("Audio Source Settings")] 
+	
+	[Tooltip("Main audio mixer used for the game")]
+	public AudioMixer mainAudioMixer;
+	
+	[Tooltip("Background music audio source component")]
+	public AudioSource musicSource;
+	
+	[Tooltip("Movement sound effects audio source component")]
+	public AudioSource movementEffectsSource;
+	
+	[Tooltip("Attack sound effects audio source component")]
+	public AudioSource attackEffectsSource;
+	
+	[Tooltip("Damage sound effects audio source component")]
+	public AudioSource damageEffectsSource;
+	
+	[Tooltip("Item sound effects audio source component")]
+	public AudioSource itemEffectsSource;
+	
+	[Tooltip("UI sound effects audio source component")]
+	public AudioSource uiEffectsSource;
+	
+	[Header("Random Sound Effect Settings")]
+	
+	[Tooltip("Low pitch range value used during random sound effect execution")]
+	public float lowPitchRange = .95f;
+	
+	[Tooltip("High pitch range value used during random sound effect execution")]
+	public float highPitchRange = 1.05f;
 
+	#endregion
+	
+	#region Unity Events
+	
+	/// TODO: Still playing with this. Goal: fade in the music for each scene. right
+	/// now it's only fading in on the _main scene (also want to fade out as you tranisiton scenes)
+
+	// called first
+	private void OnEnable()
+	{
+		//Debug.Log("OnEnable called");
+		SceneManager.sceneLoaded += OnSceneLoaded;
+	}
+	
+	// called third
+	private void Start()
+	{
+		Debug.Log("Start");
+		SceneManager.sceneUnloaded += OnSceneUnloaded;
+	}
+	
+	// called when the game is terminated
+	private void OnDisable()
+	{
+		Debug.Log("OnDisable");
+		SceneManager.sceneLoaded -= OnSceneLoaded;
+		SceneManager.sceneUnloaded -= OnSceneUnloaded;
+	}
+	
+	#endregion
+	
+	#region Public Helper Methods
 	
 	/// <summary>
 	/// Play a sound effect on the effects audio source.<br></br><br></br>
@@ -32,10 +85,11 @@ public class SoundManager : MonoBehaviour
 	{
 		AudioSource sourceSfx = source switch
 		{
-			AudioSourceType.MovementEffects => MovementEffectsSource,
-			AudioSourceType.AttackEffects => AttackEffectsSource,
-			AudioSourceType.DamageEffects => DamageEffectsSource,
-			AudioSourceType.ItemEffects => ItemEffectsSource,
+			AudioSourceType.MovementEffects => movementEffectsSource,
+			AudioSourceType.AttackEffects => attackEffectsSource,
+			AudioSourceType.DamageEffects => damageEffectsSource,
+			AudioSourceType.ItemEffects => itemEffectsSource,
+			AudioSourceType.UiEffects => uiEffectsSource,
 			AudioSourceType.None or _ => null
 		};
 
@@ -54,22 +108,23 @@ public class SoundManager : MonoBehaviour
 	// Play a single clip through the music source.
 	public void PlayMusic(AudioClip clip)
 	{
-		MusicSource.clip = clip;
-		MusicSource.Play();
+		musicSource.clip = clip;
+		musicSource.Play();
 	}
 	
 	// Play a random clip from an array, and optionally randomize the pitch slightly.
 	public void RandomSoundEffect(AudioSourceType source, bool oneShot, bool randomizePitch, params AudioClip[] clips)
 	{
 		int randomIndex = Random.Range(0, clips.Length);
-		float randomPitch = Random.Range(LowPitchRange, HighPitchRange);
+		float randomPitch = Random.Range(lowPitchRange, highPitchRange);
 
 		AudioSource sourceSfx = source switch
 		{
-			AudioSourceType.MovementEffects => MovementEffectsSource,
-			AudioSourceType.AttackEffects => AttackEffectsSource,
-			AudioSourceType.DamageEffects => DamageEffectsSource,
-			AudioSourceType.ItemEffects => ItemEffectsSource,
+			AudioSourceType.MovementEffects => movementEffectsSource,
+			AudioSourceType.AttackEffects => attackEffectsSource,
+			AudioSourceType.DamageEffects => damageEffectsSource,
+			AudioSourceType.ItemEffects => itemEffectsSource,
+			AudioSourceType.UiEffects => uiEffectsSource,
 			AudioSourceType.None or _ => null
 		};
 
@@ -100,30 +155,17 @@ public class SoundManager : MonoBehaviour
 		}
 		yield break;
 	}
+	
+	#endregion
 
-	/// TODO: Still playing with this. Goal: fade in the music for each scene. right
-	/// now it's only fading in on the _main scene (also want to fade out as you tranisiton scenes)
-
-	// called first
-	private void OnEnable()
-	{
-		//Debug.Log("OnEnable called");
-		SceneManager.sceneLoaded += OnSceneLoaded;
-	}
-
+	#region Private Helper Methods
+	
 	// called second
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
 		Debug.Log($"OnSceneLoaded: [Name: {scene.name}, Build Index: {scene.buildIndex}]");
 		Debug.Log(mode);
-		StartCoroutine(StartAudioFade(MusicSource, 5f, 0.3f));
-	}
-
-	// called third
-	private void Start()
-	{
-		Debug.Log("Start");
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
+		StartCoroutine(StartAudioFade(musicSource, 5f, 0.3f));
 	}
 
 	private void OnSceneUnloaded(Scene current)
@@ -133,44 +175,38 @@ public class SoundManager : MonoBehaviour
 		//StartCoroutine(StartAudioFade(MusicSource, 0.1f, 0f));
 		//StartCoroutine(StartAudioFade(MusicSource, 10f, 0.3f));
 	}
+	
+	#endregion
 
-	// called when the game is terminated
-	private void OnDisable()
-	{
-		Debug.Log("OnDisable");
-		SceneManager.sceneLoaded -= OnSceneLoaded;
-		SceneManager.sceneUnloaded -= OnSceneUnloaded;
-	}
+/*-------------------------------------------------------/
+|                                                        |
+|			      EXAMPLES ON HOW TO USE				 |
+|                                                        |
+|-------------------------------------------------------*/
 
-	///
-	/// EXAMPLES ON HOW TO USE
-	///
-	/*public class GameScript : MonoBehaviour
-{
-	[SerializeField]
-	private SoundManager _soundManager;
-
-    public AudioClip BattleMusic;
-
-    void Start() {
-        _soundManager = FindObjectOfType<SoundManager>();
-		_soundManager.PlayMusic(BattleMusic);
-    }
-}
+	// public class GameScript : MonoBehaviour
+	// {
+	// 	[SerializeField]
+	// 	private SoundManager _soundManager;
+	//
+	// 	public AudioClip BattleMusic;
+	//
+	// 	void Start() {
+	// 		_soundManager = FindObjectOfType<SoundManager>();
+	// 		_soundManager.PlayMusic(BattleMusic);
+	// 	}
+	// }
  
-	 * public class CharacterScript : MonoBehaviour
-{
-	[SerializeField]
-	private SoundManager _soundManager;
-
-    public AudioClip[] AttackNoises;
-
-    void Start() {
-        _soundManager = FindObjectOfType<SoundManager>();
-		_soundManager.RandomSoundEffect(AttackNoises);
-    }
-}
-	*/
-
-
+	// public class CharacterScript : MonoBehaviour
+	// {
+	// 	[SerializeField]
+	// 	private SoundManager _soundManager;
+	//
+	// 	public AudioClip[] AttackNoises;
+	//
+	// 	void Start() {
+	// 		_soundManager = FindObjectOfType<SoundManager>();
+	// 		_soundManager.RandomSoundEffect(AttackNoises);
+	// 	}
+	// }
 }

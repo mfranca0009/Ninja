@@ -48,9 +48,12 @@ public class GameManager : MonoBehaviour
     /// Enemies health that have been "tapped" by the player but not yet killed.
     /// </summary>
     public List<Health> TappedEnemiesHealth { get; private set; }
-    
-    public int EnemyCount { get; private set; }
 
+    /// <summary>
+    /// The total amount of enemies present at start of active level.
+    /// </summary>
+    public int TotalEnemiesForLevel { get; private set; }
+    
     #endregion
 
     #region Serialized Fields
@@ -83,6 +86,9 @@ public class GameManager : MonoBehaviour
     // UI Manager
     private UIManager _uiManager;
     
+    // Achievement Manager
+    private AchievementManager _achievementManager;
+    
     // Player Scripts
     private Health _playerHealth;
     private PlayerCombat _playerCombat;
@@ -97,9 +103,9 @@ public class GameManager : MonoBehaviour
     private bool _gameOver;
 
     // Achievements
-    private AchievementManager _achievementManager;
-    private SpeedBasedAchievement _speedBasedAchievement;
+    private SpeedAchievement _speedAchievement;
 
+    // Scroll Fragment States
     private bool[] _obtainedScrollFragmentStates;
     
     #endregion
@@ -129,7 +135,7 @@ public class GameManager : MonoBehaviour
         // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
-            EnemyCount = GetEnemyCount();
+            TotalEnemiesForLevel = GetEnemyCount();
             LevelMidpointReached = false;
             ActiveItemDrops.Clear();
             TappedEnemiesHealth.Clear();
@@ -167,13 +173,8 @@ public class GameManager : MonoBehaviour
             LevelMidpointReached = false;
         }
 
-        //increment the proper level timer
-        IncrementLevelTimer();
-
-
         // Update the scene's build index
         _currSceneBuildIndex = _currScene.buildIndex;
-
     }
 
     #endregion
@@ -244,8 +245,8 @@ public class GameManager : MonoBehaviour
         else
             _resetDelayTimer -= Time.deltaTime;
 
-        //Disable no death eligability
-        _achievementManager.Achievements.Find(achi => achi.Title == "Expert Ninja").Eligible = false;
+        //Disable no death eligibility
+        _achievementManager.Achievements.Find(achievement => achievement.Title == "Expert Ninja").Eligible = false;
     }
 
     /// <summary>
@@ -265,38 +266,15 @@ public class GameManager : MonoBehaviour
         else
             _gameOverDelayTimer -= Time.deltaTime;
     }
-
-
-
-
+    
     #endregion
 
-    #region Achievement Helper Methods
-
-    private void IncrementLevelTimer()
-    {
-        if (_currSceneBuildIndex != _currScene.buildIndex)
-        {
-            SpeedBasedAchievement sAchi = _currScene.buildIndex switch
-            {
-                1 => _achievementManager.Achievements.Find(achi => achi.Title == "Quick Ninja") as SpeedBasedAchievement,
-                2 => _achievementManager.Achievements.Find(achi => achi.Title == "Hasty Ninja") as SpeedBasedAchievement,
-                3 => _achievementManager.Achievements.Find(achi => achi.Title == "Untrackable Ninja") as SpeedBasedAchievement,
-                4 => _achievementManager.Achievements.Find(achi => achi.Title == "Coup de Grace") as SpeedBasedAchievement,
-                _ => new SpeedBasedAchievement(AchievementType.SpeedType, "", "", 0.0f)
-            };
-            _speedBasedAchievement = sAchi;
-        }
-
-        if (_speedBasedAchievement != null && _speedBasedAchievement.Title != "")
-        {
-            _speedBasedAchievement.TimeElapsed += Time.deltaTime;
-
-            if (_speedBasedAchievement.TimeElapsed > _speedBasedAchievement.TimeToBeat)
-                _speedBasedAchievement.Eligible = false;
-        }
-    }
-
+    #region Public Helper Methods
+    
+    /// <summary>
+    /// Retrieve most recent enemy count for active level.
+    /// </summary>
+    /// <returns>Returns the amount of enemies remaining on the active level.</returns>
     public int GetEnemyCount()
     {
         return FindObjectsOfType<EnemyCombat>().Length;
@@ -323,9 +301,9 @@ public class GameManager : MonoBehaviour
     {
         return _obtainedScrollFragmentStates[fragmentNum];
     }
-
+    
     #endregion
-
+    
     #region Private Helper Methods
 
     /// <summary>

@@ -155,6 +155,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (_health.Dead || Time.timeScale == 0f)
+        {
+            movementAudioSource.Pause();
+        }
+        
         GroundCheckUpdate();
         MovementInputUpdate();
         AnimatorSpeedUpUpdate();
@@ -171,12 +176,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_health.Dead || Time.timeScale == 0f)
-        {
-            movementAudioSource.Pause();
+        if (_health.Dead)
             return;
-        }
-
+        
         MovementFixedUpdate();
         JumpFixedUpdate();
     }

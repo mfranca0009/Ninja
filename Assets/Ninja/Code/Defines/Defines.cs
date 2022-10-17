@@ -40,7 +40,8 @@ public enum AudioSourceType
     MovementEffects = 2,
     AttackEffects = 3,
     DamageEffects = 4,
-    ItemEffects = 5
+    ItemEffects = 5,
+    UiEffects = 6
 }
 
 public enum AudioMixerGroup
@@ -56,7 +57,7 @@ public enum AchievementType
 {
     TriggerType = 0,
     SpeedType = 1,
-    CollectibleType = 2,
+    CounterType = 2,
     
     Max = 3
 }
