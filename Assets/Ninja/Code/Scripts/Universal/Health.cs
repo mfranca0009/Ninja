@@ -94,6 +94,9 @@ public class Health : MonoBehaviour
     
     // Player Scripts
     private PlayerMovement _playerMovement;
+    
+    // Enemy Scripts
+    private EnemyMovement _enemyMovement;
 
     #endregion
 
@@ -108,7 +111,12 @@ public class Health : MonoBehaviour
         _gameManager = FindObjectOfType<GameManager>();
         _uiManager = FindObjectOfType<UIManager>();
         HealthPoints = maxHealth;
-        
+
+        if (isPlayer)
+            _playerMovement = GetComponent<PlayerMovement>();
+        else
+            _enemyMovement = GetComponent<EnemyMovement>();
+
         if (!_uiManager || !enemyHealthCanvas)
             return;
 
@@ -118,11 +126,6 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        // Call this in Update to retrieve once, cannot call from Awake/Start because the game manager retrieves
-        // the player// through the Update loop due to it being a persistent object.
-        if (!_playerMovement && _gameManager && _gameManager.Player && isPlayer)
-            _playerMovement = _gameManager.Player.GetComponent<PlayerMovement>();
-
         if (!isPlayer)
             UIManager.ShowEnemyHealthUI(enemyHealthCanvas, !Dead && HealthPoints < maxHealth);
 
@@ -139,9 +142,12 @@ public class Health : MonoBehaviour
         if (_enemyItemDrop && _enemyItemDrop.HasDroppedItems && shouldDestroyAfterDeath)
             Destroy(gameObject, destroyDelay);
         
-        // FIXME: this should be checking if player is grounded, but death animation triggers
-        // not being grounded due to fall back. Player falls through floor in this case even when he was on ground.
+        // FIXME: this should be checking if player/enemy is grounded, but death animation triggers
+        // not being grounded due to fall back. Player falls through floor in this case even when
+        // gameobject was on ground.
         if (_playerMovement &&  (_playerMovement.IsJumping() || _playerMovement.IsFalling()))
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX;
+        else if (_enemyMovement && (_enemyMovement.IsJumping() || _enemyMovement.IsFalling()))
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX;
         else
         {

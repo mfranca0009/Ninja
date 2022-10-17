@@ -111,7 +111,7 @@ public class EnemyMovement : MonoBehaviour
     #region Private Fields
     
     // Rigidbody / Physics
-    private Rigidbody2D _rigidBody;
+    private Rigidbody2D _rigidBody2D;
     
     // Animator / Animation
     private Animator _animator;
@@ -143,7 +143,7 @@ public class EnemyMovement : MonoBehaviour
     
     private void Awake()
     {
-        _rigidBody = GetComponent<Rigidbody2D>();
+        _rigidBody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _health = GetComponent<Health>();
         _enemyCombat = GetComponent<EnemyCombat>();
@@ -171,11 +171,11 @@ public class EnemyMovement : MonoBehaviour
         GroundCheckUpdate();
 
         if (_isGrounded && _homePos == Vector2.zero)
-            _homePos = _rigidBody.position;
+            _homePos = _rigidBody2D.position;
 
-        _animator.SetFloat("VelocityX", _rigidBody.velocity.x);
-        _animator.SetFloat("VelocityY", _rigidBody.velocity.y);
-        _animator.SetBool("HasVelocityX", _rigidBody.velocity.x != 0);
+        _animator.SetFloat("VelocityX", _rigidBody2D.velocity.x);
+        _animator.SetFloat("VelocityY", _rigidBody2D.velocity.y);
+        _animator.SetBool("HasVelocityX", _rigidBody2D.velocity.x != 0);
         
         UpdateWalkRunSfx();
 
@@ -209,7 +209,7 @@ public class EnemyMovement : MonoBehaviour
         if (!AllowRandomMovement())
             return;
 
-        Vector2 currentPos = _rigidBody.position;
+        Vector2 currentPos = _rigidBody2D.position;
         
         if (_destReached || _destPos == Vector2.zero)
         {
@@ -219,7 +219,7 @@ public class EnemyMovement : MonoBehaviour
             if (noRandomDelay)
                 return;
             
-            _rigidBody.velocity = Vector2.zero;
+            _rigidBody2D.velocity = Vector2.zero;
             _randMoveDelayTimer = Random.Range(minDelay, maxDelay);
             _randomMoveDelayed = true;
         }
@@ -238,8 +238,8 @@ public class EnemyMovement : MonoBehaviour
 
             UpdateWalkRunSfxPitch(currentSpeed);
             
-            _rigidBody.velocity = new Vector2((_destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
-                                              * currentSpeed, 0f) * Time.deltaTime;
+            _rigidBody2D.velocity = new Vector2((_destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
+                                                * currentSpeed, 0f) * Time.deltaTime;
         }
 
         _destReached = Mathf.Abs(Vector2.Distance(currentPos, _destPos)) <= randomPointReachedTolerance;
@@ -270,7 +270,7 @@ public class EnemyMovement : MonoBehaviour
         }
 
             // Retrieve current AI position and waypoint we are on.
-        Vector2 currentPos = _rigidBody.position;
+        Vector2 currentPos = _rigidBody2D.position;
         WaypointInfo waypoint = waypoints[_currentWpId];
 
         // Check if the waypoint position and AI's current position is within range of the reached tolerance to trigger
@@ -284,7 +284,7 @@ public class EnemyMovement : MonoBehaviour
             // given delay time.
             if (waypoint.delay > 0f)
             {
-                _rigidBody.velocity = Vector2.zero;
+                _rigidBody2D.velocity = Vector2.zero;
                 _waypointPathDelayed = true;
                 _waypointDelayTimer = waypoint.delay;
             }
@@ -300,7 +300,7 @@ public class EnemyMovement : MonoBehaviour
 
             UpdateWalkRunSfxPitch(currentSpeed);
             
-            _rigidBody.velocity =
+            _rigidBody2D.velocity =
                 new Vector2((waypoint.waypointPosition.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                             * currentSpeed, 0f) * Time.deltaTime;
         }
@@ -326,11 +326,11 @@ public class EnemyMovement : MonoBehaviour
         FlipSprite();
         FlipHealthUI();
         
-        Vector2 currentPos = _rigidBody.position;
+        Vector2 currentPos = _rigidBody2D.position;
 
         UpdateWalkRunSfxPitch(runSpeed);
         
-        _rigidBody.velocity =
+        _rigidBody2D.velocity =
             new Vector2((_enemyCombat.Target.transform.position.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                         * runSpeed, 0f) * Time.deltaTime;
     }
@@ -349,12 +349,12 @@ public class EnemyMovement : MonoBehaviour
         FlipSprite();
         FlipHealthUI();
         
-        Vector2 currentPos = _rigidBody.position;
+        Vector2 currentPos = _rigidBody2D.position;
         Vector2 destPos = GetMidPoint(_enemyCombat.Target);
 
         UpdateWalkRunSfxPitch(walkSpeed);
         
-        _rigidBody.velocity =
+        _rigidBody2D.velocity =
             new Vector2((destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                         * walkSpeed, 0f) * Time.deltaTime;
     }
@@ -372,12 +372,12 @@ public class EnemyMovement : MonoBehaviour
         FlipSprite();
         FlipHealthUI();
         
-        Vector2 currentPos = _rigidBody.position;
+        Vector2 currentPos = _rigidBody2D.position;
         Vector2 destPos = _enemyCombat.InvestigateDestPos;
 
         UpdateWalkRunSfxPitch(walkSpeed);
         
-        _rigidBody.velocity =
+        _rigidBody2D.velocity =
             new Vector2((destPos.x < currentPos.x ? Vector2.left.x : Vector2.right.x)
                         * walkSpeed, 0f) * Time.deltaTime;
     }
@@ -426,7 +426,7 @@ public class EnemyMovement : MonoBehaviour
     private void GroundCheckUpdate()
     {
         // Retrieve initial ground check
-        _isGrounded = _rigidBody.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        _isGrounded = _rigidBody2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
         _animator.SetBool("IsGrounded", _isGrounded);
     }
 
@@ -435,9 +435,9 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void UpdateWalkRunSfx()
     {
-        if (ShouldPlayWalkRunSFX && _rigidBody.velocity.x != 0f && _isGrounded && !movementAudioSource.isPlaying)
+        if (ShouldPlayWalkRunSFX && _rigidBody2D.velocity.x != 0f && _isGrounded && !movementAudioSource.isPlaying)
             movementAudioSource.Play();
-        else if (!ShouldPlayWalkRunSFX || _rigidBody.velocity.x == 0f || !_isGrounded && movementAudioSource.isPlaying)
+        else if (!ShouldPlayWalkRunSFX || _rigidBody2D.velocity.x == 0f || !_isGrounded && movementAudioSource.isPlaying)
             movementAudioSource.Pause();
     }
     
@@ -451,8 +451,8 @@ public class EnemyMovement : MonoBehaviour
     private void FlipSprite()
     {
         bool isFacingLeft = transform.localScale.x < 0;
-        if (_rigidBody.velocity.x > 0 && !isFacingLeft || _rigidBody.velocity.x < 0 && isFacingLeft ||
-            _rigidBody.velocity.x == 0)
+        if (_rigidBody2D.velocity.x > 0 && !isFacingLeft || _rigidBody2D.velocity.x < 0 && isFacingLeft ||
+            _rigidBody2D.velocity.x == 0)
             return;
 
         Vector3 enemyScale = transform.localScale;
@@ -528,6 +528,24 @@ public class EnemyMovement : MonoBehaviour
         Vector2 targetPos = target.transform.position;
 
         return new Vector2((myPos.x + targetPos.x) / 2, (myPos.y + targetPos.y) / 2);
+    }
+    
+    /// <summary>
+    /// Checks if the player is jumping (positive velocity on Y axis)
+    /// </summary>
+    /// <returns>Returns true if player is jumping, otherwise false.</returns>
+    public bool IsJumping()
+    {
+        return _rigidBody2D.velocity.y > 0;
+    }
+
+    /// <summary>
+    /// Checks if the player is falling (negative velocity on Y axis)
+    /// </summary>
+    /// <returns>Returns true if player is falling, otherwise false.</returns>
+    public bool IsFalling()
+    {
+        return _rigidBody2D.velocity.y < 0;
     }
     
     #endregion
