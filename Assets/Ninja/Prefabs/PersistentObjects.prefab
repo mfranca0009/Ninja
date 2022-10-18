@@ -1004,7 +1004,7 @@ MonoBehaviour:
   achievementList: {fileID: 1345053056177161287}
   popAchievementName: {fileID: 7109200265617705464}
   popAchievementAnimator: {fileID: 4409022862951615457}
-  hidePopAchievementDelay: 5
+  hidePopAchievementDelay: 2
   achievementObtainedSound: {fileID: 8300000, guid: 5df3755e1f37706438275ecf976da4e4, type: 3}
 --- !u!1001 &880725627018116133
 PrefabInstance:
