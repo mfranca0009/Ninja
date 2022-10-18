@@ -295,7 +295,7 @@ MonoBehaviour:
   advanceTargetTime: 2.25
   stopAdvanceTargetTime: 1.25
   shouldAdvanceToTarget: 1
-  meleeCombatReach: 2
+  meleeCombatReach: 1.75
   rangeCombatReach: 4
   investigateMoveDistance: 3
   investigateCompletionDistance: 0.5
@@ -330,7 +330,6 @@ MonoBehaviour:
   maxHealth: 50
   isPlayer: 0
   enemyHealthCanvas: {fileID: 7360209169159459089}
-  enemyHealthCanvasRectTransform: {fileID: 7360209169159459094}
   enemyHealthImage: {fileID: 7810192951951929632}
   shouldDestroyAfterDeath: 1
   destroyDelay: 2

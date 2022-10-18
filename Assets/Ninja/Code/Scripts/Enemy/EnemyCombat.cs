@@ -108,7 +108,7 @@ public class EnemyCombat : MonoBehaviour
     [Header("Combat Distance Settings")]
     
     [Tooltip("The distance from the target that is acceptable to trigger melee combat")] 
-    [SerializeField] private float meleeCombatReach = 2f;
+    [SerializeField] private float meleeCombatReach = 1.75f;
 
     [Tooltip("The distance from the target that is acceptable to trigger range combat")] 
     [SerializeField] private float rangeCombatReach = 4f;
