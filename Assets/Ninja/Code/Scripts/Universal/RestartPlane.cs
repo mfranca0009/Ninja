@@ -30,9 +30,9 @@ public class RestartPlane : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        bool isPlayer = collision.gameObject.CompareTag("Player");
+        bool isPlayer = collision.gameObject.layer == LayerMask.NameToLayer("Player");
 
-        if (!isPlayer && !collision.gameObject.CompareTag("Enemy"))
+        if (!isPlayer && collision.gameObject.layer != LayerMask.NameToLayer("Enemy"))
             return;
 
         collision.gameObject.GetComponent<Health>().InstaKill(true);

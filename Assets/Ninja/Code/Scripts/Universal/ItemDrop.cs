@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = System.Random;
 
@@ -202,6 +203,9 @@ public class ItemDrop : MonoBehaviour
     /// <returns>Returns true if the item is allowed to be dropped, otherwise false.</returns>
     private bool CanDropItemType(ItemEntry itemEntry)
     {
+        if (!gameObject.activeInHierarchy || !_health.Killer)
+            return false;
+        
         // Potential scripts to be used to check certain conditions
         Health killerHealth;
         PlayerCombat playerCombat;

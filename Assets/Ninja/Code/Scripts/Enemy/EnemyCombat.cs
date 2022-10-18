@@ -3,9 +3,6 @@ using Random = UnityEngine.Random;
 
 // TODO (NEED): Cancel movement when AI is performing slow attack
 
-// TODO (WANT): Use a second animation layer and blending to allow combat/movement at same time for
-// light and throw attack
-
 public class EnemyCombat : MonoBehaviour
 {
     #region Public Properties
