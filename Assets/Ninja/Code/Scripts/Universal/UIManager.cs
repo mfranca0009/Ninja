@@ -32,10 +32,14 @@ public class UIManager : MonoBehaviour
 	public Canvas achievementsPopCanvas;
 	public Canvas scrollCanvas;
 	public Canvas healthCanvas;
-	public Canvas loadingScreen;
+	public Canvas loadingCanvas;
+	public TMP_Text loadingCanvasText;
+	public Image loadingCanvasProgress;
 	public Canvas secretScrollCanvas;
-	public Image[] livesImages; 
+	public Image[] livesImages;
 
+	public float loadingTextUpdateDelay;
+	
 	// Sprite prefabs
 	public Sprite[] livesSprites;
 
@@ -69,6 +73,9 @@ public class UIManager : MonoBehaviour
 	// UI States
 	private bool _pauseShown;
 
+	// Timers
+	private float _loadTextUpdateTimer;
+	
 	// Scripts
 	private Health _playerHealth;
 	private SoundManager _soundManager;
@@ -93,7 +100,9 @@ public class UIManager : MonoBehaviour
 		_slidersChanged = new Dictionary<string, Slider>();
 		
 		Time.timeScale = 1f;
-		
+
+		_loadTextUpdateTimer = loadingTextUpdateDelay;
+
 		// Note: no need to hide UI elements in Start() anymore. Since we have them referenced as public through
 		// the editor we can have them hidden by default on the `PersistentObjects` prefab and not have to find them.
 	}
@@ -102,7 +111,10 @@ public class UIManager : MonoBehaviour
 	private void Update()
 	{
 		_currentScene = SceneManager.GetActiveScene();
-		
+
+		if (loadingCanvas.gameObject.activeInHierarchy)
+			UpdateLoadingTextUI();
+
 		ShowMainMenuUI(_sceneManagement.HasBuildIndex(_currentScene, 0));
 		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
 		ShowSecretScrollUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
@@ -134,11 +146,52 @@ public class UIManager : MonoBehaviour
 
 	#region Public UI Methods
 
+	/// <summary>
+	/// Show/hide loading UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowLoadingUI(bool show)
 	{
-		loadingScreen.gameObject.SetActive(show);
+		loadingCanvas.gameObject.SetActive(show);
 	}
 
+	/// <summary>
+	/// Update loading text UI
+	/// </summary>
+	public void UpdateLoadingTextUI()
+	{
+		if (!loadingCanvasText)
+			return;
+		
+		int dotCount = loadingCanvasText.text.Split('.').Length - 1;
+
+		if (_loadTextUpdateTimer <= 0)
+		{
+			loadingCanvasText.text = dotCount switch
+			{
+				0 => "Loading.",
+				1 => "Loading..",
+				2 => "Loading...",
+				3 => "Loading",
+				_ => loadingCanvasText.text
+			};
+		}
+		else
+			_loadTextUpdateTimer -= Time.deltaTime;
+	}
+
+	/// <summary>
+	/// Update loading progress bar UI
+	/// </summary>
+	/// <param name="progressAmount">The new progress amount to assign to the fill image.</param>
+	public void UpdateLoadingProgressUI(float progressAmount)
+	{
+		if (!loadingCanvasProgress)
+			return;
+		
+		loadingCanvasProgress.fillAmount = progressAmount;
+	}
+	
 	/// <summary>
 	/// Show/hide main menu UI.
 	/// </summary>
