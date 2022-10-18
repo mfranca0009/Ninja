@@ -514,6 +514,11 @@ public class EnemyMovement : MonoBehaviour
             movementAudioSource.pitch = fastRunPitch;
     }
 
+    /// <summary>
+    /// Checks whether the AI is allowed to move on ground or not.<br></br><br></br>
+    /// Specifically, check if the AI is grounded and not jumping/falling.
+    /// </summary>
+    /// <returns>Returns true if the AI is allowed to move on ground, otherwise false.</returns>
     private bool AllowGroundMovement()
     {
         return IsGrounded() && !IsJumping() && !IsFalling();
