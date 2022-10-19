@@ -142,14 +142,18 @@ public class PlayerCombat : MonoBehaviour
         _playerMovement = GetComponent<PlayerMovement>();
         _soundManager = FindObjectOfType<SoundManager>();
         _achievementManager = FindObjectOfType<AchievementManager>();
-        
-        _rangedAchievement =
-            _achievementManager.Achievements.Find(achievement => achievement.Title == "Distance Ninja");
-        _meleeAchievement = _achievementManager.Achievements.Find(achievement => achievement.Title == "Martial Ninja");
 
         MaxKnives = 1;
         
         SetupMeleeWeapons();
+        
+        // Cache ranged and melee achievements if achievement manager is present.
+        if (!_achievementManager)
+            return;
+        
+        _rangedAchievement =
+            _achievementManager.Achievements.Find(achievement => achievement.Title == "Distance Ninja");
+        _meleeAchievement = _achievementManager.Achievements.Find(achievement => achievement.Title == "Martial Ninja");
     }
 
     private void Update()

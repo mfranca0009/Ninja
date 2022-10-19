@@ -115,10 +115,7 @@ public class EnemyMovement : MonoBehaviour
     
     // Animator / Animation
     private Animator _animator;
-    
-    // Ground check
-    private bool _isGrounded;
-    
+
     // Random Movement System
     private Vector2 _homePos;
     private Vector2 _destPos;
@@ -162,7 +159,7 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (_health.Dead)
+        if (_health.Dead || Time.timeScale == 0f)
         {
             movementAudioSource.Stop();
             return;
@@ -170,12 +167,13 @@ public class EnemyMovement : MonoBehaviour
 
         GroundCheckUpdate();
 
-        if (_isGrounded && _homePos == Vector2.zero)
+        if (IsGrounded() && _homePos == Vector2.zero)
             _homePos = _rigidBody2D.position;
 
         _animator.SetFloat("VelocityX", _rigidBody2D.velocity.x);
         _animator.SetFloat("VelocityY", _rigidBody2D.velocity.y);
         _animator.SetBool("HasVelocityX", _rigidBody2D.velocity.x != 0);
+        _animator.SetBool("HasVelocityY", _rigidBody2D.velocity.y != 0);
         
         UpdateWalkRunSfx();
 
@@ -320,7 +318,7 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void ChaseMovementFixedUpdate()
     {
-        if (!_enemyCombat.ChaseTarget || _enemyCombat.InCombat)
+        if (!AllowChaseMovement())
             return;
 
         FlipSprite();
@@ -343,7 +341,7 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void AdvanceOnTargetMovementFixedUpdate()
     {
-        if (!_enemyCombat.AdvanceTarget)
+        if (!AllowAdvanceMovement())
             return;
 
         FlipSprite();
@@ -366,7 +364,7 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void InvestigateMovementFixedUpdate()
     {
-        if (!_enemyCombat.InvestigateEngagement || _enemyCombat.Target)
+        if (!AllowInvestigateMovement())
             return;
 
         FlipSprite();
@@ -425,9 +423,7 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void GroundCheckUpdate()
     {
-        // Retrieve initial ground check
-        _isGrounded = _rigidBody2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        _animator.SetBool("IsGrounded", _isGrounded);
+        _animator.SetBool("IsGrounded", IsGrounded());
     }
 
     /// <summary>
@@ -435,10 +431,41 @@ public class EnemyMovement : MonoBehaviour
     /// </summary>
     private void UpdateWalkRunSfx()
     {
-        if (ShouldPlayWalkRunSFX && _rigidBody2D.velocity.x != 0f && _isGrounded && !movementAudioSource.isPlaying)
+        if (ShouldPlayWalkRunSFX && _rigidBody2D.velocity.x != 0f && IsGrounded() && !movementAudioSource.isPlaying)
             movementAudioSource.Play();
-        else if (!ShouldPlayWalkRunSFX || _rigidBody2D.velocity.x == 0f || !_isGrounded && movementAudioSource.isPlaying)
+        else if (!ShouldPlayWalkRunSFX || _rigidBody2D.velocity.x == 0f || !IsGrounded() && movementAudioSource.isPlaying)
             movementAudioSource.Pause();
+    }
+    
+    #endregion
+    
+    #region Public Helper Methods
+    
+    /// <summary>
+    /// Checks if the enemy is grounded
+    /// </summary>
+    /// <returns>Returns true if enemy is grounded, otherwise false.</returns>
+    public bool IsGrounded()
+    {
+        return _rigidBody2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
+    }
+    
+    /// <summary>
+    /// Checks if the enemy is jumping (positive velocity on Y axis)
+    /// </summary>
+    /// <returns>Returns true if player is jumping, otherwise false.</returns>
+    public bool IsJumping()
+    {
+        return _rigidBody2D.velocity.y > 0;
+    }
+
+    /// <summary>
+    /// Checks if the enemy is falling (negative velocity on Y axis)
+    /// </summary>
+    /// <returns>Returns true if player is falling, otherwise false.</returns>
+    public bool IsFalling()
+    {
+        return _rigidBody2D.velocity.y < 0;
     }
     
     #endregion
@@ -486,6 +513,16 @@ public class EnemyMovement : MonoBehaviour
         else if (movementAudioSource.pitch != fastRunPitch && currentSpeed == runSpeed)
             movementAudioSource.pitch = fastRunPitch;
     }
+
+    /// <summary>
+    /// Checks whether the AI is allowed to move on ground or not.<br></br><br></br>
+    /// Specifically, check if the AI is grounded and not jumping/falling.
+    /// </summary>
+    /// <returns>Returns true if the AI is allowed to move on ground, otherwise false.</returns>
+    private bool AllowGroundMovement()
+    {
+        return IsGrounded() && !IsJumping() && !IsFalling();
+    }
     
     /// <summary>
     /// Checks whether the AI can proceed with waypoint movement or not.
@@ -493,9 +530,9 @@ public class EnemyMovement : MonoBehaviour
     /// <returns>Returns true if AI can continue waypoint movement, otherwise false.</returns>
     private bool AllowWaypointMovement()
     {
-        return applyWaypointMovement && waypoints.Length != 0 && _isGrounded &&
-               !_waypointPathDelayed && (_currentWpId != waypoints.Length || loopWaypointPath) &&
-               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat && !_enemyCombat.InvestigateEngagement;
+        return applyWaypointMovement && waypoints.Length != 0 && !_waypointPathDelayed &&
+               (_currentWpId != waypoints.Length || loopWaypointPath) && !_enemyCombat.ChaseTarget &&
+               !_enemyCombat.InCombat && !_enemyCombat.InvestigateEngagement && AllowGroundMovement();
     }
 
     /// <summary>
@@ -504,10 +541,37 @@ public class EnemyMovement : MonoBehaviour
     /// <returns>Returns true if AI can continue random movement, otherwise false.</returns>
     private bool AllowRandomMovement()
     {
-        return applyRandomMovement && _isGrounded && !_randomMoveDelayed &&
-               !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat && !_enemyCombat.InvestigateEngagement;
+        return applyRandomMovement && !_randomMoveDelayed && !_enemyCombat.ChaseTarget && !_enemyCombat.InCombat &&
+               !_enemyCombat.InvestigateEngagement && AllowGroundMovement();
     }
 
+    /// <summary>
+    /// Checks whether the AI can proceed with chase movement or not.
+    /// </summary>
+    /// <returns>Returns true if AI can continue chase movement, otherwise false.</returns>
+    private bool AllowChaseMovement()
+    {
+        return _enemyCombat.ChaseTarget && !_enemyCombat.InCombat && AllowGroundMovement();
+    }
+
+    /// <summary>
+    /// Checks whether the AI can proceed with advance on target movement or not.
+    /// </summary>
+    /// <returns>Returns true if AI can continue advance on target movement, otherwise false.</returns>
+    private bool AllowAdvanceMovement()
+    {
+        return _enemyCombat.AdvanceTarget && AllowGroundMovement();
+    }
+
+    /// <summary>
+    /// Checks whether the AI can proceed with investigate movement or not.
+    /// </summary>
+    /// <returns>Returns true if AI can continue investigate movement, otherwise false.</returns>
+    private bool AllowInvestigateMovement()
+    {
+        return _enemyCombat.InvestigateEngagement && !_enemyCombat.Target && AllowGroundMovement();
+    }
+    
     /// <summary>
     /// Reset all waypoints to be marked as not reached, used primarily when looping the waypoint path
     /// </summary>
@@ -528,24 +592,6 @@ public class EnemyMovement : MonoBehaviour
         Vector2 targetPos = target.transform.position;
 
         return new Vector2((myPos.x + targetPos.x) / 2, (myPos.y + targetPos.y) / 2);
-    }
-    
-    /// <summary>
-    /// Checks if the enemy is jumping (positive velocity on Y axis)
-    /// </summary>
-    /// <returns>Returns true if player is jumping, otherwise false.</returns>
-    public bool IsJumping()
-    {
-        return _rigidBody2D.velocity.y > 0;
-    }
-
-    /// <summary>
-    /// Checks if the enemy is falling (negative velocity on Y axis)
-    /// </summary>
-    /// <returns>Returns true if player is falling, otherwise false.</returns>
-    public bool IsFalling()
-    {
-        return _rigidBody2D.velocity.y < 0;
     }
     
     #endregion

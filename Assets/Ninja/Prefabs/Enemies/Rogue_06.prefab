@@ -222,7 +222,7 @@ MonoBehaviour:
   advanceTargetTime: 2.25
   stopAdvanceTargetTime: 1.25
   shouldAdvanceToTarget: 1
-  meleeCombatReach: 2
+  meleeCombatReach: 1.75
   rangeCombatReach: 15
   investigateMoveDistance: 15
   investigateCompletionDistance: 0.5

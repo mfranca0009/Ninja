@@ -3,9 +3,6 @@ using Random = UnityEngine.Random;
 
 // TODO (NEED): Cancel movement when AI is performing slow attack
 
-// TODO (WANT): Use a second animation layer and blending to allow combat/movement at same time for
-// light and throw attack
-
 public class EnemyCombat : MonoBehaviour
 {
     #region Public Properties
@@ -111,7 +108,7 @@ public class EnemyCombat : MonoBehaviour
     [Header("Combat Distance Settings")]
     
     [Tooltip("The distance from the target that is acceptable to trigger melee combat")] 
-    [SerializeField] private float meleeCombatReach = 2f;
+    [SerializeField] private float meleeCombatReach = 1.75f;
 
     [Tooltip("The distance from the target that is acceptable to trigger range combat")] 
     [SerializeField] private float rangeCombatReach = 4f;
