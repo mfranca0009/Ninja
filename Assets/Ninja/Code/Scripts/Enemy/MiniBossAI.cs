@@ -24,7 +24,8 @@ public class MiniBossAI : MonoBehaviour
 
     #region Private Fields
 
-    private Health _healthComponent;
+    private Health _health;
+    private Health _playerHealth;
     private float previousHealth;
     private Vector3 curLocalScale;
     private ParticleSystem smokeBomb1;
@@ -37,8 +38,9 @@ public class MiniBossAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _healthComponent = GetComponent<Health>();
-        previousHealth = _healthComponent.HealthPoints;
+        _health = GetComponent<Health>();
+        _playerHealth = GameObject.FindWithTag("Player").GetComponent<Health>();
+        previousHealth = _health.HealthPoints;
         curLocalScale = transform.localScale;
         smokeBomb1 = Instantiate(smokeBombParticle, transform.position, transform.rotation);
         smokeBomb2 = Instantiate(smokeBombParticle, transform.position, transform.rotation);
@@ -48,8 +50,12 @@ public class MiniBossAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Reset cached previous health when the player has died and the mini-boss's health is reset to full.
+        if (_playerHealth.Dead && previousHealth < _health.HealthPoints && _health.HealthPoints >= _health.maxHealth)
+            previousHealth = _health.HealthPoints;
+
         DamageCheck();
-        CleanOnDeath();
+        CleanUpOnDeath();
     }
 
     #endregion
@@ -59,9 +65,9 @@ public class MiniBossAI : MonoBehaviour
     /// <summary>
     /// Clean up excess assets that have no purpose after the miniboss is dead.
     /// </summary>
-    private void CleanOnDeath()
+    private void CleanUpOnDeath()
     {
-        if (!_healthComponent.Dead)
+        if (!_health.Dead)
             return;
 
         Destroy(smokeBomb1);
@@ -74,7 +80,7 @@ public class MiniBossAI : MonoBehaviour
     private void DamageCheck()
     {
         //If the char is dead, or their hp hasn't lowered, return
-        if (waypoints.Length <= 1 || _healthComponent.Dead || _healthComponent.HealthPoints >= previousHealth)
+        if (waypoints.Length <= 1 || _health.Dead || _health.HealthPoints >= previousHealth)
         {
             return;
         }
@@ -87,7 +93,7 @@ public class MiniBossAI : MonoBehaviour
         } while (randNum == teleportLocation);
 
         Teleport(randNum);
-        previousHealth = _healthComponent.HealthPoints;
+        previousHealth = _health.HealthPoints;
     }
 
     /// <summary>
@@ -104,10 +110,10 @@ public class MiniBossAI : MonoBehaviour
     /// </summary>
     private void FlipHealthUI()
     {
-        if (!_healthComponent)
+        if (!_health)
             return;
         
-        _healthComponent.enemyHealthImage.fillOrigin = transform.localScale.x switch
+        _health.enemyHealthImage.fillOrigin = transform.localScale.x switch
         {
             > 0  => (int)Image.OriginHorizontal.Left,
             < 0  => (int)Image.OriginHorizontal.Right,
