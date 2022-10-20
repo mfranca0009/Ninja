@@ -148,8 +148,9 @@ public class GameManager : MonoBehaviour
         // Retrieve the required player scripts for the game manager if necessary.
         RetrievePlayerScripts();
         
-        // If the scene is not the menu, then we should be updating these timers and clean-ups when necessary.
-        if (!_sceneManagement.HasBuildIndex(_currScene, 0))
+        // If the scene is not the menu or credits, then we should be updating these timers and clean-ups when
+        // necessary.
+        if (!_sceneManagement.HasBuildIndex(_currScene, 0, 5))
         {
             UpdateDeathResetTimer();
             WipeActiveItemDrops();
@@ -187,8 +188,8 @@ public class GameManager : MonoBehaviour
     private void LivesUpdate()
     {
         // Update states to signal a lives reset.
-        if (_sceneManagement.HasBuildIndex(_currScene, 0) ||
-            (!_sceneManagement.HasBuildIndex(_currScene, 0) && Restarted))
+        if (_sceneManagement.HasBuildIndex(_currScene, 0, 5) ||
+            (!_sceneManagement.HasBuildIndex(_currScene, 0, 5) && Restarted))
             _livesSet = false;
 
         // if lives are not set yet, then set the appropriate lives total and update the state.
@@ -216,7 +217,7 @@ public class GameManager : MonoBehaviour
     {
         if (!_playerHealth || _playerHealth.HealthPoints >= _playerHealth.maxHealth ||
             (_currScene.buildIndex == _currSceneBuildIndex && !Restarted) ||
-            _sceneManagement.HasBuildIndex(_currScene, 0))
+            _sceneManagement.HasBuildIndex(_currScene, 0, 5))
             return;
         
         _playerHealth.Reset();
@@ -350,7 +351,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void RetrievePlayerScripts()
     {
-        if (_sceneManagement.HasBuildIndex(_currScene, 0) || !Player || !Player.activeInHierarchy ||
+        if (_sceneManagement.HasBuildIndex(_currScene, 0, 5) || !Player || !Player.activeInHierarchy ||
             (Player && Player.activeInHierarchy &&_playerHealth && _playerCombat && _playerCamera))
             return;
 

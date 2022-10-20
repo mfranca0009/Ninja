@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
 	public Canvas pauseCanvas;
 	public Canvas gameOverCanvas;
 	public Canvas mainMenuCanvas;
+	public Canvas creditsCanvas;
 	public Canvas settingsCanvas;
 	public Canvas soundSettingsCanvas;
 	public Canvas achievementsCanvas;
@@ -116,12 +117,13 @@ public class UIManager : MonoBehaviour
 			UpdateLoadingTextUI();
 
 		ShowMainMenuUI(_sceneManagement.HasBuildIndex(_currentScene, 0));
-		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
-		ShowSecretScrollUI(!_sceneManagement.HasBuildIndex(_currentScene, 0));
+		ShowCreditsUI(_sceneManagement.HasBuildIndex(_currentScene, 5));
+		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0, 5));
+		ShowSecretScrollUI(!_sceneManagement.HasBuildIndex(_currentScene, 0, 5));
 
 		//uses the p or escape button to pause and unpause the game
 		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) &&
-		    !_sceneManagement.HasBuildIndex(_currentScene, 0) && !scrollCanvas.isActiveAndEnabled)
+		    !_sceneManagement.HasBuildIndex(_currentScene, 0, 5) && !scrollCanvas.isActiveAndEnabled)
 		{
 			ShowPauseUI(!_pauseShown);
 
@@ -200,6 +202,15 @@ public class UIManager : MonoBehaviour
 	{
 		mainMenuCanvas.gameObject.SetActive(show);
 	}
+	
+	/// <summary>
+	/// Show/hide credits UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowCreditsUI(bool show)
+	{
+		creditsCanvas.gameObject.SetActive(show);
+	}	
 
 	/// <summary>
 	/// Show/hide pause menu UI.
@@ -225,14 +236,14 @@ public class UIManager : MonoBehaviour
 		achievementsCanvas.gameObject.SetActive(show);
 	}
 
-	// /// <summary>
-	// /// Show/hide achievements pop-up UI.
-	// /// </summary>
-	// /// <param name="show">Whether to show the UI or not.</param>
-	// public void ShowAchievementsPopUI(bool show)
-	// {
-	// 	achievementsPopCanvas.gameObject.SetActive(show);
-	// }
+	/// <summary>
+	/// Show/hide achievements pop-up UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	public void ShowAchievementsPopUI(bool show)
+	{
+		achievementsPopCanvas.gameObject.SetActive(show);
+	}
 
 	/// <summary>
 	/// Show/hide settings menu UI.
@@ -498,42 +509,6 @@ public class UIManager : MonoBehaviour
 			return "No message to show!";
 		
 		return scrollEntry.scrollMessage.Replace("\\n", "\n");
-	}
-
-	#endregion
-
-	#region Scene Management [REMOVE] - use `SceneManagement` class.
-
-	public void LoadSceneByString(string sceneString)
-	{
-		_achievementManager.ResetTimers();
-		Debug.Log($"sceneName to load: {sceneString}");
-		SceneManager.LoadScene(sceneString, LoadSceneMode.Single);
-	}
-	
-	public void LoadSceneByIndex(int sceneNumber)
-	{
-		_achievementManager.ResetTimers();
-		Debug.Log($"sceneBuildIndex to load: {sceneNumber}");
-		SceneManager.LoadScene(sceneNumber, LoadSceneMode.Single);
-	}
-	
-	public void GetActiveScene()
-	{
-		Scene currentScene = SceneManager.GetActiveScene();
-		Debug.Log(currentScene.name);
-		Debug.Log(currentScene.buildIndex);
-	}
-	
-	//Reloads the Level
-	public void ReloadCurrentScene()
-	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-	}
-	
-	public void QuitGame()
-	{
-		Application.Quit();
 	}
 
 	#endregion

@@ -159,7 +159,7 @@ public class ThrowKnife : MonoBehaviour
     /// </summary>
     public void UpdateActiveKnives()
     {
-        if (Owner && Owner.layer != LayerMask.NameToLayer("Player"))
+        if (Owner && Owner.activeInHierarchy && Owner.layer != LayerMask.NameToLayer("Player"))
             return;
 
         PlayerCombat playerCombat = Owner.GetComponent<PlayerCombat>();

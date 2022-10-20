@@ -228,7 +228,8 @@ public class AchievementManager : MonoBehaviour
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Not an Italian Plumber",
             "Jump on an enemy's head"));
 
-        Achievements.Add(new Achievement(AchievementType.TriggerType, "Being a Bully", "Push an enemy into a pit"));
+        Achievements.Add(new Achievement(AchievementType.TriggerType, "Being a Bully",
+            "Push or lure an enemy into a pit"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "No Traps Activated",
             "Reach the boss without activating any swinging traps"));
