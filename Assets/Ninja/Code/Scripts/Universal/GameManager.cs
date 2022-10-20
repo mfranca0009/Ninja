@@ -131,9 +131,7 @@ public class GameManager : MonoBehaviour
     {
         // Retrieve current scene.
         _currScene = SceneManager.GetActiveScene();
-
-        // Clean-up if main menu
-
+        
         // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
