@@ -132,6 +132,8 @@ public class GameManager : MonoBehaviour
         // Retrieve current scene.
         _currScene = SceneManager.GetActiveScene();
 
+        // Clean-up if main menu
+
         // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
@@ -139,6 +141,13 @@ public class GameManager : MonoBehaviour
             LevelMidpointReached = false;
             ActiveItemDrops.Clear();
             TappedEnemiesHealth.Clear();
+
+            // Clean-ups specific to when the updated scene is main menu.
+            if (_uiManager && _sceneManagement.HasBuildIndex(_currScene, 0))
+            {
+                Array.Fill(_obtainedScrollFragmentStates, false);
+                _uiManager.UpdateSecretScrollUI();
+            }
         }
 
         // If the player does not exist or is invalid for this scene, then retrieve the player again.
@@ -172,6 +181,12 @@ public class GameManager : MonoBehaviour
             Restarted = false;
             _gameOver = false;
             LevelMidpointReached = false;
+
+            if (_uiManager)
+            {
+                Array.Fill(_obtainedScrollFragmentStates, false);
+                _uiManager.UpdateSecretScrollUI();   
+            }
         }
 
         // Update the scene's build index
@@ -278,7 +293,7 @@ public class GameManager : MonoBehaviour
     /// <returns>Returns the amount of enemies remaining on the active level.</returns>
     public int GetEnemyCount()
     {
-        return FindObjectsOfType<EnemyCombat>().Length;
+        return _sceneManagement.HasBuildIndex(_currScene, 0, 5) ? 0 : FindObjectsOfType<EnemyCombat>().Length;
     }
 
     public void CollectScroll(int scrollNum)
@@ -293,7 +308,7 @@ public class GameManager : MonoBehaviour
         counterAchievement.Counter++;
 
         // Update GUI
-        _uiManager.UpdateSecretScrollFragmentUI();
+        _uiManager.UpdateSecretScrollUI();
 
     }
 

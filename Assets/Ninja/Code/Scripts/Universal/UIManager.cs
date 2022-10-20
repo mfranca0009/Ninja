@@ -442,10 +442,13 @@ public class UIManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Update secret scroll fragment UI depending on how many were collected.
+	/// Update secret scroll UI depending on how many were collected.
 	/// </summary>
-	public void UpdateSecretScrollFragmentUI()
+	public void UpdateSecretScrollUI()
 	{
+		if (!_gameManager)
+			return;
+		
 		bool allFragmentsObtained =
 			_gameManager.ScrollStatus(0) && _gameManager.ScrollStatus(1) && _gameManager.ScrollStatus(2);
 
@@ -457,12 +460,10 @@ public class UIManager : MonoBehaviour
 			scrollFragments[0].SetActive(true);
 			return;
 		}
-		
+
 		for (int i = 0; i < scrollFragments.Length - 1; i++)
-		{
 			scrollFragments[i + 1].SetActive(_gameManager.ScrollStatus(i));
-		}
-    }
+	}
 
 	/// <summary>
 	/// Show/hide the game over UI.
@@ -503,7 +504,15 @@ public class UIManager : MonoBehaviour
 		if (scrollEntries.Count == 0)
 			return "No scroll entries available!";
 		
-		ScrollEntry scrollEntry = scrollEntries.Find(sEntry => sEntry.levelName == scene.name);
+		ScrollEntry[] result = scrollEntries.FindAll(sEntry => sEntry.levelName == scene.name).ToArray();
+
+		if (result.Length == 0)
+			return "No scroll entry found for this level!";
+
+		bool allFragmentsObtained =
+			_gameManager.ScrollStatus(0) && _gameManager.ScrollStatus(1) && _gameManager.ScrollStatus(2);
+
+		ScrollEntry scrollEntry = result.Length == 1 ? result[0] : allFragmentsObtained ? result[1] : result[0];
 
 		if (string.IsNullOrEmpty(scrollEntry.scrollMessage) || string.IsNullOrWhiteSpace(scrollEntry.scrollMessage))
 			return "No message to show!";
