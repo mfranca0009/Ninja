@@ -1,110 +1,131 @@
 using UnityEngine;
 
 /// <summary>
-/// The Script is placed on the trigger to control the swaping of camera's for a boss fight.
+/// The Script is placed on the trigger to control the swapping of camera's for a boss fight.
 /// </summary>
 public class ArenaCamera : MonoBehaviour
 {
     #region Serialized Fields
 
-    [Tooltip("The invisible walls that prevent player from going out of frame.")]
-    [SerializeField]public GameObject arenaBoundaries;
-   
+    [Header("Arena Camera Settings")]
+    
     [Tooltip("The camera set to be centered over boss arena.")]
-    [SerializeField]public Camera arenaCamera;
+    [SerializeField] private Camera arenaCameraObject;
    
     [Tooltip("The main camera")]
-    [SerializeField]public Camera mainCamera;
-   
-    [Tooltip("The miniboss for the level")]
-    [SerializeField]public GameObject miniBoss;
-
+    [SerializeField] private Camera mainCameraObject;
+    
+    [Tooltip("The camera's transitioning speed when switching cameras")]
+    [SerializeField] private float cameraTransitioningSpeed = 8f;
+    
     [Tooltip("Tolerance level to know when to swap camera control")]
-    [SerializeField] public float cameraSwapTolerence = 0.25f;
+    [SerializeField] private float cameraSwapTolerance = 0.25f;
 
+    [Tooltip("The invisible walls that prevent player from going out of frame.")]
+    [SerializeField] private GameObject arenaBoundaries;
+
+    [Tooltip("The mini-boss for the level")]
+    [SerializeField] private GameObject miniBoss;
+
+    [Tooltip("Mini-boss background music audio clip which will play during mini-boss arena engagement")]
+    [SerializeField] private AudioClip miniBossBgMusic;
+    
     #endregion
 
     #region Private Fields
 
-    //Miniboss's health component
+    // Positions
+    private Vector3 _arenaCameraPosition;
+    private Vector3 _mainCameraPosition;
+    private Vector3 _arenaCameraLockPosition;
+
+    // Cameras
+    private Camera _mainCamera;
+    private Camera _arenaCamera;
+    
+    // Managers
+    private SoundManager _soundManager;
+    
+    // Scripts
+    private Health _playerHealth;
     private Health _miniBossHealth;
-
-    //The location for the arenaCamera to be during the fight/when initialized
-    private Vector3 arenaCameraLockPosition;
-
-    //The Speed at which the camera moves into position.
-    private float cameraMoveSpeed;
+    private MenuSounds _menuSounds;
 
     #endregion
 
-    #region Unity Functions
+    #region Unity Events
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        _soundManager = FindObjectOfType<SoundManager>();
+        _menuSounds = mainCameraObject.GetComponent<MenuSounds>();
+        
         _miniBossHealth = miniBoss.GetComponent<Health>();
-        arenaCameraLockPosition = arenaCamera.transform.position;
+        _playerHealth = GameObject.FindWithTag("Player").GetComponent<Health>();
+        _mainCamera = mainCameraObject.GetComponent<Camera>();
+        _arenaCamera = arenaCameraObject.GetComponent<Camera>();
+        _arenaCameraLockPosition = arenaCameraObject.transform.position;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        cameraMoveSpeed = 8 * Time.deltaTime;
-
-        //If arena cam is active, move it to be centered in the arena. 
-        if (arenaCamera.isActiveAndEnabled && !_miniBossHealth.Dead)
-        {
-            arenaCamera.transform.position = Vector3.MoveTowards(arenaCamera.transform.position, arenaCameraLockPosition, cameraMoveSpeed);
-        }
-
-        //When boss dies, deactivate arena boundries
-        if (!_miniBossHealth.Dead)
-            return;
-
-        arenaBoundaries.SetActive(false);
-
-        //If maincamera is not active, return control to main cam.
-        if (!arenaCamera.isActiveAndEnabled)
-            return;
-
-        ReturnCameraToMain();
+        _arenaCameraPosition = arenaCameraObject.transform.position;
+        _mainCameraPosition = mainCameraObject.transform.position;
         
+        //If arena camera is active, move it to be centered in the arena.
+        if (_arenaCamera.isActiveAndEnabled && !_miniBossHealth.Dead)
+        {
+            arenaCameraObject.transform.position = Vector3.MoveTowards(_arenaCameraPosition,
+                _arenaCameraLockPosition, cameraTransitioningSpeed * Time.deltaTime);
+        }
+        
+        ArenaCleanUp();
     }
     /// <summary>
-    ///When player hits the trigger, if the boss isn't dead, active the arena cam and bandaries, and deactive the main cam. 
+    ///When player hits the trigger, if the boss isn't dead, active the arena camera and boundaries,
+    /// and deactivate the main camera.
     /// </summary>
-    /// <param name="collision"></param>
+    /// <param name="collision">The colliding object's collider 2D.</param>
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player") || _miniBossHealth.Dead || arenaCamera.isActiveAndEnabled)
+        if (!collision.gameObject.CompareTag("Player") || _miniBossHealth.Dead || _arenaCamera.isActiveAndEnabled)
             return;
 
-        arenaCamera.transform.position = mainCamera.transform.position;
-        mainCamera.gameObject.SetActive(false);
-        arenaCamera.gameObject.SetActive(true);
+        arenaCameraObject.transform.position = mainCameraObject.transform.position;
+        _mainCamera.enabled = false;
+        _arenaCamera.enabled = true;
         arenaBoundaries.SetActive(true);
+        _soundManager.PlayMusic(miniBossBgMusic);
     }
 
     #endregion
 
     #region Private Helper Function
+    
     /// <summary>
-    /// Set's main camera's position to the same as the arena cam, then relinquishes control back to main cam.
+    /// Perform arena clean-up if the mini-boss dies or the player dies.<br></br><br></br>
+    /// Arena clean-up involves swapping to main camera, disabling arena boundaries, and transitioning music.
     /// </summary>
-    private void ReturnCameraToMain()
+    private void ArenaCleanUp()
     {
-        arenaCamera.transform.position = Vector3.MoveTowards(arenaCamera.transform.position, mainCamera.transform.position, cameraMoveSpeed);
+        if (!_arenaCamera.isActiveAndEnabled || (!_miniBossHealth.Dead && !_playerHealth.Dead))
+            return;
 
-        //Using distance formula to determine if cameras are close enough to each other to swap.
-        
-        if (arenaCamera.transform.position != mainCamera.transform.position)
-        {
-            if (Vector2.Distance(arenaCamera.transform.position, mainCamera.transform.position) > cameraSwapTolerence)
-                return;
-        }
-        mainCamera.gameObject.SetActive(true);
-        arenaCamera.gameObject.SetActive(false);
+        arenaCameraObject.transform.position = Vector3.MoveTowards(_arenaCameraPosition,
+            _mainCameraPosition, cameraTransitioningSpeed * Time.deltaTime);
+
+        // Using distance formula to determine if both cameras are close enough to each other to swap.
+        float cameraDistance = Vector2.Distance(_arenaCameraPosition, _mainCameraPosition);
+        if (_arenaCameraPosition != _mainCameraPosition && cameraDistance >= cameraSwapTolerance && !_playerHealth.Dead)
+            return;
+
+        _mainCamera.enabled = true;
+        _arenaCamera.enabled = false;
+        arenaBoundaries.SetActive(false);
+        _soundManager.PlayMusic(_menuSounds.bgMusic);
     }
 
     #endregion

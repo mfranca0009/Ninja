@@ -501,8 +501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e038ae848f0535a4097438e680786196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundManager: {fileID: 0}
-  bg_music: {fileID: 8300000, guid: af6909a144ed123408e5a2ef616d696e, type: 3}
+  bgMusic: {fileID: 8300000, guid: af6909a144ed123408e5a2ef616d696e, type: 3}
 --- !u!81 &1370773865
 AudioListener:
   m_ObjectHideFlags: 0
