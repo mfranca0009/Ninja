@@ -70,6 +70,7 @@ public class ArenaCamera : MonoBehaviour
         ReturnCameraToMain();
         
     }
+
     /// <summary>
     ///When player hits the trigger, if the boss isn't dead, active the arena cam and bandaries, and deactive the main cam. 
     /// </summary>

@@ -6700,11 +6700,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86136bba7c3a20c4a8432721bacd659d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 1673062479}
-  secCamera: {fileID: 1599799024}
+  mainCamera: {fileID: 1673062481}
+  secCamera: {fileID: 1599799026}
   player: {fileID: 662303656}
   yLevel: -2
   xLevel: 150
+  cameraSwapTolerence: 0.25
 --- !u!61 &1560981338
 BoxCollider2D:
   m_ObjectHideFlags: 0
