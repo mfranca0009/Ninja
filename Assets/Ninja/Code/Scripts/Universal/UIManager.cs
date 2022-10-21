@@ -448,21 +448,17 @@ public class UIManager : MonoBehaviour
 	{
 		if (!_gameManager)
 			return;
-		
-		bool allFragmentsObtained =
-			_gameManager.ScrollStatus(0) && _gameManager.ScrollStatus(1) && _gameManager.ScrollStatus(2);
 
-		if (allFragmentsObtained)
-		{
-			scrollFragments[1].SetActive(false);
-			scrollFragments[2].SetActive(false);
-			scrollFragments[3].SetActive(false);
-			scrollFragments[0].SetActive(true);
-			return;
-		}
+		bool allFragmentsObtained = _gameManager.ObtainedScrollFragmentStates[0] &&
+		                            _gameManager.ObtainedScrollFragmentStates[1] &&
+		                            _gameManager.ObtainedScrollFragmentStates[2];
 
-		for (int i = 0; i < scrollFragments.Length - 1; i++)
-			scrollFragments[i + 1].SetActive(_gameManager.ScrollStatus(i));
+		scrollFragments[0].SetActive(allFragmentsObtained);
+
+		for (int i = 1; i < scrollFragments.Length; i++)
+			scrollFragments[i].SetActive(!allFragmentsObtained
+				? _gameManager.ObtainedScrollFragmentStates[i - 1]
+				: !_gameManager.ObtainedScrollFragmentStates[i - 1]);
 	}
 
 	/// <summary>
@@ -509,8 +505,9 @@ public class UIManager : MonoBehaviour
 		if (result.Length == 0)
 			return "No scroll entry found for this level!";
 
-		bool allFragmentsObtained =
-			_gameManager.ScrollStatus(0) && _gameManager.ScrollStatus(1) && _gameManager.ScrollStatus(2);
+		bool allFragmentsObtained = _gameManager.ObtainedScrollFragmentStates[0] &&
+		                            _gameManager.ObtainedScrollFragmentStates[1] &&
+		                            _gameManager.ObtainedScrollFragmentStates[2];
 
 		ScrollEntry scrollEntry = result.Length == 1 ? result[0] : allFragmentsObtained ? result[1] : result[0];
 

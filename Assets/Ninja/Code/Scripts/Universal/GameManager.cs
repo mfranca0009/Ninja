@@ -54,6 +54,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public int TotalEnemiesForLevel { get; private set; }
     
+    /// <summary>
+    /// Secret scroll fragment obtained states
+    /// </summary>
+    public bool[] ObtainedScrollFragmentStates { get; private set; }
+    
     #endregion
 
     #region Serialized Fields
@@ -105,9 +110,6 @@ public class GameManager : MonoBehaviour
     // Achievements
     private SpeedAchievement _speedAchievement;
 
-    // Scroll Fragment States
-    private bool[] _obtainedScrollFragmentStates;
-    
     #endregion
 
     #region Unity Events
@@ -122,7 +124,7 @@ public class GameManager : MonoBehaviour
         ActiveItemDrops = new List<GameObject>();
         TappedEnemiesHealth = new List<Health>();
 
-        _obtainedScrollFragmentStates = new bool[3];
+        ObtainedScrollFragmentStates = new bool[3];
     }
 
     // Update is called once per frame
@@ -143,7 +145,7 @@ public class GameManager : MonoBehaviour
             // Clean-ups specific to when the updated scene is main menu.
             if (_uiManager && _sceneManagement.HasBuildIndex(_currScene, 0))
             {
-                Array.Fill(_obtainedScrollFragmentStates, false);
+                Array.Fill(ObtainedScrollFragmentStates, false);
                 _uiManager.UpdateSecretScrollUI();
             }
         }
@@ -182,7 +184,7 @@ public class GameManager : MonoBehaviour
 
             if (_uiManager)
             {
-                Array.Fill(_obtainedScrollFragmentStates, false);
+                Array.Fill(ObtainedScrollFragmentStates, false);
                 _uiManager.UpdateSecretScrollUI();   
             }
         }
@@ -294,28 +296,25 @@ public class GameManager : MonoBehaviour
         return _sceneManagement.HasBuildIndex(_currScene, 0, 5) ? 0 : FindObjectsOfType<EnemyCombat>().Length;
     }
 
+    /// <summary>
+    /// Process the collection of a secret scroll fragment.
+    /// </summary>
+    /// <param name="scrollNum">The scroll number that was obtained.</param>
     public void CollectScroll(int scrollNum)
     {
-        _obtainedScrollFragmentStates[scrollNum - 1] = true;
-        
+        ObtainedScrollFragmentStates[scrollNum - 1] = true;
+
         // Update achievement progress
-        if (_achievementManager.Achievements.Find(achi => achi.Title == "The corruption is cleansed") is not
-            CounterAchievement counterAchievement)
+        if (_achievementManager.Achievements.Find(achievement => achievement.Title == "The corruption is cleansed") is
+            not CounterAchievement counterAchievement)
             return;
 
         counterAchievement.Counter++;
 
         // Update GUI
         _uiManager.UpdateSecretScrollUI();
-
     }
 
-    //Used by the UI Manager to confirm which fragments should be showing.
-    public bool ScrollStatus(int fragmentNum)
-    {
-        return _obtainedScrollFragmentStates[fragmentNum];
-    }
-    
     #endregion
     
     #region Private Helper Methods
