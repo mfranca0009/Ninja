@@ -3172,6 +3172,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1860446570756328647, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
   m_PrefabInstance: {fileID: 351728720}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &662303667 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1863393140144074463, guid: 13cec597a5b5eaa409e8868077cf8bcf, type: 3}
+  m_PrefabInstance: {fileID: 351728720}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &680786886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6700,11 +6705,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86136bba7c3a20c4a8432721bacd659d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 1673062479}
-  secCamera: {fileID: 1599799024}
-  player: {fileID: 662303656}
+  cameraTransitioningSpeed: 8
+  mainCamera: {fileID: 1673062481}
+  secondaryCamera: {fileID: 1599799026}
+  playerTransform: {fileID: 662303667}
   yLevel: -2
   xLevel: 150
+  cameraSwapTolerance: 0.25
 --- !u!61 &1560981338
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6861,22 +6868,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1599799027}
   - component: {fileID: 1599799026}
-  - component: {fileID: 1599799025}
   m_Layer: 0
   m_Name: Secondary Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!81 &1599799025
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1599799024}
-  m_Enabled: 1
+  m_IsActive: 1
 --- !u!20 &1599799026
 Camera:
   m_ObjectHideFlags: 0
@@ -6884,7 +6882,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599799024}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
