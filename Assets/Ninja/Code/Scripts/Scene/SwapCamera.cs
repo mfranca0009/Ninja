@@ -2,72 +2,99 @@ using UnityEngine;
 
 public class SwapCamera : MonoBehaviour
 {
+    #region Public Fields
+
+    [Header("Swap Camera Settings")]
+    
+    [Tooltip("The transitioning speed when swapping cameras")]
+    public float cameraTransitioningSpeed = 8f;
+    
+    [Tooltip("The main camera's camera component")]
     public Camera mainCamera;
-    public Camera secCamera;
-    public GameObject player;
-    public float yLevel = 0.0f;
+    
+    [Tooltip("The secondary camera's camera component")]
+    public Camera secondaryCamera;
+    
+    [Tooltip("The player's transform within the current scene")]
+    public Transform playerTransform;
+
+    [Tooltip("The y-axis level to trigger swapping of cameras")]
+    public float yLevel;
+    
+    [Tooltip("The x-axis level to trigger swapping of cameras")]
     public float xLevel = 150.0f;
+    
+    #endregion
 
     [Tooltip("Tolerance level to know when to swap camera control")]
-    [SerializeField] public float cameraSwapTolerence = 0.25f;
+    [SerializeField] public float cameraSwapTolerance = 0.25f;
 
-    private Vector3 secretCameraLocation;
-    //The Speed at which the camera moves into position.
-    private float cameraMoveSpeed;
+    #region Private Fields
+    
+    // Positions
+    private Vector3 _mainCameraPosition;
+    private Vector3 _secondaryCameraPosition;
+    private Vector3 _secretCameraLocation;
 
+    #endregion
+
+    #region Unity Events
+    
     // Start is called before the first frame update
     private void Start()
     {
-        secretCameraLocation = secCamera.transform.position;
-
+        _secretCameraLocation = secondaryCamera.transform.position;
     }
 
-    void Update()
+    private void Update()
     {
-        cameraMoveSpeed = 8 * Time.deltaTime;
-
+        _mainCameraPosition = mainCamera.transform.position;
+        _secondaryCameraPosition = secondaryCamera.transform.position;
+        
         //If arena cam is active, move it to be centered in the arena. 
-        if (secCamera.isActiveAndEnabled && player.transform.position.y < yLevel)
+        if (secondaryCamera.isActiveAndEnabled && playerTransform.position.y < yLevel)
         {
-            secCamera.transform.position = Vector3.MoveTowards(secCamera.transform.position, secretCameraLocation, cameraMoveSpeed);
+            secondaryCamera.transform.position = Vector3.MoveTowards(_secondaryCameraPosition, _secretCameraLocation,
+                cameraTransitioningSpeed * Time.deltaTime);
         }
 
-        //If maincamera is not active, return control to main cam.
-        if (mainCamera.gameObject.activeInHierarchy || !(player.transform.position.y >= yLevel) ||
-            !(player.transform.position.x <= xLevel))
+        //If main camera is not active, return control to main camera.
+        if (mainCamera.isActiveAndEnabled || !(playerTransform.transform.position.y >= yLevel) ||
+            !(playerTransform.transform.position.x <= xLevel))
             return;
 
         ReturnCameraToMain();
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player") || secCamera.isActiveAndEnabled)
+        if (!collision.gameObject.CompareTag("Player") || secondaryCamera.isActiveAndEnabled)
             return;
 
-        secCamera.transform.position = mainCamera.transform.position;
-        mainCamera.gameObject.SetActive(false);
-        secCamera.gameObject.SetActive(true);
+        secondaryCamera.transform.position = mainCamera.transform.position;
+        mainCamera.enabled = false;
+        secondaryCamera.enabled = true;
     }
+    
+    #endregion
 
     #region Private Helper Function
+    
     /// <summary>
-    /// Set's main camera's position to the same as the arena cam, then relinquishes control back to main cam.
+    /// Sets main camera's position to the same as the secondary camera, then relinquishes control back to main camera.
     /// </summary>
     private void ReturnCameraToMain()
     {
-        secCamera.transform.position = Vector3.MoveTowards(secCamera.transform.position, mainCamera.transform.position, cameraMoveSpeed);
+        secondaryCamera.transform.position = Vector3.MoveTowards(_secondaryCameraPosition, _mainCameraPosition,
+            cameraTransitioningSpeed * Time.deltaTime);
 
         //Using distance formula to determine if cameras are close enough to each other to swap.
+        float cameraDistance = Vector2.Distance(_secondaryCameraPosition, _mainCameraPosition);
+        if (_secondaryCameraPosition != _mainCameraPosition && cameraDistance >= cameraSwapTolerance)
+            return;
 
-        if (secCamera.transform.position != mainCamera.transform.position)
-        {
-            if (Vector2.Distance(secCamera.transform.position, mainCamera.transform.position) > cameraSwapTolerence)
-                return;
-        }
-        mainCamera.gameObject.SetActive(true);
-         secCamera.gameObject.SetActive(false);
+        mainCamera.enabled = true;
+        secondaryCamera.enabled = false;
     }
 
     #endregion
