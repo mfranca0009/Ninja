@@ -442,27 +442,24 @@ public class UIManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Update secret scroll fragment UI depending on how many were collected.
+	/// Update secret scroll UI depending on how many were collected.
 	/// </summary>
-	public void UpdateSecretScrollFragmentUI()
+	public void UpdateSecretScrollUI()
 	{
-		bool allFragmentsObtained =
-			_gameManager.ScrollStatus(0) && _gameManager.ScrollStatus(1) && _gameManager.ScrollStatus(2);
-
-		if (allFragmentsObtained)
-		{
-			scrollFragments[1].SetActive(false);
-			scrollFragments[2].SetActive(false);
-			scrollFragments[3].SetActive(false);
-			scrollFragments[0].SetActive(true);
+		if (!_gameManager)
 			return;
-		}
-		
-		for (int i = 0; i < scrollFragments.Length - 1; i++)
-		{
-			scrollFragments[i + 1].SetActive(_gameManager.ScrollStatus(i));
-		}
-    }
+
+		bool allFragmentsObtained = _gameManager.ObtainedScrollFragmentStates[0] &&
+		                            _gameManager.ObtainedScrollFragmentStates[1] &&
+		                            _gameManager.ObtainedScrollFragmentStates[2];
+
+		scrollFragments[0].SetActive(allFragmentsObtained);
+
+		for (int i = 1; i < scrollFragments.Length; i++)
+			scrollFragments[i].SetActive(!allFragmentsObtained
+				? _gameManager.ObtainedScrollFragmentStates[i - 1]
+				: !_gameManager.ObtainedScrollFragmentStates[i - 1]);
+	}
 
 	/// <summary>
 	/// Show/hide the game over UI.
@@ -503,7 +500,16 @@ public class UIManager : MonoBehaviour
 		if (scrollEntries.Count == 0)
 			return "No scroll entries available!";
 		
-		ScrollEntry scrollEntry = scrollEntries.Find(sEntry => sEntry.levelName == scene.name);
+		ScrollEntry[] result = scrollEntries.FindAll(sEntry => sEntry.levelName == scene.name).ToArray();
+
+		if (result.Length == 0)
+			return "No scroll entry found for this level!";
+
+		bool allFragmentsObtained = _gameManager.ObtainedScrollFragmentStates[0] &&
+		                            _gameManager.ObtainedScrollFragmentStates[1] &&
+		                            _gameManager.ObtainedScrollFragmentStates[2];
+
+		ScrollEntry scrollEntry = result.Length == 1 ? result[0] : allFragmentsObtained ? result[1] : result[0];
 
 		if (string.IsNullOrEmpty(scrollEntry.scrollMessage) || string.IsNullOrWhiteSpace(scrollEntry.scrollMessage))
 			return "No message to show!";
