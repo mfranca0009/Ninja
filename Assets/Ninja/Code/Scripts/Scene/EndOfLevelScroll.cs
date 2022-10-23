@@ -76,7 +76,7 @@ public class EndOfLevelScroll : MonoBehaviour
         
         bool goodEndingTrigger = false;
 
-        if (sceneNum == 4)
+        if (sceneNum == 5)
         {
             if (_achievementManager.Achievements.Find(achievement => achievement.Title == "The corruption is cleansed")
                 is not CounterAchievement counterAchievement)
@@ -84,6 +84,7 @@ public class EndOfLevelScroll : MonoBehaviour
             
             goodEndingTrigger = counterAchievement.Counter == 3;
         }
+
 
         string achievementName = sceneNum switch
         {
@@ -162,15 +163,17 @@ public class EndOfLevelScroll : MonoBehaviour
 
     /// <summary>
     /// Check level three achievements.<br></br><br></br>
-    /// Note: Achievements 18, 19 [No Traps Activated, Proud Ninja]
+    /// Note: Achievements 18, 19, 21, 22 [No Traps Activated, Proud Ninja]
     /// </summary>
     private void CheckLevelThreeAchievements(int sceneNum)
     {
-        if (!_achievementManager || sceneNum != 3)
+        if (!_achievementManager || sceneNum != 4)
             return;
         
         _achievementManager.ObtainAchievement("No Traps Activated");
         _achievementManager.ObtainAchievement("Proud Ninja");
+        _achievementManager.ObtainAchievement("Martial Ninja");
+        _achievementManager.ObtainAchievement("Distance Ninja");
     }
 
     /// <summary>
@@ -179,13 +182,11 @@ public class EndOfLevelScroll : MonoBehaviour
     /// </summary>
     private void CheckLevelFourAchievements(int sceneNum)
     {
-        if (!_achievementManager || sceneNum != 4)
+        if (!_achievementManager || sceneNum != 5)
             return;
-        
-        _achievementManager.ObtainAchievement("Martial Ninja");
-        _achievementManager.ObtainAchievement("Distance Ninja");
-        _achievementManager.ObtainAchievement("Expert Ninja");
+                _achievementManager.ObtainAchievement("Expert Ninja");
+
+
     }
-    
     #endregion
 }
