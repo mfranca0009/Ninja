@@ -3,12 +3,22 @@ using UnityEngine.SceneManagement;
 
 public class EndOfLevelScroll : MonoBehaviour
 {
+    #region Public Fields
+
+    [Header("End of Level Scroll Settings")]
+    
+    [Tooltip("The background music audio clip to be played when the end of level scroll appears.")]
+    public AudioClip scrollBgMusic;
+    
+    #endregion
+    
     #region Private Fields
 
     // Managers
     private UIManager _uiManager;
     private AchievementManager _achievementManager;
     private GameManager _gameManager;
+    private SoundManager _soundManager;
     
     #endregion
 
@@ -19,6 +29,7 @@ public class EndOfLevelScroll : MonoBehaviour
         _uiManager = FindObjectOfType<UIManager>();
         _achievementManager = FindObjectOfType<AchievementManager>();
         _gameManager = FindObjectOfType<GameManager>();
+        _soundManager = FindObjectOfType<SoundManager>();
         
         if (!_uiManager)
             return;
@@ -36,6 +47,10 @@ public class EndOfLevelScroll : MonoBehaviour
         int sceneNum = SceneManager.GetActiveScene().buildIndex;
         CheckAllEndOfLevelAchievements(sceneNum);
 
+        if (!_soundManager)
+            return;
+
+        _soundManager.PlayMusic(scrollBgMusic);
     }
 
     /// <summary>

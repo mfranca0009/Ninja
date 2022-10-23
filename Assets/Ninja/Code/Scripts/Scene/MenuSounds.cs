@@ -1,26 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuSounds : MonoBehaviour
 {
-    [SerializeField]
+    #region Public Fields
+    
+    [Header("Menu Sounds Settings")]
+    
+    [Tooltip("The background music sound clip to be played on loop")]
+    public AudioClip bgMusic;
+    
+    #endregion
+
+    #region Private Fields
+
+    // Sound / Music
     private SoundManager _soundManager;
-
-    public AudioClip bg_music;
-
-    void Start()
+    
+    #endregion
+    
+    #region Unity Events
+    
+    private void Start()
     {
         _soundManager = FindObjectOfType<SoundManager>();
+        _soundManager.PlayMusic(bgMusic);
+    }
 
-        if (!_soundManager)
+    private void OnEnable()
+    {
+        if (!_soundManager || _soundManager.musicSource.isPlaying)
             return;
         
-        _soundManager.PlayMusic(bg_music);
+        _soundManager.PlayMusic(bgMusic);
     }
 
-    private void Update()
+    private void OnDisable()
     {
-
+        if (!_soundManager || !_soundManager.musicSource.isPlaying)
+            return;
+        
+        _soundManager.musicSource.Stop();
     }
+
+    #endregion
 }

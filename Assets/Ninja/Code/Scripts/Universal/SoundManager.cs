@@ -108,6 +108,7 @@ public class SoundManager : MonoBehaviour
 	// Play a single clip through the music source.
 	public void PlayMusic(AudioClip clip)
 	{
+		musicSource.Stop();
 		musicSource.clip = clip;
 		musicSource.Play();
 	}

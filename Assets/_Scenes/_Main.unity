@@ -197,15 +197,19 @@ MonoBehaviour:
   pauseCanvas: {fileID: 0}
   gameOverCanvas: {fileID: 0}
   mainMenuCanvas: {fileID: 0}
+  creditsCanvas: {fileID: 0}
   settingsCanvas: {fileID: 0}
   soundSettingsCanvas: {fileID: 0}
   achievementsCanvas: {fileID: 0}
   achievementsPopCanvas: {fileID: 0}
   scrollCanvas: {fileID: 0}
   healthCanvas: {fileID: 0}
-  loadingScreen: {fileID: 0}
+  loadingCanvas: {fileID: 0}
+  loadingCanvasText: {fileID: 0}
+  loadingCanvasProgress: {fileID: 0}
   secretScrollCanvas: {fileID: 0}
   livesImages: []
+  loadingTextUpdateDelay: 0
   livesSprites: []
   scrollFragments: []
   scrollEntries: []
@@ -306,5 +310,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e038ae848f0535a4097438e680786196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundManager: {fileID: 0}
-  bg_music: {fileID: 8300000, guid: f19525861ca454746adcb2b72372e34e, type: 3}
+  bgMusic: {fileID: 8300000, guid: f19525861ca454746adcb2b72372e34e, type: 3}
