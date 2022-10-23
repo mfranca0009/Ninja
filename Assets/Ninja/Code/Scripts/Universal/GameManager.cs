@@ -293,7 +293,7 @@ public class GameManager : MonoBehaviour
     /// <returns>Returns the amount of enemies remaining on the active level.</returns>
     public int GetEnemyCount()
     {
-        return _sceneManagement.HasBuildIndex(_currScene, 0, 5) ? 0 : FindObjectsOfType<EnemyCombat>().Length;
+        return _sceneManagement.HasBuildIndex(_currScene, 0, 1, 6) ? 0 : FindObjectsOfType<EnemyCombat>().Length;
     }
 
     /// <summary>
@@ -363,7 +363,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void RetrievePlayerScripts()
     {
-        if (_sceneManagement.HasBuildIndex(_currScene, 0, 5) || !Player || !Player.activeInHierarchy ||
+        if (_sceneManagement.HasBuildIndex(_currScene, 0, 1, 6) || !Player || !Player.activeInHierarchy ||
             (Player && Player.activeInHierarchy &&_playerHealth && _playerCombat && _playerCamera))
             return;
 

@@ -87,10 +87,10 @@ public class EndOfLevelScroll : MonoBehaviour
 
         string achievementName = sceneNum switch
         {
-            1 => "Enter the Jungle",
-            2 => "Jungle with a View",
-            3 => "Source of the corruption",
-            4 => (goodEndingTrigger ? "The corruption is cleansed" : "The Corruption Lingers"),
+            2 => "Enter the Jungle",
+            3 => "Jungle with a View",
+            4 => "Source of the corruption",
+            5 => (goodEndingTrigger ? "The corruption is cleansed" : "The Corruption Lingers"),
             _ => string.Empty
         };
 
@@ -109,10 +109,10 @@ public class EndOfLevelScroll : MonoBehaviour
         //Determine which Achievement we should be checking by scene number
         string achievementName = sceneNum switch
         {
-            1 => "Quick Ninja",
-            2 => "Hasty Ninja",
-            3 => "Untraceable Ninja",
-            4 => "Coup de Grâce",
+            2 => "Quick Ninja",
+            3 => "Hasty Ninja",
+            4 => "Untraceable Ninja",
+            5 => "Coup de Grâce",
             _ => string.Empty
         };
         
@@ -136,9 +136,9 @@ public class EndOfLevelScroll : MonoBehaviour
         {
             achievementName = sceneNum switch
             {
-                1 => "Level 1 Genocide",
-                2 => "Level 2 Genocide",
-                3 => "Level 3 Genocide",
+                2 => "Level 1 Genocide",
+                3 => "Level 2 Genocide",
+                4 => "Level 3 Genocide",
                 _ => string.Empty
             };
 
@@ -151,9 +151,9 @@ public class EndOfLevelScroll : MonoBehaviour
         ////PACIFIST
         achievementName = sceneNum switch
         {
-            1 => "Level 1 Mostly Pacifist",
-            2 => "Level 2 Mostly Pacifist",
-            3 => "Level 3 Mostly Pacifist",
+            2 => "Level 1 Mostly Pacifist",
+            3 => "Level 2 Mostly Pacifist",
+            4 => "Level 3 Mostly Pacifist",
             _ => string.Empty
         };
 

@@ -52,7 +52,7 @@ public class HealthBar : MonoBehaviour
         {
             case true when !_gameManager:
                 return;
-            case true when !_sceneManagement.HasBuildIndex(SceneManager.GetActiveScene(), 0, 5) && !_health:
+            case true when !_sceneManagement.HasBuildIndex(SceneManager.GetActiveScene(), 0, 1, 6) && !_health:
                 _health = _gameManager.Player.GetComponent<Health>();
                 break;
         }
