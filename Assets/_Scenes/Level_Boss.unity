@@ -961,7 +961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e038ae848f0535a4097438e680786196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgMusic: {fileID: 8300000, guid: ea42450ae28e34243adb156ce2a76af9, type: 3}
+  bgMusic: {fileID: 8300000, guid: aba4f37057b16dc40822314b10e3e918, type: 3}
 --- !u!4 &1066683025 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4636852613748134625, guid: 03eda65f0df0e1c40872dc6c484580b1, type: 3}

@@ -4412,7 +4412,7 @@ MonoBehaviour:
   cameraSwapTolerance: 0.25
   arenaBoundaries: {fileID: 171610103}
   miniBoss: {fileID: 1243352606}
-  miniBossBgMusic: {fileID: 8300000, guid: aba4f37057b16dc40822314b10e3e918, type: 3}
+  miniBossBgMusic: {fileID: 8300000, guid: 827e48f6858d96c48b30d99060379681, type: 3}
 --- !u!61 &1005201288
 BoxCollider2D:
   m_ObjectHideFlags: 0
