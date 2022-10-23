@@ -16,8 +16,8 @@ public class CanvasLevelNumber : MonoBehaviour
     {
         textDisplay.text = gameObject.tag switch
         {
-            "PauseCanvas" => $"Level {SceneManager.GetActiveScene().buildIndex}",
-            "ScrollCanvas" => $"Level {SceneManager.GetActiveScene().buildIndex} Complete!",
+            "PauseCanvas" => $"Level {SceneManager.GetActiveScene().buildIndex - 1}",
+            "ScrollCanvas" => $"Level {SceneManager.GetActiveScene().buildIndex - 1} Complete!",
             _ => textDisplay.text
         };
     }

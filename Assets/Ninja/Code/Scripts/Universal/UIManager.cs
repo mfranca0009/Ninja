@@ -26,6 +26,10 @@ public class UIManager : MonoBehaviour
 	public Canvas pauseCanvas;
 	public Canvas gameOverCanvas;
 	public Canvas mainMenuCanvas;
+	public Canvas introCanvas;
+	public Animator introScrollAnimator;
+	public Canvas transitionCanvas;
+	public float transitionRate = 1f;
 	public Canvas creditsCanvas;
 	public Canvas settingsCanvas;
 	public Canvas soundSettingsCanvas;
@@ -54,6 +58,9 @@ public class UIManager : MonoBehaviour
 
 	#region Private Fields
 	
+	// UI elements
+	private Image _transitionBackground;
+
 	// Sound Settings 
 	private Dictionary<string, Slider> _slidersChanged;
 	private float[] _currSoundSettings;
@@ -73,10 +80,12 @@ public class UIManager : MonoBehaviour
 	
 	// UI States
 	private bool _pauseShown;
+	private bool _showTransitionBackground;
+	private bool _loadLevelOneTrigger;
 
 	// Timers
 	private float _loadTextUpdateTimer;
-	
+
 	// Scripts
 	private Health _playerHealth;
 	private SoundManager _soundManager;
@@ -91,6 +100,7 @@ public class UIManager : MonoBehaviour
 		_soundManager = FindObjectOfType<SoundManager>();
 		_achievementManager = FindObjectOfType<AchievementManager>();
 		_gameManager = FindObjectOfType<GameManager>();
+		_transitionBackground = transitionCanvas.GetComponentInChildren<Image>();
 
 		_currSoundSettings = new float[(int)AudioMixerGroup.Max];
 
@@ -113,17 +123,39 @@ public class UIManager : MonoBehaviour
 	{
 		_currentScene = SceneManager.GetActiveScene();
 
+		// Load next scene from intro scene
+		if (!_loadLevelOneTrigger && _transitionBackground.color.a >= 1f &&
+		    _sceneManagement.HasBuildIndex(_currentScene, 1))
+		{
+			_loadLevelOneTrigger = true;
+			_sceneManagement.LoadNextScene();
+		}
+		
 		if (loadingCanvas.gameObject.activeInHierarchy)
 			UpdateLoadingTextUI();
 
 		ShowMainMenuUI(_sceneManagement.HasBuildIndex(_currentScene, 0));
-		ShowCreditsUI(_sceneManagement.HasBuildIndex(_currentScene, 5));
-		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0, 5));
-		ShowSecretScrollUI(!_sceneManagement.HasBuildIndex(_currentScene, 0, 5));
+		ShowIntroUI(_sceneManagement.HasBuildIndex(_currentScene, 1));
+		ShowIntroScrollUI(_transitionBackground.color.a == 0f);
+		ShowCreditsUI(_sceneManagement.HasBuildIndex(_currentScene, 6));
+		ShowHealthUI(!_sceneManagement.HasBuildIndex(_currentScene, 0, 1, 6));
+		ShowSecretScrollUI(!_sceneManagement.HasBuildIndex(_currentScene, 0, 1, 6));
+
+		// Clean-ups specific to when the updated scene is level 1 when coming from the intro scene.
+		if (_sceneManagement.HasBuildIndex(_currentScene, 2))
+		{
+			ShowTransitionBgUI(false);
+			_loadLevelOneTrigger = false;
+		}
+		
+		// Update transition background UI depending on the current alpha set.
+		if (_showTransitionBackground && _transitionBackground.color.a < 255f ||
+		    !_showTransitionBackground && _transitionBackground.color.a > 0f)
+			UpdateTransitionBgUI();
 
 		//uses the p or escape button to pause and unpause the game
 		if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) &&
-		    !_sceneManagement.HasBuildIndex(_currentScene, 0, 5) && !scrollCanvas.isActiveAndEnabled)
+		    !_sceneManagement.HasBuildIndex(_currentScene, 0, 1, 6) && !scrollCanvas.isActiveAndEnabled)
 		{
 			ShowPauseUI(!_pauseShown);
 
@@ -154,13 +186,16 @@ public class UIManager : MonoBehaviour
 	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowLoadingUI(bool show)
 	{
+		if (!show && !loadingCanvas.isActiveAndEnabled || show && loadingCanvas.isActiveAndEnabled)
+			return;
+		
 		loadingCanvas.gameObject.SetActive(show);
 	}
 
 	/// <summary>
 	/// Update loading text UI
 	/// </summary>
-	public void UpdateLoadingTextUI()
+	private void UpdateLoadingTextUI()
 	{
 		if (!loadingCanvasText)
 			return;
@@ -200,15 +235,80 @@ public class UIManager : MonoBehaviour
 	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowMainMenuUI(bool show)
 	{
+		if (!show && !mainMenuCanvas.isActiveAndEnabled || show && mainMenuCanvas.isActiveAndEnabled)
+			return;
+		
 		mainMenuCanvas.gameObject.SetActive(show);
+	}
+	
+	/// <summary>
+	/// Show/hide introduction UI.
+	/// </summary>
+	/// <param name="show">Whether to show the UI or not.</param>
+	private void ShowIntroUI(bool show)
+	{
+		if (!show && !introCanvas.isActiveAndEnabled || show && introCanvas.isActiveAndEnabled)
+			return;
+
+		introCanvas.gameObject.SetActive(show);
+	}
+
+	/// <summary>
+	/// Play the show or hide animation for the introduction scroll UI
+	/// </summary>
+	/// <param name="show"></param>
+	private void ShowIntroScrollUI(bool show)
+	{
+		if (!introCanvas.isActiveAndEnabled ||
+		    !show && introScrollAnimator.IsPlayingAnimation("Hide", (int)AnimationLayers.BaseAnimLayer) ||
+		    show && introScrollAnimator.IsPlayingAnimation("Show", (int)AnimationLayers.BaseAnimLayer))
+			return;
+		
+		introScrollAnimator.SetTrigger(show ? "Show" : "Hide");
+	}
+	
+	/// <summary>
+	/// Show/hide transition UI
+	/// </summary>
+	public void ShowTransitionUI(bool show)
+	{
+		if (!show && !transitionCanvas.isActiveAndEnabled || show && transitionCanvas.isActiveAndEnabled)
+			return;
+
+		transitionCanvas.gameObject.SetActive(show);
+	}
+	
+	/// <summary>
+	/// Show/hide transition Background UI
+	/// </summary>
+	public void ShowTransitionBgUI(bool show)
+	{
+		if (!show && !_showTransitionBackground || show && _showTransitionBackground)
+			return;
+		
+		_showTransitionBackground = show;
+	}
+
+	/// <summary>
+	/// Update the transition Background UI's color to smoothly change the alpha to visible or not visible.
+	/// </summary>
+	private void UpdateTransitionBgUI()
+	{
+		float currentAlpha = _transitionBackground.color.a;
+		_transitionBackground.color = _showTransitionBackground
+			? new Color(0, 0, 0, Mathf.MoveTowards(currentAlpha, 255f, transitionRate * Time.deltaTime))
+			: new Color(0, 0, 0, Mathf.MoveTowards(currentAlpha, 0f, transitionRate * Time.deltaTime));
 	}
 	
 	/// <summary>
 	/// Show/hide credits UI.
 	/// </summary>
 	/// <param name="show">Whether to show the UI or not.</param>
-	public void ShowCreditsUI(bool show)
+	private void ShowCreditsUI(bool show)
 	{
+		if (!show && !creditsCanvas.isActiveAndEnabled || show && creditsCanvas.isActiveAndEnabled)
+			return;
+		
 		creditsCanvas.gameObject.SetActive(show);
 	}	
 
@@ -233,6 +333,9 @@ public class UIManager : MonoBehaviour
 	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowAchievementsUI(bool show)
 	{
+		if (!show && !achievementsCanvas.isActiveAndEnabled || show && achievementsCanvas.isActiveAndEnabled)
+			return;
+		
 		achievementsCanvas.gameObject.SetActive(show);
 	}
 
@@ -251,6 +354,9 @@ public class UIManager : MonoBehaviour
 	/// <param name="show">Whether to show the UI or not.</param>
 	public void ShowSettingsUI(bool show)
 	{
+		if (!show && !settingsCanvas.isActiveAndEnabled || show && settingsCanvas.isActiveAndEnabled)
+			return;
+		
 		settingsCanvas.gameObject.SetActive(show);
 	}
 
@@ -374,8 +480,11 @@ public class UIManager : MonoBehaviour
 	/// Show/hide the player's health UI.
 	/// </summary>
 	/// <param name="show">Whether to show the UI or not.</param>
-	public void ShowHealthUI(bool show)
+	private void ShowHealthUI(bool show)
 	{
+		if (!show && !healthCanvas.isActiveAndEnabled || show && healthCanvas.isActiveAndEnabled)
+			return;
+		
 		healthCanvas.gameObject.SetActive(show);
 	}
 
@@ -436,8 +545,11 @@ public class UIManager : MonoBehaviour
 	/// Show/hide the Secret Scroll UI.
 	/// </summary>
 	/// <param name="show">Whether to show the UI or not.</param>
-	public void ShowSecretScrollUI(bool show)
+	private void ShowSecretScrollUI(bool show)
     {
+	    if (!show && !secretScrollCanvas.isActiveAndEnabled || show && secretScrollCanvas.isActiveAndEnabled)
+		    return;
+	    
 		secretScrollCanvas.gameObject.SetActive(show);
 	}
 
