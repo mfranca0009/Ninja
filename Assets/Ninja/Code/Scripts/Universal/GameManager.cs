@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
     {
         // Retrieve current scene.
         _currScene = SceneManager.GetActiveScene();
-        
+
         // If the scene is changed, update appropriate states and clean-ups.
         if (_currScene.buildIndex != _currSceneBuildIndex)
         {
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
             LevelMidpointReached = false;
             ActiveItemDrops.Clear();
             TappedEnemiesHealth.Clear();
-
+            
             // Clean-ups specific to when the updated scene is main menu.
             if (_uiManager && _sceneManagement.HasBuildIndex(_currScene, 0))
             {
@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
         
         // If the scene is not the menu or credits, then we should be updating these timers and clean-ups when
         // necessary.
-        if (!_sceneManagement.HasBuildIndex(_currScene, 0, 5))
+        if (!_sceneManagement.HasBuildIndex(_currScene, 0, 1, 6))
         {
             UpdateDeathResetTimer();
             WipeActiveItemDrops();
@@ -203,8 +203,8 @@ public class GameManager : MonoBehaviour
     private void LivesUpdate()
     {
         // Update states to signal a lives reset.
-        if (_sceneManagement.HasBuildIndex(_currScene, 0, 5) ||
-            (!_sceneManagement.HasBuildIndex(_currScene, 0, 5) && Restarted))
+        if (_sceneManagement.HasBuildIndex(_currScene, 0) ||
+            (!_sceneManagement.HasBuildIndex(_currScene, 0) && Restarted))
             _livesSet = false;
 
         // if lives are not set yet, then set the appropriate lives total and update the state.
@@ -232,7 +232,7 @@ public class GameManager : MonoBehaviour
     {
         if (!_playerHealth || _playerHealth.HealthPoints >= _playerHealth.maxHealth ||
             (_currScene.buildIndex == _currSceneBuildIndex && !Restarted) ||
-            _sceneManagement.HasBuildIndex(_currScene, 0, 5))
+            _sceneManagement.HasBuildIndex(_currScene, 0, 1, 6))
             return;
         
         _playerHealth.Reset();
@@ -293,7 +293,7 @@ public class GameManager : MonoBehaviour
     /// <returns>Returns the amount of enemies remaining on the active level.</returns>
     public int GetEnemyCount()
     {
-        return _sceneManagement.HasBuildIndex(_currScene, 0, 5) ? 0 : FindObjectsOfType<EnemyCombat>().Length;
+        return _sceneManagement.HasBuildIndex(_currScene, 0, 1, 6) ? 0 : FindObjectsOfType<EnemyCombat>().Length;
     }
 
     /// <summary>
@@ -363,7 +363,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void RetrievePlayerScripts()
     {
-        if (_sceneManagement.HasBuildIndex(_currScene, 0, 5) || !Player || !Player.activeInHierarchy ||
+        if (_sceneManagement.HasBuildIndex(_currScene, 0, 1, 6) || !Player || !Player.activeInHierarchy ||
             (Player && Player.activeInHierarchy &&_playerHealth && _playerCombat && _playerCamera))
             return;
 

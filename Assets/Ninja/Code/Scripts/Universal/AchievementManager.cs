@@ -241,10 +241,10 @@ public class AchievementManager : MonoBehaviour
             "Grab a total of 50 pick-ups throughout your journey", 50));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Martial Ninja",
-            "Beat the game without throwing any knives"));
+            "Reach the boss without throwing any knives"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Distance Ninja",
-            "Beat the game without using any melee attacks"));
+            "Reach the boss without using any melee attacks"));
 
         Achievements.Add(new Achievement(AchievementType.TriggerType, "Expert Ninja",
             "Clear the game without dying"));

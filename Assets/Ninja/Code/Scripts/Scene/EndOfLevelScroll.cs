@@ -76,7 +76,7 @@ public class EndOfLevelScroll : MonoBehaviour
         
         bool goodEndingTrigger = false;
 
-        if (sceneNum == 4)
+        if (sceneNum == 5)
         {
             if (_achievementManager.Achievements.Find(achievement => achievement.Title == "The corruption is cleansed")
                 is not CounterAchievement counterAchievement)
@@ -85,12 +85,13 @@ public class EndOfLevelScroll : MonoBehaviour
             goodEndingTrigger = counterAchievement.Counter == 3;
         }
 
+
         string achievementName = sceneNum switch
         {
-            1 => "Enter the Jungle",
-            2 => "Jungle with a View",
-            3 => "Source of the corruption",
-            4 => (goodEndingTrigger ? "The corruption is cleansed" : "The Corruption Lingers"),
+            2 => "Enter the Jungle",
+            3 => "Jungle with a View",
+            4 => "Source of the corruption",
+            5 => (goodEndingTrigger ? "The corruption is cleansed" : "The Corruption Lingers"),
             _ => string.Empty
         };
 
@@ -109,10 +110,10 @@ public class EndOfLevelScroll : MonoBehaviour
         //Determine which Achievement we should be checking by scene number
         string achievementName = sceneNum switch
         {
-            1 => "Quick Ninja",
-            2 => "Hasty Ninja",
-            3 => "Untraceable Ninja",
-            4 => "Coup de Grâce",
+            2 => "Quick Ninja",
+            3 => "Hasty Ninja",
+            4 => "Untraceable Ninja",
+            5 => "Coup de Grâce",
             _ => string.Empty
         };
         
@@ -136,9 +137,9 @@ public class EndOfLevelScroll : MonoBehaviour
         {
             achievementName = sceneNum switch
             {
-                1 => "Level 1 Genocide",
-                2 => "Level 2 Genocide",
-                3 => "Level 3 Genocide",
+                2 => "Level 1 Genocide",
+                3 => "Level 2 Genocide",
+                4 => "Level 3 Genocide",
                 _ => string.Empty
             };
 
@@ -151,9 +152,9 @@ public class EndOfLevelScroll : MonoBehaviour
         ////PACIFIST
         achievementName = sceneNum switch
         {
-            1 => "Level 1 Mostly Pacifist",
-            2 => "Level 2 Mostly Pacifist",
-            3 => "Level 3 Mostly Pacifist",
+            2 => "Level 1 Mostly Pacifist",
+            3 => "Level 2 Mostly Pacifist",
+            4 => "Level 3 Mostly Pacifist",
             _ => string.Empty
         };
 
@@ -162,15 +163,17 @@ public class EndOfLevelScroll : MonoBehaviour
 
     /// <summary>
     /// Check level three achievements.<br></br><br></br>
-    /// Note: Achievements 18, 19 [No Traps Activated, Proud Ninja]
+    /// Note: Achievements 18, 19, 21, 22 [No Traps Activated, Proud Ninja]
     /// </summary>
     private void CheckLevelThreeAchievements(int sceneNum)
     {
-        if (!_achievementManager || sceneNum != 3)
+        if (!_achievementManager || sceneNum != 4)
             return;
         
         _achievementManager.ObtainAchievement("No Traps Activated");
         _achievementManager.ObtainAchievement("Proud Ninja");
+        _achievementManager.ObtainAchievement("Martial Ninja");
+        _achievementManager.ObtainAchievement("Distance Ninja");
     }
 
     /// <summary>
@@ -179,13 +182,11 @@ public class EndOfLevelScroll : MonoBehaviour
     /// </summary>
     private void CheckLevelFourAchievements(int sceneNum)
     {
-        if (!_achievementManager || sceneNum != 4)
+        if (!_achievementManager || sceneNum != 5)
             return;
-        
-        _achievementManager.ObtainAchievement("Martial Ninja");
-        _achievementManager.ObtainAchievement("Distance Ninja");
-        _achievementManager.ObtainAchievement("Expert Ninja");
+                _achievementManager.ObtainAchievement("Expert Ninja");
+
+
     }
-    
     #endregion
 }
