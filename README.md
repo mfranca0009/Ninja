@@ -1,6 +1,6 @@
 # Ninja - Senior Design Project
 
-2D Action Platformer with Ninjas!
+2D Action Platformer with Ninjas! View the game user manual for a more in-depth explanation of the game and mechanics.
 
 # Controls
 
@@ -15,8 +15,6 @@
 [X Key] - Light Attack
 
 [C Key] - Slow Attack
-
-View the game user manual for a more in-depth explanation of the game and mechanics!
 
 # Unity Version
 
