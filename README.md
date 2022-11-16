@@ -5,11 +5,16 @@
 # Controls
 
 [Left/Right Arrow Keys] - Move left and right respectively
+
 [Spacebar] - Jump (double jumping is possible!)
+
 [Left Shift Key] - Sprint
+
 [Z Key] - Throw Knife Attack
-[X Key] - Slow Attack
-[C Key] - Light Attack
+
+[X Key] - Light Attack
+
+[C Key] - Slow Attack
 
 View the game user manual for a more in-depth explanation of the game and mechanics!
 
