@@ -20,9 +20,13 @@
 
 Project was developed in Unity editor version 2022.1.14f1.
 
-# Testing
+# Testing [Editor]
 
 Clone the repository, open the project in Unity 2022.1.14f1.
+
+# Testing [Release]
+
+Select a release version and follow instructions on the release page for setup!
 
 # Educational Purposes
 
